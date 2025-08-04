@@ -18,10 +18,11 @@ struct SettingsView: View {
             List {
                 Section(header: Text("")) {
                     NavigationLink(destination: InstanceView()) {
-                        HStack {
+                        VStack(alignment: .leading) {
                             Text("INSTANCE")
-                            Spacer()
                             Text(self.pangolinServerUrl)
+                                .foregroundStyle(.gray)
+                                .font(.system(size: 14))
                         }
                     }
                 }//Section

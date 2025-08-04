@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "API_KEY" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -19,6 +22,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Domains"
+          }
+        }
+      }
+    },
+    "ERROR_CONNECTING_TO_SERVER" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot connect to server, please check your Server URL!"
           }
         }
       }

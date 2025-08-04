@@ -6,13 +6,30 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4346E5DE2E4150C700CD1A93 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4346E5DD2E4150C700CD1A93 /* Alamofire */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		4346E59E2E40713F00CD1A93 /* Pangolinios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pangolinios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4346E5E02E41521600CD1A93 /* Exceptions for "Pangolinios" folder in "Pangolinios" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4346E59D2E40713F00CD1A93 /* Pangolinios */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4346E5A02E40713F00CD1A93 /* Pangolinios */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4346E5E02E41521600CD1A93 /* Exceptions for "Pangolinios" folder in "Pangolinios" target */,
+			);
 			path = Pangolinios;
 			sourceTree = "<group>";
 		};
@@ -23,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4346E5DE2E4150C700CD1A93 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +83,7 @@
 			);
 			name = Pangolinios;
 			packageProductDependencies = (
+				4346E5DD2E4150C700CD1A93 /* Alamofire */,
 			);
 			productName = Pangolinios;
 			productReference = 4346E59E2E40713F00CD1A93 /* Pangolinios.app */;
@@ -95,6 +114,9 @@
 			);
 			mainGroup = 4346E5952E40713F00CD1A93;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4346E5DC2E4150C700CD1A93 /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4346E59F2E40713F00CD1A93 /* Products */;
 			projectDirPath = "";
@@ -259,6 +281,7 @@
 				DEVELOPMENT_TEAM = B72LWYT2SZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Pangolinios/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -287,6 +310,7 @@
 				DEVELOPMENT_TEAM = B72LWYT2SZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Pangolinios/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -327,6 +351,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4346E5DC2E4150C700CD1A93 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4346E5DD2E4150C700CD1A93 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4346E5DC2E4150C700CD1A93 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4346E5962E40713F00CD1A93 /* Project object */;
 }

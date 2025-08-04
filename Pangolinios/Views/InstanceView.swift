@@ -6,6 +6,11 @@
 //
 
 import SwiftUI
+import Alamofire
+
+struct PangolinHealthCheckResponse: Decodable {
+    var message: String
+}
 
 struct InstanceView: View {
     
@@ -17,7 +22,8 @@ struct InstanceView: View {
     @State private var serverUrl = ""
     @State private var apiKey = ""
     @State private var organizationId = ""
-    @State private var isLoggedIn: Bool = false
+    @State private var connectionError: Bool = false
+    @State private var isLoading: Bool = false
     
     var body: some View {
         Form {
@@ -32,6 +38,12 @@ struct InstanceView: View {
                     Text("API_KEY")
                     SecureField("API_KEY", text: $apiKey)
                         .multilineTextAlignment(.trailing)
+                }
+                
+                if connectionError == true {
+                    Text("ERROR_CONNECTING_TO_SERVER")
+                        .foregroundStyle(.red)
+                        .font(.system(size: 14))
                 }
             }
             
@@ -51,7 +63,9 @@ struct InstanceView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    self.save()
+                    if self.isLoading == false {
+                        self.save()
+                    }
                 } label: {
                     Text("SAVE")
                 }
@@ -64,12 +78,22 @@ struct InstanceView: View {
             return
         }
         
+        self.isLoading = true
+        self.connectionError = false
         self.pangolinServerUrl = self.serverUrl
         self.pangolinApiKey = self.apiKey
         self.pangolinOrganizationId = self.organizationId
         
-        // TODO: Test server before save.
-        self.dismiss()
+        print(self.pangolinServerUrl)
+        AF.request("\(self.pangolinServerUrl)/v1")
+            .responseDecodable(of: PangolinHealthCheckResponse.self) { response in
+                self.isLoading = false
+                if let res = response.value, res.message == "Healthy" {
+                    self.dismiss()
+                } else {
+                    self.connectionError = true
+                }
+            }
     }
 }
 
