@@ -9,7 +9,12 @@ import SwiftUI
 
 struct ResourcesView: View {
     var body: some View {
-        Text("RESOURCES")
+        NavigationStack {
+            List {
+                
+            }
+            .navigationTitle(Text("RESOURCES"))
+        }
     }
 }
 

@@ -9,7 +9,12 @@ import SwiftUI
 
 struct SitesView: View {
     var body: some View {
-        Text("SITES")
+        NavigationStack {
+            List {
+                
+            }
+            .navigationTitle(Text("SITES"))
+        }
     }
 }
 

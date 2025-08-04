@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
     "API_KEY" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -26,8 +23,15 @@
         }
       }
     },
-    "Hello, World!" : {
-
+    "INSTANCE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instance"
+          }
+        }
+      }
     },
     "LOGIN" : {
       "extractionState" : "manual",
@@ -40,8 +44,25 @@
         }
       }
     },
-    "Pangolinios" : {
-
+    "ORGANIZATION_ID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Organization ID"
+          }
+        }
+      }
+    },
+    "ORGANIZATION_ID_HINT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave it empty if your API Key has root access."
+          }
+        }
+      }
     },
     "RESOURCES" : {
       "extractionState" : "manual",
@@ -54,6 +75,16 @@
         }
       }
     },
+    "SAVE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        }
+      }
+    },
     "SERVER_URL" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -61,6 +92,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Server URL"
+          }
+        }
+      }
+    },
+    "SETTINGS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         }
       }

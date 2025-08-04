@@ -9,7 +9,12 @@ import SwiftUI
 
 struct DomainsView: View {
     var body: some View {
-        Text("DOMAINS")
+        NavigationStack {
+            List {
+                
+            }
+            .navigationTitle(Text("DOMAINS"))
+        }
     }
 }
 
