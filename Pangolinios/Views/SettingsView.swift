@@ -20,9 +20,11 @@ struct SettingsView: View {
                     NavigationLink(destination: InstanceView()) {
                         VStack(alignment: .leading) {
                             Text("INSTANCE")
-                            Text(self.pangolinServerUrl)
-                                .foregroundStyle(.gray)
-                                .font(.system(size: 14))
+                            if !self.pangolinServerUrl.isEmpty {
+                                Text(self.pangolinServerUrl)
+                                    .foregroundStyle(.gray)
+                                    .font(.system(size: 14))
+                            }
                         }
                     }
                 }//Section

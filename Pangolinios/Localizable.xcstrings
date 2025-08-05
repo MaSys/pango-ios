@@ -4,6 +4,12 @@
     "" : {
 
     },
+    "%@ MB In" : {
+
+    },
+    "%@ MB Out" : {
+
+    },
     "API_KEY" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -129,6 +135,9 @@
           }
         }
       }
+    },
+    "v%@" : {
+
     }
   },
   "version" : "1.0"

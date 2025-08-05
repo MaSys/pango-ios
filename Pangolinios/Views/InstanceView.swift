@@ -8,11 +8,9 @@
 import SwiftUI
 import Alamofire
 
-struct PangolinHealthCheckResponse: Decodable {
-    var message: String
-}
-
 struct InstanceView: View {
+    
+    @EnvironmentObject var appService: AppService
     
     @AppStorage("pangolin_server_url") var pangolinServerUrl: String = ""
     @AppStorage("pangolin_api_key") var pangolinApiKey: String = ""
@@ -32,6 +30,9 @@ struct InstanceView: View {
                     Text("SERVER_URL")
                     TextField("SERVER_URL", text: $serverUrl)
                         .multilineTextAlignment(.trailing)
+                        .keyboardType(.URL)
+                        .textContentType(.URL)
+                        .textInputAutocapitalization(.none)
                 }
                 
                 HStack {
@@ -84,16 +85,25 @@ struct InstanceView: View {
         self.pangolinApiKey = self.apiKey
         self.pangolinOrganizationId = self.organizationId
         
-        print(self.pangolinServerUrl)
-        AF.request("\(self.pangolinServerUrl)/v1")
-            .responseDecodable(of: PangolinHealthCheckResponse.self) { response in
+        if self.pangolinOrganizationId.isEmpty {
+            self.appService.fetchOrgs { success, orgs in
                 self.isLoading = false
-                if let res = response.value, res.message == "Healthy" {
+                if success {
                     self.dismiss()
                 } else {
                     self.connectionError = true
                 }
             }
+        } else {
+            self.appService.fetchSites { success, sites in
+                self.isLoading = false
+                if success {
+                    self.dismiss()
+                } else {
+                    self.connectionError = true
+                }
+            }
+        }
     }
 }
 

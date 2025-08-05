@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct PangoliniosApp: App {
+    
+    @StateObject var appService = AppService.shared
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(self.appService)
         }
     }
 }
