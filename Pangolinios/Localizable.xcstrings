@@ -10,6 +10,16 @@
     "%@ MB Out" : {
 
     },
+    "ALL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        }
+      }
+    },
     "API_KEY" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -21,6 +31,26 @@
         }
       }
     },
+    "AUTHENTICATION" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authentication"
+          }
+        }
+      }
+    },
+    "DISABLED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disabled"
+          }
+        }
+      }
+    },
     "DOMAINS" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -28,6 +58,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Domains"
+          }
+        }
+      }
+    },
+    "ENABLED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enabled"
           }
         }
       }
@@ -63,6 +103,26 @@
         }
       }
     },
+    "NAME" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "NOT_PROTECTED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Protected"
+          }
+        }
+      }
+    },
     "ORGANIZATION_ID" : {
       "localizations" : {
         "en" : {
@@ -79,6 +139,106 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leave it empty if your API Key has root access."
+          }
+        }
+      }
+    },
+    "PASSWORD" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password"
+          }
+        }
+      }
+    },
+    "PASSWORD_PROTECTION_DISABLED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password Protection Disabled"
+          }
+        }
+      }
+    },
+    "PASSWORD_PROTECTION_ENABLED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password Protection Enabled"
+          }
+        }
+      }
+    },
+    "PIN_CODE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PIN Code"
+          }
+        }
+      }
+    },
+    "PIN_CODE_PROTECTION_DISABLED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PIN Code Protection Disabled"
+          }
+        }
+      }
+    },
+    "PIN_CODE_PROTECTION_ENABLED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PIN Code Protection Enabled"
+          }
+        }
+      }
+    },
+    "PROTECTED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protected"
+          }
+        }
+      }
+    },
+    "PROTECTION" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protection"
+          }
+        }
+      }
+    },
+    "RESOURCE_PASSWORD_HINT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave it empty to remove password!"
+          }
+        }
+      }
+    },
+    "RESOURCE_PIN_CODE_HINT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave it empty to remove PIN Code!"
           }
         }
       }
@@ -125,6 +285,16 @@
         }
       }
     },
+    "SITE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Site"
+          }
+        }
+      }
+    },
     "SITES" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -136,8 +306,31 @@
         }
       }
     },
+    "STATUS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status"
+          }
+        }
+      }
+    },
+    "URL" : {
+
+    },
     "v%@" : {
 
+    },
+    "VISIBILITY" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visibility"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

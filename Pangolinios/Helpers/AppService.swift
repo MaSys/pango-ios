@@ -40,13 +40,8 @@ class AppService: ObservableObject {
     }
     
     public func fetchResources() {
-        Request.fetchOrgs { success, orgs in
-            if success {
-                self.organizations = orgs
-                if let org = orgs.first {
-                    self.pangolinOrganizationId = org.orgId
-                }
-            }
+        ResourcesRequest.fetch { success, resources in
+            self.resources = resources
         }
     }
 }

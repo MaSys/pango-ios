@@ -33,9 +33,13 @@ class Request {
         let url = URL(string: "\(baseUrl)/v1/orgs")!
         let token = "Bearer \(apiKey)"
         AF.request(url, headers: ["Authorization": token])
-            .responseDecodable(of: OrganizationsResponse.self) { response in
+            .responseDecodable(of: MainResponse<OrganizationsResponse>.self) { response in
                 if let val = response.value {
-                    completionHandler(true, val.data.orgs)
+                    if val.success {
+                        completionHandler(false, val.data!.orgs)
+                    } else {
+                        completionHandler(false, [])
+                    }
                 } else {
                     completionHandler(false, [])
                 }
@@ -57,14 +61,19 @@ class Request {
         let url = URL(string: "\(baseUrl)/v1/org/\(org)/sites")!
         let token = "Bearer \(apiKey)"
         AF.request(url, headers: ["Authorization": token])
-            .responseDecodable(of: SitesResponse.self) { response in
+            .responseDecodable(of: MainResponse<SitesResponse>.self) { response in
                 if let val = response.value {
-                    completionHandler(true, val.data.sites)
+                    if val.success {
+                        completionHandler(true, val.data!.sites)
+                    } else {
+                        completionHandler(false, [])
+                    }
                 } else {
                     completionHandler(false, [])
                 }
             }
     }
+    
 }
 
 extension DataRequest {
