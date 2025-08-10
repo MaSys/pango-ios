@@ -13,13 +13,20 @@ struct ResourceView: View {
     
     var resource: Resource
     
+    @State private var ssl: Bool = false
+    
     var body: some View {
         List {
             detailsGroup
             
+            domain
+            
             authenticationSection
         }
         .navigationTitle(self.resource.name)
+        .onAppear {
+            self.ssl = self.resource.ssl
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 HStack {
@@ -53,21 +60,17 @@ struct ResourceView: View {
             self.appService.fetchResources()
         }
     }
+    
+    private func toggleSSL() {
+        ResourcesRequest.toggleSSL(id: self.resource.resourceId, ssl: self.ssl) { success, response in
+            if let res = response, res.success {
+                self.appService.fetchResources()
+            }
+        }
+    }
 }
 
 extension ResourceView {
-    var title: some View {
-        HStack {
-//            Text(resource.name)
-//                .font(.title)
-//                .fontWeight(.bold)
-//                .foregroundStyle(.primary)
-            Spacer()
-
-        }
-        .padding(.bottom, 25)
-    }//title
-    
     var detailsGroup: some View {
         Section {
             VStack(alignment: .leading) {
@@ -107,6 +110,23 @@ extension ResourceView {
         }//Section
         .textCase(nil)
     }//detailsGroup
+    
+    var domain: some View {
+        Section {
+            Toggle(isOn: $ssl) {
+                Text("ENABLE_SSL_HTTPS")
+            }
+            .onChange(of: ssl) { oldValue, newValue in
+                self.toggleSSL()
+            }
+            NavigationLink {
+                ResourceDomainView(resource: self.resource)
+            } label: {
+                Text("DOMAIN")
+            }
+
+        }
+    }//domain
     
     var authenticationSection: some View {
         Section {

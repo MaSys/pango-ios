@@ -31,6 +31,10 @@ struct ResourcesResponse: Decodable {
     var resources: [Resource]
 }
 
+struct DomainsResponse: Decodable {
+    var domains: [Domain]
+}
+
 struct EmptyResponse: Decodable {
 }
 

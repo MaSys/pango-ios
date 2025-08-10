@@ -104,7 +104,6 @@ class ResourcesRequest {
         let token = "Bearer \(apiKey)"
         let encoder = JSONEncoding.default
         AF.request(url, method: .post, parameters: ["password": password.isEmpty ? nil : password], encoding: encoder, headers: ["Authorization": token])
-            .printError()
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value, val.success {
                     completionHandler(val.success, val)
@@ -130,7 +129,57 @@ class ResourcesRequest {
         let token = "Bearer \(apiKey)"
         let encoder = JSONEncoding.default
         AF.request(url, method: .post, parameters: ["pincode": pinCode.isEmpty ? nil : pinCode], encoding: encoder, headers: ["Authorization": token])
-            .printError()
+            .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
+                if let val = response.value, val.success {
+                    completionHandler(val.success, val)
+                }
+                completionHandler(false, nil)
+            }
+    }
+    
+    public static func toggleSSL(
+        id: Int,
+        ssl: Bool,
+        completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
+    ) {
+        let userDefaults = UserDefaults.standard
+        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
+              let apiKey = userDefaults.string(forKey: "pangolin_api_key") else
+        {
+            completionHandler(false, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseUrl)/v1/resource/\(id)")!
+        let token = "Bearer \(apiKey)"
+        let encoder = JSONEncoding.default
+        AF.request(url, method: .post, parameters: ["ssl": ssl], encoding: encoder, headers: ["Authorization": token])
+            .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
+                if let val = response.value, val.success {
+                    completionHandler(val.success, val)
+                }
+                completionHandler(false, nil)
+            }
+    }
+    
+    public static func updateSubdomain(
+        id: Int,
+        domainId: String,
+        subdomain: String,
+        completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
+    ) {
+        let userDefaults = UserDefaults.standard
+        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
+              let apiKey = userDefaults.string(forKey: "pangolin_api_key") else
+        {
+            completionHandler(false, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseUrl)/v1/resource/\(id)")!
+        let token = "Bearer \(apiKey)"
+        let encoder = JSONEncoding.default
+        AF.request(url, method: .post, parameters: ["domainId": domainId, "subdomain": subdomain], encoding: encoder, headers: ["Authorization": token])
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value, val.success {
                     completionHandler(val.success, val)

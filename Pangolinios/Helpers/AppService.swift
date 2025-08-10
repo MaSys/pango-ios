@@ -44,4 +44,10 @@ class AppService: ObservableObject {
             self.resources = resources
         }
     }
+    
+    public func fetchDomains() {
+        Request.fetchDomains { success, domains in
+            self.domains = domains
+        }
+    }
 }

@@ -51,6 +51,16 @@
         }
       }
     },
+    "DOMAIN" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain"
+          }
+        }
+      }
+    },
     "DOMAINS" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -58,6 +68,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Domains"
+          }
+        }
+      }
+    },
+    "ENABLE_SSL_HTTPS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable SSL (https)"
           }
         }
       }
@@ -312,6 +332,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Status"
+          }
+        }
+      }
+    },
+    "SUBDOMAIN" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subdomain"
           }
         }
       }
