@@ -124,7 +124,11 @@ extension ResourceView {
             } label: {
                 Text("DOMAIN")
             }
-
+            NavigationLink {
+                ResourceTargetsView(resource: self.resource)
+            } label: {
+                Text("TARGETS")
+            }
         }
     }//domain
     

@@ -35,6 +35,10 @@ struct DomainsResponse: Decodable {
     var domains: [Domain]
 }
 
+struct TargetsResponse: Decodable {
+    var targets: [Target]
+}
+
 struct EmptyResponse: Decodable {
 }
 
@@ -112,6 +116,14 @@ struct Domain: Decodable {
     var failed: Bool
     var tries: Int
     var configManaged: Bool
+}
+
+struct Target: Decodable {
+    var targetId: Int
+    var method: String
+    var ip: String
+    var port: Int
+    var enabled: Bool
 }
 
 extension Site {

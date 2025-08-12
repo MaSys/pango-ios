@@ -57,8 +57,9 @@ class ResourcesRequest {
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value, val.success {
                     completionHandler(val.success, val)
+                } else {
+                    completionHandler(false, nil)
                 }
-                completionHandler(false, nil)
             }
     }
     
@@ -82,8 +83,9 @@ class ResourcesRequest {
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value, val.success {
                     completionHandler(val.success, val)
+                } else {
+                    completionHandler(false, nil)
                 }
-                completionHandler(false, nil)
             }
     }
     
@@ -107,8 +109,9 @@ class ResourcesRequest {
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value, val.success {
                     completionHandler(val.success, val)
+                } else {
+                    completionHandler(false, nil)
                 }
-                completionHandler(false, nil)
             }
     }
     
@@ -132,8 +135,9 @@ class ResourcesRequest {
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value, val.success {
                     completionHandler(val.success, val)
+                } else {
+                    completionHandler(false, nil)
                 }
-                completionHandler(false, nil)
             }
     }
     
@@ -157,8 +161,9 @@ class ResourcesRequest {
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value, val.success {
                     completionHandler(val.success, val)
+                } else {
+                    completionHandler(false, nil)
                 }
-                completionHandler(false, nil)
             }
     }
     
@@ -183,8 +188,9 @@ class ResourcesRequest {
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value, val.success {
                     completionHandler(val.success, val)
+                } else {
+                    completionHandler(false, nil)
                 }
-                completionHandler(false, nil)
             }
     }
 }

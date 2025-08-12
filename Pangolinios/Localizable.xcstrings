@@ -10,6 +10,16 @@
     "%@ MB Out" : {
 
     },
+    "%@://%@:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@://%2$@:%3$@"
+          }
+        }
+      }
+    },
     "ALL" : {
       "localizations" : {
         "en" : {
@@ -40,6 +50,9 @@
           }
         }
       }
+    },
+    "DELETE" : {
+
     },
     "DISABLED" : {
       "localizations" : {
@@ -102,12 +115,31 @@
         }
       }
     },
+    "h2c" : {
+
+    },
+    "http" : {
+
+    },
+    "https" : {
+
+    },
     "INSTANCE" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Instance"
+          }
+        }
+      }
+    },
+    "IP_HOSTNAME" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IP / Hostname"
           }
         }
       }
@@ -122,6 +154,9 @@
           }
         }
       }
+    },
+    "METHOD" : {
+
     },
     "NAME" : {
       "localizations" : {
@@ -219,6 +254,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "PIN Code Protection Enabled"
+          }
+        }
+      }
+    },
+    "PORT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Port"
           }
         }
       }
@@ -346,11 +391,41 @@
         }
       }
     },
+    "TARGETS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Targets"
+          }
+        }
+      }
+    },
+    "UNVERIFIED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unverified"
+          }
+        }
+      }
+    },
     "URL" : {
 
     },
     "v%@" : {
 
+    },
+    "VERIFIED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verified"
+          }
+        }
+      }
     },
     "VISIBILITY" : {
       "localizations" : {
