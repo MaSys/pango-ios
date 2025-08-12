@@ -51,8 +51,25 @@
         }
       }
     },
+    "DEFAULT_TAB" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default Tab"
+          }
+        }
+      }
+    },
     "DELETE" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
     },
     "DISABLED" : {
       "localizations" : {
@@ -156,7 +173,14 @@
       }
     },
     "METHOD" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Method"
+          }
+        }
+      }
     },
     "NAME" : {
       "localizations" : {

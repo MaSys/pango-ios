@@ -12,6 +12,7 @@ struct SettingsView: View {
     @AppStorage("pangolin_server_url") var pangolinServerUrl: String = ""
     @AppStorage("pangolin_api_key") var pangolinApiKey: String = ""
     @AppStorage("pangolin_organization_id") var pangolinOrganizationId: String = ""
+    @AppStorage("selectedTab") private var selectedTab: DefaultTab = .sites
     
     var body: some View {
         NavigationStack {
@@ -28,6 +29,15 @@ struct SettingsView: View {
                         }
                     }
                 }//Section
+                
+                Section {
+                    Picker("DEFAULT_TAB", selection: $selectedTab) {
+                        ForEach(DefaultTab.allCases, id: \.self) { tab in
+                            Text(LocalizedStringResource(stringLiteral: tab.rawValue.capitalized))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
             }//List
             .navigationTitle(Text("SETTINGS"))
         }//NavStack
