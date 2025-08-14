@@ -25,7 +25,11 @@ struct ResourceTargetsView: View {
                     ResourceTargetView(resource: self.resource, target: target)
                 } label: {
                     HStack {
-                        Text("\(target.method)://\(target.ip):\(String(target.port))")
+                        if target.method == nil {
+                            Text("\(target.ip):\(String(target.port))")
+                        } else {
+                            Text("\(target.method!)://\(target.ip):\(String(target.port))")
+                        }
                         Spacer()
                     }
                 }

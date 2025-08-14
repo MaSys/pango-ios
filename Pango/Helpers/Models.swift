@@ -76,29 +76,29 @@ struct Resource: Decodable {
         case passwordId
         case sso
         case pincodeId
-    //    case whitelist
-    //    case http
+        case whitelist
+        case http
         case protocolString = "protocol"
-    //    case proxyPort
+        case proxyPort
         case enabled
-    //    case domainId
+        case domainId
     }
     
     var resourceId: Int
     var name: String
     var ssl: Bool
-    var fullDomain: String
+    var fullDomain: String?
     var siteName: String?
     var siteId: String
     var passwordId: Int?
     var sso: Bool
     var pincodeId: Int?
-//    var whitelist: Bool
-//    var http: Bool
+    var whitelist: Bool
+    var http: Bool
     var protocolString: String
-//    var proxyPort: Int?
+    var proxyPort: Int?
     var enabled: Bool
-//    var domainId: String
+    var domainId: String?
     
     var protected: Bool {
         if passwordId != nil { return true }
@@ -120,7 +120,7 @@ struct Domain: Decodable {
 
 struct Target: Decodable {
     var targetId: Int
-    var method: String
+    var method: String?
     var ip: String
     var port: Int
     var enabled: Bool
@@ -158,6 +158,8 @@ extension Resource {
             passwordId: nil,
             sso: false,
             pincodeId: nil,
+            whitelist: false,
+            http: true,
             protocolString: "tcp",
             enabled: true
         )

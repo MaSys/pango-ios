@@ -37,6 +37,59 @@ class ResourcesRequest {
             }
     }
     
+    public static func create(
+        name: String,
+        siteId: Int,
+        http: Bool,
+        subdomain: String?,
+        domainId: String?,
+        protocolString: String,
+        proxyPort: Int?,
+        completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
+    ) {
+        let userDefaults = UserDefaults.standard
+        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
+              let apiKey = userDefaults.string(forKey: "pangolin_api_key"),
+              let org = userDefaults.string(forKey: "pangolin_organization_id") else
+        {
+            completionHandler(false, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseUrl)/v1/org/\(org)/site/\(siteId)/resource")!
+        let token = "Bearer \(apiKey)"
+        let encoder = JSONEncoding.default
+        var params: [String: Any] = [:]
+        if http {
+            params = [
+                "name": name,
+                "siteId": siteId,
+                "http": http,
+                "protocol": "tcp",
+                "subdomain": subdomain!,
+                "domainId": domainId!
+            ]
+        } else {
+            params = [
+                "name": name,
+                "siteId": siteId,
+                "http": http,
+                "protocol": protocolString,
+                "proxyPort": proxyPort!
+            ]
+        }
+        
+        AF.request(url, method: .put, parameters: params, encoding: encoder, headers: ["Authorization": token])
+            .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
+                print(response)
+                if let val = response.value {
+                    completionHandler(val.success, val)
+                } else {
+                    completionHandler(false, nil)
+                }
+            }
+    }
+    
     public static func toggleStatus(
         id: Int,
         enabled: Bool,

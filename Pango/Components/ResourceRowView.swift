@@ -27,15 +27,20 @@ struct ResourceRowView: View {
                     StatusIconView(online: resource.enabled)
                 }//HStack
                 HStack {
-                    Text(fullURL(from: resource.fullDomain, ssl: resource.ssl))
-                        .font(.system(size: 14))
-                        .foregroundStyle(.gray)
+                    if self.resource.http {
+                        Text(fullURL(from: resource.fullDomain!, ssl: resource.ssl))
+                            .font(.system(size: 14))
+                            .foregroundStyle(.gray)
+                    } else {
+                        Text(String(self.resource.proxyPort ?? 0))
+                            .font(.system(size: 14))
+                            .foregroundStyle(.gray)
+                    }
                     Spacer()
                     Text(resource.siteName ?? "")
                         .font(.system(size: 14))
                         .foregroundStyle(.gray)
                 }//HStack
-                .padding(.leading, 30)
             }//VStack
         }
     }

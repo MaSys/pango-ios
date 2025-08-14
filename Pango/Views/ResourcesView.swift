@@ -77,11 +77,18 @@ struct ResourcesView: View {
                 self.fetch()
             }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .topBarLeading) {
                     HStack {
                         filterMenu
                         
                         sortMenu
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        ResourcesCreateView()
+                    } label: {
+                        Image(systemName: "plus")
                     }
                 }
             }

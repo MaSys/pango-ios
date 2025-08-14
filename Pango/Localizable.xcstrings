@@ -20,6 +20,16 @@
         }
       }
     },
+    "%@:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@:%2$@"
+          }
+        }
+      }
+    },
     "ALL" : {
       "localizations" : {
         "en" : {
@@ -140,6 +150,16 @@
     },
     "https" : {
 
+    },
+    "HTTPS_RESOURCE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTPS Resource"
+          }
+        }
+      }
     },
     "INSTANCE" : {
       "localizations" : {
@@ -302,6 +322,16 @@
         }
       }
     },
+    "PORT_NUMBER" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Port Number"
+          }
+        }
+      }
+    },
     "PROTECTED" : {
       "localizations" : {
         "en" : {
@@ -322,6 +352,26 @@
         }
       }
     },
+    "PROTOCOL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protocol"
+          }
+        }
+      }
+    },
+    "RAW_TCP_UDP_RESOURCE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raw TCP/UDP Resource"
+          }
+        }
+      }
+    },
     "RESOURCE_PASSWORD_HINT" : {
       "localizations" : {
         "en" : {
@@ -338,6 +388,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leave it empty to remove PIN Code!"
+          }
+        }
+      }
+    },
+    "RESOURCE_TYPE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resource Type"
           }
         }
       }
@@ -434,6 +494,12 @@
           }
         }
       }
+    },
+    "TCP" : {
+
+    },
+    "UDP" : {
+
     },
     "UNVERIFIED" : {
       "localizations" : {

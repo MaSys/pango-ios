@@ -70,7 +70,7 @@ class TargetsRequest {
     
     public static func update(
         id: Int,
-        method: String,
+        method: String?,
         ip: String,
         port: String,
         enabled: Bool,
@@ -87,12 +87,14 @@ class TargetsRequest {
         let url = URL(string: "\(baseUrl)/v1/target/\(id)")!
         let token = "Bearer \(apiKey)"
         let encoder = JSONEncoding.default
-        let params: [String: Any] = [
-            "method": method,
+        var params: [String: Any] = [
             "ip": ip,
             "port": Int(port)!,
             "enabled": enabled
         ]
+        if method != nil {
+            params["method"] = method!
+        }
         AF.request(url, method: .post, parameters: params, encoding: encoder, headers: ["Authorization": token])
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value {

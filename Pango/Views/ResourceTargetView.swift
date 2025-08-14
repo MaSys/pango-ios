@@ -22,14 +22,16 @@ struct ResourceTargetView: View {
     
     var body: some View {
         Form {
-            Picker("METHOD", selection: $method) {
-                Text("http")
-                    .tag("http")
-                Text("https")
-                    .tag("https")
-                Text("h2c")
-                    .tag("h2c")
-            }.pickerStyle(.segmented)
+            if self.resource.http {
+                Picker("METHOD", selection: $method) {
+                    Text("http")
+                        .tag("http")
+                    Text("https")
+                        .tag("https")
+                    Text("h2c")
+                        .tag("h2c")
+                }.pickerStyle(.segmented)
+            }
             
             HStack {
                 TextField("IP_HOSTNAME", text: $ipHostname)
@@ -47,7 +49,7 @@ struct ResourceTargetView: View {
         }
         .onAppear {
             if let target = self.target {
-                self.method = target.method
+                self.method = target.method ?? ""
                 self.ipHostname = target.ip
                 self.port = String(target.port)
                 self.enabled = target.enabled
@@ -88,7 +90,7 @@ struct ResourceTargetView: View {
     private func update() {
         TargetsRequest.update(
             id: self.target!.targetId,
-            method: self.method,
+            method: self.resource.http ? self.method : nil,
             ip: self.ipHostname,
             port: self.port,
             enabled: self.enabled) { success, response in

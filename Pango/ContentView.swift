@@ -54,6 +54,8 @@ struct ContentView: View {
         .onAppear {
             self.selectedTab = self.defaultTab.rawValue
             self.appService.fetchOrgs { _, _ in }
+            self.appService.fetchDomains()
+            self.appService.fetchSites { _, _ in }
         }
     }
 }

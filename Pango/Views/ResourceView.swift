@@ -21,7 +21,9 @@ struct ResourceView: View {
             
             domain
             
-            authenticationSection
+            if self.resource.http {
+                authenticationSection
+            }
         }
         .navigationTitle(self.resource.name)
         .onAppear {
@@ -75,21 +77,31 @@ extension ResourceView {
         Section {
             VStack(alignment: .leading) {
                 HStack {
-                    VStack(alignment: .leading) {
-                        Text("AUTHENTICATION")
-                            .font(.system(size: 14))
-                            .fontWeight(.bold)
-                        HStack {
-                            ShieldView(resource: resource, showText: true)
+                    if self.resource.http {
+                        VStack(alignment: .leading) {
+                            Text("AUTHENTICATION")
+                                .font(.system(size: 14))
+                                .fontWeight(.bold)
+                            HStack {
+                                ShieldView(resource: resource, showText: true)
+                            }
                         }
-                    }
-                    Spacer()
-                    VStack(alignment: .leading) {
-                        Text("SITE")
-                            .font(.system(size: 14))
-                            .fontWeight(.bold)
-                        Text(self.resource.siteName ?? "")
-                            .font(.system(size: 14))
+                        Spacer()
+                        VStack(alignment: .leading) {
+                            Text("SITE")
+                                .font(.system(size: 14))
+                                .fontWeight(.bold)
+                            Text(self.resource.siteName ?? "")
+                                .font(.system(size: 14))
+                        }
+                    } else {
+                        VStack(alignment: .leading) {
+                            Text("PORT")
+                                .font(.system(size: 14))
+                                .fontWeight(.bold)
+                            Text(String(self.resource.proxyPort ?? 0))
+                                .font(.system(size: 14))
+                        }
                     }
                     Spacer()
                     VStack(alignment: .leading) {
@@ -101,28 +113,34 @@ extension ResourceView {
                             .foregroundStyle(self.resource.enabled ? .green : .red)
                     }
                 }
-                .padding(.bottom)
                 
-                Text("URL")
-                    .fontWeight(.bold)
-                Text(fullURL(from: resource.fullDomain, ssl: resource.ssl))
+                if self.resource.http {
+                    Text("URL")
+                        .fontWeight(.bold)
+                        .font(.system(size: 14))
+                        .padding(.top)
+                    Text(fullURL(from: resource.fullDomain ?? "", ssl: resource.ssl))
+                }
             }
+            .padding(.vertical, 2)
         }//Section
         .textCase(nil)
     }//detailsGroup
     
     var domain: some View {
         Section {
-            Toggle(isOn: $ssl) {
-                Text("ENABLE_SSL_HTTPS")
-            }
-            .onChange(of: ssl) { oldValue, newValue in
-                self.toggleSSL()
-            }
-            NavigationLink {
-                ResourceDomainView(resource: self.resource)
-            } label: {
-                Text("DOMAIN")
+            if self.resource.http {
+                Toggle(isOn: $ssl) {
+                    Text("ENABLE_SSL_HTTPS")
+                }
+                .onChange(of: ssl) { oldValue, newValue in
+                    self.toggleSSL()
+                }
+                NavigationLink {
+                    ResourceDomainView(resource: self.resource)
+                } label: {
+                    Text("DOMAIN")
+                }
             }
             NavigationLink {
                 ResourceTargetsView(resource: self.resource)
