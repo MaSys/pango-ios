@@ -59,7 +59,6 @@ struct ResourcesCreateView: View {
                 self.proxyPort = ""
             } else {
                 self.subdomain = ""
-                self.selectedDomain = ""
             }
         })
         .onAppear {
@@ -116,6 +115,8 @@ extension ResourcesCreateView {
     var httpsResourceType: some View {
         Group {
             TextField("SUBDOMAIN", text: $subdomain)
+                .autocapitalization(.none)
+                .autocorrectionDisabled(true)
             List {
                 ForEach(self.appService.domains, id: \.domainId) { domain in
                     Button {

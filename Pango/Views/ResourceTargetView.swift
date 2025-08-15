@@ -36,11 +36,13 @@ struct ResourceTargetView: View {
             HStack {
                 TextField("IP_HOSTNAME", text: $ipHostname)
                     .keyboardType(.numbersAndPunctuation)
+                    .autocapitalization(.none)
             }
             
             HStack {
                 TextField("PORT", text: $port)
                     .keyboardType(.numberPad)
+                    .autocapitalization(.none)
             }
             
             HStack {
