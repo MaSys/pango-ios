@@ -1,7 +1,18 @@
-# Pango: For Pangolin
-
-
+<div align="center">
+    <h2>
+      <picture>
+          <img alt="Pangolin Logo" src="https://github.com/MaSys/pango-ios/blob/main/screenshots/logo.png?raw=true" width="200">
+        </picture>
+    </h2>
+</div>
+<h3 align="center">Pango: For Pangolin</h3>
+<div align="center">
 Manage Pangolin from your iPhone.
+</div>
+
+<br/><br/>
+
+
 
 | ![](https://github.com/MaSys/pango-ios/blob/main/screenshots/sites.png?raw=true) | ![](https://github.com/MaSys/pango-ios/blob/main/screenshots/resources.png?raw=true) | ![](https://github.com/MaSys/pango-ios/blob/main/screenshots/domains.png?raw=true) | ![](https://github.com/MaSys/pango-ios/blob/main/screenshots/settings.png?raw=true) |
 |:--:|:--:|:--:|:--:|
@@ -30,3 +41,4 @@ To request a feature or report a bug, please open an [issue](https://github.com/
 
 ## Support 🤝
 If you like Pango, please consider supporting the development by contributing to the repository. Thank you!
+
