@@ -46,6 +46,7 @@ struct SitesView: View {
 #Preview {
     SitesView()
 }
+
 extension Double {
     /// Rounds the double to decimal places value
     func rounded(toPlaces places:Int) -> Double {

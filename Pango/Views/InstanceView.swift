@@ -33,6 +33,8 @@ struct InstanceView: View {
                         .keyboardType(.URL)
                         .textContentType(.URL)
                         .textInputAutocapitalization(.none)
+                        .autocapitalization(.none)
+                        .autocorrectionDisabled()
                 }
                 
                 HStack {
@@ -53,6 +55,8 @@ struct InstanceView: View {
                     Text("ORGANIZATION_ID")
                     TextField("ORGANIZATION_ID", text: $organizationId)
                         .multilineTextAlignment(.trailing)
+                        .autocapitalization(.none)
+                        .autocorrectionDisabled()
                 }
             }
         }
