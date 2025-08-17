@@ -23,7 +23,7 @@ struct NewtView: View {
             .padding(.horizontal, 7)
             .padding(.vertical, 3)
         }
-        .background(Color.init(uiColor: UIColor(white: 0.3, alpha: 0.5)))
+        .background(Color.init(uiColor: UIColor(white: 0.8, alpha: 0.3)))
         .cornerRadius(15)
     }
 }

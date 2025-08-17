@@ -34,7 +34,7 @@ struct ResourceDomainView: View {
                             } label: {
                                 HStack {
                                     Text(domain.baseDomain)
-                                        .foregroundStyle(.white)
+                                        .foregroundStyle(.primary)
                                     Spacer()
                                     if self.selectedDomain == domain.domainId {
                                         Image(systemName: "checkmark")
