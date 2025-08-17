@@ -12,7 +12,10 @@ class Request {
     public static func healthCheck(
         completionHandler: @escaping (_ success: Bool) -> Void
     ) {
-        let baseUrl = UserDefaults.standard.string(forKey: "pangolin_server_url")!
+        guard let baseUrl = UserDefaults.standard.string(forKey: "pangolin_server_url") else {
+            completionHandler(false)
+            return
+        }
         let url = URL(string: "\(baseUrl)/v1")!
         AF.request(url)
             .responseDecodable(of: HealthCheckResponse.self) { response in
@@ -28,9 +31,12 @@ class Request {
         completionHandler: @escaping (_ success: Bool, _ orgs: [Organization]) -> Void
     ) {
         let userDefaults = UserDefaults.standard
-        let baseUrl = userDefaults.string(forKey: "pangolin_server_url")!
-        let apiKey = userDefaults.string(forKey: "pangolin_api_key")!
-        let url = URL(string: "\(baseUrl)/v1/orgs")!
+        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
+              let apiKey = userDefaults.string(forKey: "pangolin_api_key"),
+              let url = URL(string: "\(baseUrl)/v1/orgs") else {
+            completionHandler(false, [])
+            return
+        }
         let token = "Bearer \(apiKey)"
         AF.request(url, headers: ["Authorization": token])
             .responseDecodable(of: MainResponse<OrganizationsResponse>.self) { response in
