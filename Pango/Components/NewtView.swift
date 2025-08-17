@@ -16,9 +16,11 @@ struct NewtView: View {
             HStack {
                 Text(site.type.capitalized)
                     .font(.system(size: 14))
-                Text("v\(site.newtVersion)")
-                    .foregroundStyle(.gray)
-                    .font(.system(size: 14))
+                if let version = site.newtVersion {
+                    Text("v\(version)")
+                        .foregroundStyle(.gray)
+                        .font(.system(size: 14))
+                }
             }
             .padding(.horizontal, 7)
             .padding(.vertical, 3)

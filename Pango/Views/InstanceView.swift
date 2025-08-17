@@ -22,13 +22,14 @@ struct InstanceView: View {
     @State private var organizationId = ""
     @State private var connectionError: Bool = false
     @State private var isLoading: Bool = false
-    
+        
     var body: some View {
         Form {
-            Section {
+            Section(footer: Text("SERVER_HINT")) {
                 HStack {
                     Text("SERVER_URL")
-                    TextField("SERVER_URL", text: $serverUrl)
+                    TextField(String("https://api.pangolin.mydomain.com"), text: $serverUrl)
+                        .font(.system(size: 14))
                         .multilineTextAlignment(.trailing)
                         .keyboardType(.URL)
                         .textContentType(.URL)
@@ -39,7 +40,8 @@ struct InstanceView: View {
                 
                 HStack {
                     Text("API_KEY")
-                    SecureField("API_KEY", text: $apiKey)
+                    SecureField("abc123", text: $apiKey)
+                        .font(.system(size: 14))
                         .multilineTextAlignment(.trailing)
                 }
                 
@@ -54,6 +56,7 @@ struct InstanceView: View {
                 HStack {
                     Text("ORGANIZATION_ID")
                     TextField("ORGANIZATION_ID", text: $organizationId)
+                        .font(.system(size: 14))
                         .multilineTextAlignment(.trailing)
                         .autocapitalization(.none)
                         .autocorrectionDisabled()

@@ -53,15 +53,15 @@ struct Site: Decodable {
     var siteId: Int
     var niceId: String
     var name: String
-    var pubKey: String
+    var pubKey: String?
     var subnet: String
     var megabytesIn: Float
     var megabytesOut: Float
     var orgName: String
     var type: String
     var online: Bool
-    var address: String
-    var newtVersion: String
+    var address: String?
+    var newtVersion: String?
     var newtUpdateAvailable: Bool
 }
 

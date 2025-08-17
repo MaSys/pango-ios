@@ -30,6 +30,9 @@
         }
       }
     },
+    "abc123" : {
+
+    },
     "ALL" : {
       "localizations" : {
         "en" : {
@@ -419,6 +422,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Save"
+          }
+        }
+      }
+    },
+    "SERVER_HINT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make sure you have enabled Integration API in your Pangolin instance, this will generate a different URL than the main one. For more info, [Click here](https://docs.digpangolin.com/self-host/advanced/integration-api)."
           }
         }
       }
