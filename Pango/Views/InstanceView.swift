@@ -85,6 +85,7 @@ struct InstanceView: View {
         if self.serverUrl.isEmpty || self.apiKey.isEmpty {
             return
         }
+        self.serverUrl = baseDomain(from: self.serverUrl)
         
         self.isLoading = true
         self.connectionError = false

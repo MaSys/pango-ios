@@ -13,14 +13,27 @@ struct SiteUsageView: View {
     
     var body: some View {
         Group {
-            Text("\(String(format: "%.2f", site.megabytesIn)) MB In")
-                .font(.system(size: 14))
-            Text("\(String(format: "%.2f", site.megabytesOut)) MB Out")
-                .font(.system(size: 14))
+            HStack {
+                Text(humanMegabyte(from: site.megabytesIn))
+                    .font(.system(size: 14))
+                Image(systemName: "arrowshape.up.fill")
+                    .resizable()
+                    .frame(width: 11, height: 11)
+                    .foregroundStyle(.red)
+            }
+            
+            HStack {
+                Text(humanMegabyte(from: site.megabytesOut))
+                    .font(.system(size: 14))
+                Image(systemName: "arrowshape.down.fill")
+                    .resizable()
+                    .frame(width: 11, height: 11)
+                    .foregroundStyle(.green)
+            }
         }
     }
 }
 
 #Preview {
-//    SiteUsageView()
+    SiteUsageView(site: Site.fake())
 }

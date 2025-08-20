@@ -81,7 +81,6 @@ class ResourcesRequest {
         
         AF.request(url, method: .put, parameters: params, encoding: encoder, headers: ["Authorization": token])
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
-                print(response)
                 if let val = response.value {
                     completionHandler(val.success, val)
                 } else {
