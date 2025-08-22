@@ -19,7 +19,7 @@ struct ResourceRowView: View {
                 HStack {
                     ShieldView(resource: resource)
                     Text(resource.name)
-                        .fontWeight(.bold)
+                        .fontWeight(.semibold)
                     Spacer()
                     Text(resource.protocolString.uppercased())
                         .font(.system(size: 14))

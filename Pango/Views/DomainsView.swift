@@ -18,7 +18,7 @@ struct DomainsView: View {
                     VStack {
                         HStack {
                             Text(domain.baseDomain)
-                                .fontWeight(.bold)
+                                .fontWeight(.semibold)
                             Spacer()
                         }
                         

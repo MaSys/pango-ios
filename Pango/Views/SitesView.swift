@@ -19,6 +19,7 @@ struct SitesView: View {
                     VStack {
                         HStack {
                             Text(site.name)
+                                .fontWeight(.semibold)
                             Spacer()
                             StatusIconView(online: site.online)
                         }//HStack

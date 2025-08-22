@@ -75,13 +75,13 @@ struct ResourceView: View {
 extension ResourceView {
     var detailsGroup: some View {
         Section {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     if self.resource.http {
                         VStack(alignment: .leading) {
                             Text("AUTHENTICATION")
                                 .font(.system(size: 14))
-                                .fontWeight(.bold)
+                                .fontWeight(.semibold)
                             HStack {
                                 ShieldView(resource: resource, showText: true)
                             }
@@ -90,7 +90,7 @@ extension ResourceView {
                         VStack(alignment: .leading) {
                             Text("SITE")
                                 .font(.system(size: 14))
-                                .fontWeight(.bold)
+                                .fontWeight(.semibold)
                             Text(self.resource.siteName ?? "")
                                 .font(.system(size: 14))
                         }
@@ -98,7 +98,7 @@ extension ResourceView {
                         VStack(alignment: .leading) {
                             Text("PORT")
                                 .font(.system(size: 14))
-                                .fontWeight(.bold)
+                                .fontWeight(.semibold)
                             Text(String(self.resource.proxyPort ?? 0))
                                 .font(.system(size: 14))
                         }
@@ -107,24 +107,38 @@ extension ResourceView {
                     VStack(alignment: .leading) {
                         Text("VISIBILITY")
                             .font(.system(size: 14))
-                            .fontWeight(.bold)
+                            .fontWeight(.semibold)
                         Text(self.resource.enabled ? "ENABLED" : "DISABLED")
                             .font(.system(size: 14))
                             .foregroundStyle(self.resource.enabled ? .green : .red)
                     }
                 }
-                
+
                 if self.resource.http {
-                    Text("URL")
-                        .fontWeight(.bold)
-                        .font(.system(size: 14))
-                        .padding(.top)
-                    Text(fullURL(from: resource.fullDomain ?? "", ssl: resource.ssl))
+                    HStack {
+                        Text("URL")
+                            .fontWeight(.semibold)
+                            .font(.system(size: 14))
+                        Spacer()
+                        Link(
+                            destination: URL(
+                                string: fullURL(from: resource.fullDomain ?? "", ssl: resource.ssl)
+                            )!
+                        ) {
+                            Text(fullURL(from: resource.fullDomain ?? "", ssl: resource.ssl))
+                                .font(.system(size: 14))
+                                .foregroundColor(.blue)
+                        }
+                        .buttonStyle(.plain) // Ensures only the text is tappable
+                    }
+                    .contentShape(Rectangle()) // Limits the tappable area to the HStack
+                    .padding(.top)
                 }
             }
             .padding(.vertical, 2)
-        }//Section
+        }
         .textCase(nil)
+        .listRowSeparator(.hidden)
     }//detailsGroup
     
     var domain: some View {

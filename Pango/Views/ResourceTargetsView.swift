@@ -25,6 +25,7 @@ struct ResourceTargetsView: View {
                     ResourceTargetView(resource: self.resource, target: target)
                 } label: {
                     HStack {
+                        StatusIconView(online: target.enabled)
                         if target.method == nil {
                             Text("\(target.ip):\(String(target.port))")
                         } else {
