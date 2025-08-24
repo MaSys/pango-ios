@@ -14,23 +14,34 @@ struct SitesView: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(self.appService.sites, id: \.siteId) { site in
-                    VStack {
-                        HStack {
-                            Text(site.name)
-                                .fontWeight(.semibold)
-                            Spacer()
-                            StatusIconView(online: site.online)
-                        }//HStack
-                        HStack {
-                            SiteUsageView(site: site)
-                            Spacer()
-                            NewtView(site: site)
-                        }
-                    }//VStack
-                }
-            }
+            ScrollView {
+                LazyVStack(spacing: 8) {
+                    ForEach(self.appService.sites, id: \.siteId) { site in
+                        VStack {
+                            HStack {
+                                Text(site.name)
+                                    .fontWeight(.semibold)
+                                Spacer()
+                                StatusIconView(online: site.online)
+                            }//HStack
+                            HStack {
+                                SiteUsageView(site: site)
+                                Spacer()
+                                NewtView(site: site)
+                            }
+                        }//VStack
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(uiColor: UIColor.secondarySystemBackground))
+                                .shadow(color: .gray.opacity(0.2), radius: 2, y: 1)
+                        )
+                        .padding(.horizontal)
+                        .padding(.vertical, 4)
+                    }//loop
+                }//lazystack
+                .padding(.vertical, 8)
+            }//scrollview
             .navigationTitle(Text("SITES"))
             .onAppear {
                 self.fetch()

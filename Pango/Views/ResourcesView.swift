@@ -67,11 +67,14 @@ struct ResourcesView: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(self.filteredResources, id: \.resourceId) { resource in
-                    ResourceRowView(resource: resource)
-                }
-            }
+            ScrollView {
+                LazyVStack(spacing: 8) {
+                    ForEach(self.filteredResources, id: \.resourceId) { resource in
+                        ResourceRowView(resource: resource)
+                    }
+                }//lazystack
+                .padding(.vertical, 8)
+            }//scrollview
             .navigationTitle(Text("RESOURCES"))
             .onAppear {
                 self.fetch()
