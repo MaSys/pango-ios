@@ -8,9 +8,9 @@
 struct Domain: Decodable {
     var domainId: String
     var baseDomain: String
-    var verified: Bool
+    var verified: Bool?
     var type: String
-    var failed: Bool
-    var tries: Int
-    var configManaged: Bool
+    var failed: Bool?
+    var tries: Int?
+    var configManaged: Bool?
 }

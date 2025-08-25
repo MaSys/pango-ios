@@ -27,9 +27,9 @@ struct DomainsView: View {
                                 Text(domain.type.capitalized)
                                     .font(.system(size: 14))
                                 Spacer()
-                                Text(domain.verified ? "VERIFIED" : "UNVERIFIED")
+                                Text(domain.verified == true ? "VERIFIED" : "UNVERIFIED")
                                     .font(.system(size: 14))
-                                    .foregroundStyle(domain.verified ? .green : .red)
+                                    .foregroundStyle(domain.verified == true ? .green : .red)
                             }
                             .padding(.top, 5)
                         }//vstack

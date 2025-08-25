@@ -74,44 +74,48 @@ struct DeleteRoleView: View {
     @State private var selectedRoleForTransfer: Role?
 
     var body: some View {
-        List {
-            Section(header: VStack {
-                HStack {
-                    Spacer()
-                    Text("TRANSFER_USERS")
-                        .font(.headline)
-                    Spacer()
-                }
-                HStack {
-                    Spacer()
-                    Text("SELECT_A_ROLE_TO_TRANSFER_USERS_FROM_**\(roleToDelete.name)**:")
-                    Spacer()
-                }
-            }) {
-                ForEach(self.appService.roles.filter { $0.roleId != roleToDelete.roleId }, id: \.roleId) { role in
-                    Button {
-                        self.selectedRoleForTransfer = role
-                    } label: {
-                        HStack {
-                            Text(role.name)
-                            Spacer()
-                            if let rol = self.selectedRoleForTransfer, rol.roleId == role.roleId {
-                                Image(systemName: "checkmark")
-                                    .foregroundStyle(Color.accentColor)
-                            }
-                        }//hstack
+        if self.roleToDelete.isAdmin == true {
+            Text("YOU_CANNOT_DELETE_ADMIN_ROLE")
+        } else {
+            List {
+                Section(header: VStack {
+                    HStack {
+                        Spacer()
+                        Text("TRANSFER_USERS")
+                            .font(.headline)
+                        Spacer()
                     }
-                    .tint(.primary)
+                    HStack {
+                        Spacer()
+                        Text("SELECT_A_ROLE_TO_TRANSFER_USERS_FROM_**\(roleToDelete.name)**:")
+                        Spacer()
+                    }
+                }) {
+                    ForEach(self.appService.roles.filter { $0.roleId != roleToDelete.roleId }, id: \.roleId) { role in
+                        Button {
+                            self.selectedRoleForTransfer = role
+                        } label: {
+                            HStack {
+                                Text(role.name)
+                                Spacer()
+                                if let rol = self.selectedRoleForTransfer, rol.roleId == role.roleId {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(Color.accentColor)
+                                }
+                            }//hstack
+                        }
+                        .tint(.primary)
+                    }
+                }//section
+                .textCase(.none)
+            }//list
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("SAVE") {
+                        self.save()
+                    }
+                    .disabled(self.selectedRoleForTransfer == nil)
                 }
-            }//section
-            .textCase(.none)
-        }//list
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button("SAVE") {
-                    self.save()
-                }
-                .disabled(self.selectedRoleForTransfer == nil)
             }
         }
     }
