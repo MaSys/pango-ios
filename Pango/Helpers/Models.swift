@@ -43,5 +43,9 @@ struct RolesResponse: Decodable {
     var roles: [Role]
 }
 
+struct UsersResponse: Decodable {
+    var users: [User]
+}
+
 struct EmptyResponse: Decodable {
 }

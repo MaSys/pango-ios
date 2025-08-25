@@ -20,6 +20,7 @@ class AppService: ObservableObject {
     @Published var resources: [Resource] = []
     @Published var domains: [Domain] = []
     @Published var roles: [Role] = []
+    @Published var users: [User] = []
     
     public func fetchOrgs(completionHandler: @escaping (_ success: Bool, _ orgs: [Organization]) -> Void) {
         Request.fetchOrgs { success, orgs in
@@ -53,6 +54,12 @@ class AppService: ObservableObject {
     public func fetchRoles() {
         RolesRequest.fetch { success, roles in
             self.roles = roles
+        }
+    }
+    
+    public func fetchUsers() {
+        UsersRequest.fetch { success, users in
+            self.users = users
         }
     }
 }

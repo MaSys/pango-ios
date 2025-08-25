@@ -25,7 +25,6 @@ class ResourcesRequest {
         let token = "Bearer \(apiKey)"
         AF.request(url, headers: ["Authorization": token])
             .responseDecodable(of: MainResponse<ResourcesResponse>.self) { response in
-                print(response)
                 if let val = response.value {
                     if val.success {
                         completionHandler(true, val.data!.resources)

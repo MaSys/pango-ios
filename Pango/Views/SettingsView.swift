@@ -53,7 +53,8 @@ struct SettingsView: View {
                         Text("ROLES")
                     }
                     NavigationLink {
-                        EmptyView()
+                        UsersView()
+                            .environmentObject(self.appService)
                     } label: {
                         Text("USERS")
                     }

@@ -259,6 +259,16 @@
         }
       }
     },
+    "OWNER" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Owner"
+          }
+        }
+      }
+    },
     "PASSWORD" : {
       "localizations" : {
         "en" : {
