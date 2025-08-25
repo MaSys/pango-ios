@@ -44,8 +44,9 @@ struct SettingsView: View {
                         .pickerStyle(.menu)
                     }
                 }//Section
+                .textCase(nil)
                 
-                Section {
+                Section(header: Text("ACCESS_CONTROL")) {
                     NavigationLink {
                         RolesView()
                             .environmentObject(self.appService)
@@ -59,15 +60,32 @@ struct SettingsView: View {
                         Text("USERS")
                     }
                 }//section
+                .textCase(nil)
                 
-                Section {
+                Section(header: Text("SETTINGS")) {
                     Picker("DEFAULT_TAB", selection: $selectedTab) {
                         ForEach(DefaultTab.allCases, id: \.self) { tab in
                             Text(LocalizedStringResource(stringLiteral: tab.rawValue.capitalized))
                         }
                     }
                     .pickerStyle(.menu)
-                }
+                }//section
+                .textCase(nil)
+                
+                Section(header: Text("SUPPORT")) {
+                    Button(action: {
+                        let email = "support@masys.mx"
+                        let subject = "Support / Feedback"
+                        let body = getDeviceAndAppInfo().addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+
+                        if let url = URL(string: "mailto:\(email)?subject=\(subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")&body=\(body)") {
+                            UIApplication.shared.open(url)
+                        }
+                    }) {
+                        Text("SUPPORT_FEEDBACK")
+                    }
+                }//section
+                .textCase(nil)
             }//List
             .navigationTitle(Text("SETTINGS"))
         }//NavStack
@@ -76,4 +94,21 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
+}
+
+func getDeviceAndAppInfo() -> String {
+    let device = UIDevice.current
+    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+    let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
+    let systemName = device.systemName
+    let systemVersion = device.systemVersion
+    let model = device.model
+
+    return """
+    --- Device / App Info ---
+    App Version: \(appVersion)
+    Build Number: \(buildNumber)
+    Device Model: \(model)
+    OS: \(systemName) \(systemVersion)
+    """
 }

@@ -27,6 +27,16 @@
     "abc123" : {
 
     },
+    "ACCESS_CONTROL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Access Control"
+          }
+        }
+      }
+    },
     "ALL" : {
       "localizations" : {
         "en" : {
@@ -532,6 +542,26 @@
         }
       }
     },
+    "SUPPORT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support"
+          }
+        }
+      }
+    },
+    "SUPPORT_FEEDBACK" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support / Feedback"
+          }
+        }
+      }
+    },
     "TARGETS" : {
       "localizations" : {
         "en" : {
@@ -600,6 +630,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Visibility"
+          }
+        }
+      }
+    },
+    "YOU_CANNOT_DELETE_ADMIN_ROLE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You cannot delete Admin Role!!"
           }
         }
       }
