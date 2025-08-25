@@ -23,7 +23,7 @@ class AppService: ObservableObject {
     @Published var users: [User] = []
     
     public func fetchOrgs(completionHandler: @escaping (_ success: Bool, _ orgs: [Organization]) -> Void) {
-        Request.fetchOrgs { success, orgs in
+        OrgsRequest.fetch { success, orgs in
             self.organizations = orgs
             if let org = orgs.first {
                 self.pangolinOrganizationId = org.orgId
@@ -33,7 +33,7 @@ class AppService: ObservableObject {
     }
     
     public func fetchSites(completionHandler: @escaping (_ success: Bool, _ sites: [Site]) -> Void) {
-        Request.fetchSites { success, sites in
+        SitesRequest.fetch { success, sites in
             self.sites = sites
             completionHandler(success, sites)
         }
@@ -46,7 +46,7 @@ class AppService: ObservableObject {
     }
     
     public func fetchDomains() {
-        Request.fetchDomains { success, domains in
+        DomainsRequest.fetch { success, domains in
             self.domains = domains
         }
     }

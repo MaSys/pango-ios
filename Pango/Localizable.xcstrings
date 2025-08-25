@@ -149,6 +149,16 @@
         }
       }
     },
+    "ERROR_API_KEY" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot authenticate to server, please check your API Key / Organization ID!"
+          }
+        }
+      }
+    },
     "ERROR_CONNECTING_TO_SERVER" : {
       "localizations" : {
         "en" : {

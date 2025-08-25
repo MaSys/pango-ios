@@ -21,6 +21,7 @@ struct InstanceView: View {
     @State private var apiKey = ""
     @State private var organizationId = ""
     @State private var connectionError: Bool = false
+    @State private var authError: Bool = false
     @State private var isLoading: Bool = false
         
     var body: some View {
@@ -50,6 +51,11 @@ struct InstanceView: View {
                         .foregroundStyle(.red)
                         .font(.system(size: 14))
                 }
+                if authError == true {
+                    Text("ERROR_API_KEY")
+                        .foregroundStyle(.red)
+                        .font(.system(size: 14))
+                }
             }
             
             Section(footer: Text("ORGANIZATION_ID_HINT")) {
@@ -71,35 +77,48 @@ struct InstanceView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    if self.isLoading == false {
-                        self.save()
-                    }
+                    self.save()
                 } label: {
                     Text("SAVE")
                 }
+                .disabled(self.isLoading)
             }
         }
     }
     
     private func save() {
         if self.serverUrl.isEmpty || self.apiKey.isEmpty {
+            print("empty")
             return
         }
         self.serverUrl = baseDomain(from: self.serverUrl)
         
-        self.isLoading = true
         self.connectionError = false
+        self.authError = false
+        self.isLoading = true
+        
         self.pangolinServerUrl = self.serverUrl
         self.pangolinApiKey = self.apiKey
         self.pangolinOrganizationId = self.organizationId
-        
+
+        Request.healthCheck { healthSuccess in
+            if healthSuccess {
+                self.authenticate()
+            } else {
+                self.isLoading = false
+                self.connectionError = true
+            }
+        }
+    }
+    
+    private func authenticate() {
         if self.pangolinOrganizationId.isEmpty {
             self.appService.fetchOrgs { success, orgs in
                 self.isLoading = false
                 if success {
                     self.dismiss()
                 } else {
-                    self.connectionError = true
+                    self.authError = true
                 }
             }
         } else {
@@ -109,7 +128,7 @@ struct InstanceView: View {
                 if success {
                     self.dismiss()
                 } else {
-                    self.connectionError = true
+                    self.authError = true
                 }
             }
         }

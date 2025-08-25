@@ -38,7 +38,7 @@ struct UsersView: View {
                         .foregroundColor(.secondary)
                         .padding(.top, 2)
                     }//vstack
-                }
+                }//loop
             }//list
             .onAppear {
                 self.appService.fetchUsers()
