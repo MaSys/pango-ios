@@ -47,7 +47,6 @@ struct SitesView: View {
                 self.fetch()
             }
         }
-        
     }
     
     private func fetch() {

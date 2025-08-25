@@ -23,23 +23,23 @@ struct ResourceRowView: View {
                     Spacer()
                     Text(resource.protocolString.uppercased())
                         .font(.system(size: 14))
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(.secondary)
                     StatusIconView(online: resource.enabled)
                 }//HStack
                 HStack {
                     if self.resource.http {
                         Text(fullURL(from: resource.fullDomain!, ssl: resource.ssl))
                             .font(.system(size: 14))
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(.secondary)
                     } else {
                         Text(String(self.resource.proxyPort ?? 0))
                             .font(.system(size: 14))
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(.secondary)
                     }
                     Spacer()
                     Text(resource.siteName ?? "")
                         .font(.system(size: 14))
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(.secondary)
                 }//HStack
             }//VStack
             .padding()

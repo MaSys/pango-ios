@@ -78,6 +78,16 @@
         }
       }
     },
+    "DESCRIPTION" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
+          }
+        }
+      }
+    },
     "DISABLED" : {
       "localizations" : {
         "en" : {
@@ -410,12 +420,32 @@
         }
       }
     },
+    "ROLES" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roles"
+          }
+        }
+      }
+    },
     "SAVE" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Save"
+          }
+        }
+      }
+    },
+    "SELECT_A_ROLE_TO_TRANSFER_USERS_FROM_**%@**:" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a role to transfer users from **%@**:"
           }
         }
       }
@@ -505,6 +535,16 @@
     "TCP" : {
 
     },
+    "TRANSFER_USERS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transfer Users"
+          }
+        }
+      }
+    },
     "UDP" : {
 
     },
@@ -520,6 +560,16 @@
     },
     "URL" : {
 
+    },
+    "USERS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Users"
+          }
+        }
+      }
     },
     "v%@" : {
 

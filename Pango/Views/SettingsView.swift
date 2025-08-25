@@ -20,7 +20,10 @@ struct SettingsView: View {
         NavigationStack {
             List {
                 Section(header: Text("")) {
-                    NavigationLink(destination: InstanceView()) {
+                    NavigationLink {
+                        InstanceView()
+                            .environmentObject(self.appService)
+                    } label: {
                         VStack(alignment: .leading) {
                             Text("INSTANCE")
                             if !self.pangolinServerUrl.isEmpty {
@@ -41,6 +44,20 @@ struct SettingsView: View {
                         .pickerStyle(.menu)
                     }
                 }//Section
+                
+                Section {
+                    NavigationLink {
+                        RolesView()
+                            .environmentObject(self.appService)
+                    } label: {
+                        Text("ROLES")
+                    }
+                    NavigationLink {
+                        EmptyView()
+                    } label: {
+                        Text("USERS")
+                    }
+                }//section
                 
                 Section {
                     Picker("DEFAULT_TAB", selection: $selectedTab) {

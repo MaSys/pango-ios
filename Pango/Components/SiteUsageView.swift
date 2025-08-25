@@ -14,7 +14,7 @@ struct SiteUsageView: View {
     var body: some View {
         Group {
             HStack {
-                Text(humanMegabyte(from: site.megabytesIn))
+                Text(humanMegabyte(from: site.megabytesIn ?? 0))
                     .font(.system(size: 14))
                 Image(systemName: "arrowshape.up.fill")
                     .resizable()
@@ -23,7 +23,7 @@ struct SiteUsageView: View {
             }
             
             HStack {
-                Text(humanMegabyte(from: site.megabytesOut))
+                Text(humanMegabyte(from: site.megabytesOut ?? 0))
                     .font(.system(size: 14))
                 Image(systemName: "arrowshape.down.fill")
                     .resizable()
