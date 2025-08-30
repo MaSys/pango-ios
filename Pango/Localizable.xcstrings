@@ -47,6 +47,9 @@
         }
       }
     },
+    "API Compatibility" : {
+
+    },
     "API_KEY" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -288,6 +291,9 @@
           }
         }
       }
+    },
+    "Pangolin API **v1.9.2**" : {
+
     },
     "PASSWORD" : {
       "localizations" : {

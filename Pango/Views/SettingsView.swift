@@ -78,6 +78,14 @@ struct SettingsView: View {
                 .textCase(nil)
                 
                 Section(header: Text("SUPPORT")) {
+                    HStack {
+                        Text("API Compatibility")
+                        Spacer()
+                        Text("Pangolin API **v1.9.2**")
+                            .font(.callout)
+                            .foregroundColor(.secondary)
+                    }
+                    
                     Button(action: {
                         let email = "support@masys.mx"
                         let subject = "Support / Feedback"
