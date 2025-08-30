@@ -40,6 +40,7 @@ class TargetsRequest {
         ip: String,
         port: String,
         enabled: Bool,
+        siteId: Int,
         completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
     ) {
         let userDefaults = UserDefaults.standard
@@ -57,7 +58,8 @@ class TargetsRequest {
             "method": method,
             "ip": ip,
             "port": Int(port),
-            "enabled": enabled
+            "enabled": enabled,
+            "siteId": siteId
         ], encoding: encoder, headers: ["Authorization": token])
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value {
@@ -74,6 +76,7 @@ class TargetsRequest {
         ip: String,
         port: String,
         enabled: Bool,
+        siteId: Int,
         completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
     ) {
         let userDefaults = UserDefaults.standard
@@ -90,7 +93,8 @@ class TargetsRequest {
         var params: [String: Any] = [
             "ip": ip,
             "port": Int(port)!,
-            "enabled": enabled
+            "enabled": enabled,
+            "siteId": siteId
         ]
         if method != nil {
             params["method"] = method!

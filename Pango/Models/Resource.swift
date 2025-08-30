@@ -11,8 +11,6 @@ struct Resource: Decodable {
         case name
         case ssl
         case fullDomain
-        case siteName
-        case siteId
         case passwordId
         case sso
         case pincodeId
@@ -28,8 +26,6 @@ struct Resource: Decodable {
     var name: String
     var ssl: Bool
     var fullDomain: String?
-    var siteName: String?
-    var siteId: String?
     var passwordId: Int?
     var sso: Bool
     var pincodeId: Int?
@@ -55,8 +51,6 @@ extension Resource {
             name: "Resource Name",
             ssl: true,
             fullDomain: "resou.example.com",
-            siteName: "SITE NAME",
-            siteId: "site-id",
             passwordId: nil,
             sso: false,
             pincodeId: nil,

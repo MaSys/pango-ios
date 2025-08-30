@@ -39,7 +39,6 @@ class ResourcesRequest {
     
     public static func create(
         name: String,
-        siteId: Int,
         http: Bool,
         subdomain: String?,
         domainId: String?,
@@ -56,23 +55,21 @@ class ResourcesRequest {
             return
         }
         
-        let url = URL(string: "\(baseUrl)/v1/org/\(org)/site/\(siteId)/resource")!
+        let url = URL(string: "\(baseUrl)/v1/org/\(org)/resource")!
         let token = "Bearer \(apiKey)"
         let encoder = JSONEncoding.default
-        var params: [String: Any] = [:]
+        var params: [String: Any?] = [:]
         if http {
             params = [
                 "name": name,
-                "siteId": siteId,
                 "http": http,
                 "protocol": "tcp",
                 "subdomain": subdomain!,
-                "domainId": domainId!
+                "domainId": domainId ?? nil
             ]
         } else {
             params = [
                 "name": name,
-                "siteId": siteId,
                 "http": http,
                 "protocol": protocolString,
                 "proxyPort": proxyPort!

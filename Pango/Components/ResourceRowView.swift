@@ -37,9 +37,6 @@ struct ResourceRowView: View {
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
-                    Text(resource.siteName ?? "")
-                        .font(.system(size: 14))
-                        .foregroundStyle(.secondary)
                 }//HStack
             }//VStack
             .padding()

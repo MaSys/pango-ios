@@ -86,14 +86,6 @@ extension ResourceView {
                                 ShieldView(resource: resource, showText: true)
                             }
                         }
-                        Spacer()
-                        VStack(alignment: .leading) {
-                            Text("SITE")
-                                .font(.system(size: 14))
-                                .fontWeight(.semibold)
-                            Text(self.resource.siteName ?? "")
-                                .font(.system(size: 14))
-                        }
                     } else {
                         VStack(alignment: .leading) {
                             Text("PORT")

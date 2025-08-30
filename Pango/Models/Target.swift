@@ -11,4 +11,6 @@ struct Target: Decodable {
     var ip: String
     var port: Int
     var enabled: Bool
+    var siteType: String
+    var siteId: Int
 }

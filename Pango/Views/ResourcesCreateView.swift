@@ -13,7 +13,6 @@ struct ResourcesCreateView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var name: String = ""
-    @State private var siteId: Int = 0
     @State private var resourceHttp: Bool = true
     
     @State private var subdomain: String = ""
@@ -28,13 +27,6 @@ struct ResourcesCreateView: View {
         Form {
             Section {
                 TextField("NAME", text: $name)
-                
-                Picker("SITE", selection: $siteId) {
-                    ForEach(self.appService.sites, id: \.siteId) { site in
-                        Text(site.name)
-                            .tag(site.siteId)
-                    }
-                }.pickerStyle(.menu)
             }//Section
             
             Section {
@@ -62,9 +54,6 @@ struct ResourcesCreateView: View {
             }
         })
         .onAppear {
-            if let site = self.appService.sites.first {
-                self.siteId = site.siteId
-            }
             if let domain = self.appService.domains.first {
                 self.selectedDomain = domain.domainId
             }
@@ -83,7 +72,6 @@ struct ResourcesCreateView: View {
     private func save() {
         ResourcesRequest.create(
             name: self.name,
-            siteId: self.siteId,
             http: self.resourceHttp,
             subdomain: self.subdomain,
             domainId: self.selectedDomain.isEmpty ? nil : self.selectedDomain,

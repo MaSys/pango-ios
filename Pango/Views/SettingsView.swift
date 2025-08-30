@@ -42,6 +42,11 @@ struct SettingsView: View {
                             }
                         }
                         .pickerStyle(.menu)
+                        .onChange(of: pangolinOrganizationId) { oldValue, newValue in
+                            self.appService.fetchResources()
+                            self.appService.fetchDomains()
+                            self.appService.fetchSites { _, _ in }
+                        }
                     }
                 }//Section
                 .textCase(nil)
