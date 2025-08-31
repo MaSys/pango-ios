@@ -25,10 +25,13 @@ class RolesRequest {
         let token = "Bearer \(apiKey)"
         let encoder = JSONEncoding.default
         AF.request(url, method: .get, encoding: encoder, headers: ["Authorization": token])
-            .printError()
             .responseDecodable(of: MainResponse<RolesResponse>.self) { response in
                 if let val = response.value {
-                    completionHandler(val.success, val.data!.roles)
+                    if let roles = val.data?.roles {
+                        completionHandler(val.success, roles)
+                    } else {
+                        completionHandler(false, [])
+                    }
                 } else {
                     completionHandler(false, [])
                 }

@@ -19,7 +19,7 @@ struct RolesView: View {
             List {
                 ForEach(self.appService.roles, id: \.roleId) { role in
                     VStack(alignment: .leading) {
-                        Text(role.name)
+                        Text(role.name ?? "")
                             .fontWeight(.semibold)
                         
                         Text(role.description ?? "")
@@ -96,7 +96,7 @@ struct DeleteRoleView: View {
                             self.selectedRoleForTransfer = role
                         } label: {
                             HStack {
-                                Text(role.name)
+                                Text(role.name ?? "")
                                 Spacer()
                                 if let rol = self.selectedRoleForTransfer, rol.roleId == role.roleId {
                                     Image(systemName: "checkmark")
@@ -124,6 +124,7 @@ struct DeleteRoleView: View {
         if self.selectedRoleForTransfer == nil {
             return
         }
+        
         RolesRequest.delete(id: self.roleToDelete.roleId, roleId: self.selectedRoleForTransfer!.roleId) { success in
             if success {
                 self.appService.fetchRoles()
