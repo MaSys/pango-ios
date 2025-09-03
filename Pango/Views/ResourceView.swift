@@ -10,10 +10,12 @@ import SwiftUI
 struct ResourceView: View {
     
     @EnvironmentObject var appService: AppService
+    @Environment(\.dismiss) var dismiss
     
     var resource: Resource
     
     @State private var ssl: Bool = false
+    @State private var showDeleteConfirmation: Bool = false
     
     var body: some View {
         List {
@@ -23,6 +25,24 @@ struct ResourceView: View {
             
             if self.resource.http {
                 authenticationSection
+            }
+            
+            HStack {
+                Spacer()
+                Button("DELETE") {
+                    self.showDeleteConfirmation = true
+                }
+                .confirmationDialog(
+                    "DELETE_RESOURCE_CONFIRMATION_MESSAGE",
+                    isPresented: $showDeleteConfirmation
+                ) {
+                    Button("DELETE", role: .destructive) {
+                        self.delete()
+                    }
+                    Button("CANCEL", role: .cancel) {
+                    }
+                }
+                Spacer()
             }
         }
         .navigationTitle(self.resource.name)
@@ -67,6 +87,15 @@ struct ResourceView: View {
         ResourcesRequest.toggleSSL(id: self.resource.resourceId, ssl: self.ssl) { success, response in
             if let res = response, res.success {
                 self.appService.fetchResources()
+            }
+        }
+    }
+    
+    private func delete() {
+        ResourcesRequest.delete(id: self.resource.resourceId) { success, response in
+            if let res = response, res.success {
+                self.appService.fetchResources()
+                self.dismiss()
             }
         }
     }

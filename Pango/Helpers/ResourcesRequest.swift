@@ -242,4 +242,29 @@ class ResourcesRequest {
                 }
             }
     }
+    
+    public static func delete(
+        id: Int,
+        completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
+    ) {
+        let userDefaults = UserDefaults.standard
+        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
+              let apiKey = userDefaults.string(forKey: "pangolin_api_key") else
+        {
+            completionHandler(false, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseUrl)/v1/resource/\(id)")!
+        let token = "Bearer \(apiKey)"
+        let encoder = JSONEncoding.default
+        AF.request(url, method: .delete, encoding: encoder, headers: ["Authorization": token])
+            .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
+                if let val = response.value, val.success {
+                    completionHandler(val.success, val)
+                } else {
+                    completionHandler(false, nil)
+                }
+            }
+    }
 }

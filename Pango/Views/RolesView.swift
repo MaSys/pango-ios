@@ -87,7 +87,7 @@ struct DeleteRoleView: View {
                     }
                     HStack {
                         Spacer()
-                        Text("SELECT_A_ROLE_TO_TRANSFER_USERS_FROM_**\(roleToDelete.name)**:")
+                        Text("SELECT_A_ROLE_TO_TRANSFER_USERS_FROM_**\(roleToDelete.name ?? "")**:")
                         Spacer()
                     }
                 }) {
