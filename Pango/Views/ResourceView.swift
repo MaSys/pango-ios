@@ -188,7 +188,15 @@ extension ResourceView {
     var authenticationSection: some View {
         Section {
             NavigationLink {
+                ResourceSSOView(resource: self.resource)
+                    .environmentObject(self.appService)
+            } label: {
+                Text("USERS_AND_ROLES")
+            }
+            
+            NavigationLink {
                 ResourcePasswordView(resource: self.resource)
+                    .environmentObject(self.appService)
             } label: {
                 HStack {
                     if self.resource.passwordId == nil {

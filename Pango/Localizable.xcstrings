@@ -192,6 +192,9 @@
         }
       }
     },
+    "github issue: https://github.com/fosrl/pangolin/issues/1423" : {
+
+    },
     "h2c" : {
 
     },
@@ -611,6 +614,9 @@
     "TCP" : {
 
     },
+    "This functionality has error from Pangolin API and does not work with Root API Key,\nif you want to add/remove users you have to use Organization API Key instead." : {
+
+    },
     "TRANSFER_USERS" : {
       "localizations" : {
         "en" : {
@@ -637,12 +643,32 @@
     "URL" : {
 
     },
+    "USE_PLATFORM_SSO" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use Platform SSO"
+          }
+        }
+      }
+    },
     "USERS" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Users"
+          }
+        }
+      }
+    },
+    "USERS_AND_ROLES" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Users & Roles"
           }
         }
       }

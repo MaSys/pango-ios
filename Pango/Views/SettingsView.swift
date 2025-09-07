@@ -77,7 +77,7 @@ struct SettingsView: View {
                 }//section
                 .textCase(nil)
                 
-                Section(header: Text("SUPPORT")) {
+                Section(header: Text("SUPPORT"), footer: SettingsFooterView()) {
                     HStack {
                         Text("API Compatibility")
                         Spacer()
@@ -107,6 +107,35 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
+}
+
+struct SettingsFooterView: View {
+    @State private var companyName = "MaSys"
+    @State private var appName = Bundle.main.infoDictionary!["CFBundleDisplayName"]!
+    @State private var version = "v\((Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String)!)"
+    @State private var buildNumber = (Bundle.main.infoDictionary?["CFBundleVersion"] as? String)!
+    
+    var appDetails: String {
+        return """
+    \(appName) \(version) (\(buildNumber))
+    """
+    }
+
+    var body: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Text(self.companyName)
+                    .font(.custom("Splash", size: 13))
+                    .foregroundColor(.gray)
+                Spacer()
+            }//HStack
+            Text(appDetails)
+                .font(.system(size: 13))
+                .foregroundColor(.gray)
+        }//VStack
+        .padding(.top, 20)
+    }
 }
 
 func getDeviceAndAppInfo() -> String {

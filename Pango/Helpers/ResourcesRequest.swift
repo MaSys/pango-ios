@@ -216,6 +216,32 @@ class ResourcesRequest {
             }
     }
     
+    public static func toggleSSO(
+        id: Int,
+        sso: Bool,
+        completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
+    ) {
+        let userDefaults = UserDefaults.standard
+        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
+              let apiKey = userDefaults.string(forKey: "pangolin_api_key") else
+        {
+            completionHandler(false, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseUrl)/v1/resource/\(id)")!
+        let token = "Bearer \(apiKey)"
+        let encoder = JSONEncoding.default
+        AF.request(url, method: .post, parameters: ["sso": sso], encoding: encoder, headers: ["Authorization": token])
+            .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
+                if let val = response.value, val.success {
+                    completionHandler(val.success, val)
+                } else {
+                    completionHandler(false, nil)
+                }
+            }
+    }
+    
     public static func updateSubdomain(
         id: Int,
         domainId: String,
@@ -264,6 +290,118 @@ class ResourcesRequest {
                     completionHandler(val.success, val)
                 } else {
                     completionHandler(false, nil)
+                }
+            }
+    }
+    
+    public static func users(
+        id: Int,
+        completionHandler: @escaping (_ success: Bool, _ users: [ResourceUser]) -> Void
+    ) {
+        let userDefaults = UserDefaults.standard
+        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
+              let apiKey = userDefaults.string(forKey: "pangolin_api_key") else
+        {
+            completionHandler(false, [])
+            return
+        }
+        
+        let url = URL(string: "\(baseUrl)/v1/resource/\(id)/users")!
+        let token = "Bearer \(apiKey)"
+        AF.request(url, headers: ["Authorization": token])
+            .responseDecodable(of: MainResponse<ResourceUsersResponse>.self) { response in
+                if let val = response.value {
+                    if val.success {
+                        completionHandler(true, val.data!.users)
+                    } else {
+                        completionHandler(false, [])
+                    }
+                } else {
+                    print(response)
+                    completionHandler(false, [])
+                }
+            }
+    }
+    
+    public static func setUser(
+        id: Int,
+        userIds: [String],
+        completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
+    ) {
+        let userDefaults = UserDefaults.standard
+        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
+              let apiKey = userDefaults.string(forKey: "pangolin_api_key") else
+        {
+            completionHandler(false, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseUrl)/v1/resource/\(id)/users")!
+        let token = "Bearer \(apiKey)"
+        let encoder = JSONEncoding.default
+        AF.request(url, method: .post, parameters: ["userIds": userIds], encoding: encoder, headers: ["Authorization": token])
+            .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
+                if let val = response.value, val.success {
+                    completionHandler(val.success, val)
+                } else {
+                    print(response)
+                    completionHandler(false, response.value)
+                }
+            }
+    }
+    
+    public static func roles(
+        id: Int,
+        completionHandler: @escaping (_ success: Bool, _ roles: [Role]) -> Void
+    ) {
+        let userDefaults = UserDefaults.standard
+        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
+              let apiKey = userDefaults.string(forKey: "pangolin_api_key") else
+        {
+            completionHandler(false, [])
+            return
+        }
+        
+        let url = URL(string: "\(baseUrl)/v1/resource/\(id)/roles")!
+        let token = "Bearer \(apiKey)"
+        AF.request(url, headers: ["Authorization": token])
+            .responseDecodable(of: MainResponse<RolesResponse>.self) { response in
+                if let val = response.value {
+                    if val.success {
+                        completionHandler(true, val.data!.roles)
+                    } else {
+                        completionHandler(false, [])
+                    }
+                } else {
+                    print(response)
+                    completionHandler(false, [])
+                }
+            }
+    }
+    
+    public static func setRoles(
+        id: Int,
+        roleIds: [Int],
+        completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
+    ) {
+        let userDefaults = UserDefaults.standard
+        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
+              let apiKey = userDefaults.string(forKey: "pangolin_api_key") else
+        {
+            completionHandler(false, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseUrl)/v1/resource/\(id)/roles")!
+        let token = "Bearer \(apiKey)"
+        let encoder = JSONEncoding.default
+        AF.request(url, method: .post, parameters: ["roleIds": roleIds], encoding: encoder, headers: ["Authorization": token])
+            .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
+                if let val = response.value, val.success {
+                    completionHandler(val.success, val)
+                } else {
+                    print(response)
+                    completionHandler(false, response.value)
                 }
             }
     }

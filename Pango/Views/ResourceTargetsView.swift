@@ -43,6 +43,7 @@ struct ResourceTargetsView: View {
                 }
             }
         }
+        .navigationTitle("TARGETS")
         .onAppear {
             self.fetch()
         }

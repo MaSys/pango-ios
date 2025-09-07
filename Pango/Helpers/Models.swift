@@ -47,5 +47,9 @@ struct UsersResponse: Decodable {
     var users: [User]
 }
 
+struct ResourceUsersResponse: Decodable {
+    var users: [ResourceUser]
+}
+
 struct EmptyResponse: Decodable {
 }

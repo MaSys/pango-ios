@@ -21,3 +21,7 @@ struct User: Decodable {
     var idpId: Int?
     var twoFactorEnabled: Bool?
 }
+
+struct ResourceUser: Decodable {
+    var userId: String?
+}
