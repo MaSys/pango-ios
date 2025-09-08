@@ -79,10 +79,7 @@ struct ResourceUsersView: View {
     
     var body: some View {
         List {
-            Section(footer: VStack(alignment: .leading, spacing: 8) {
-                Text("This functionality has error from Pangolin API and does not work with Root API Key,\nif you want to add/remove users you have to use Organization API Key instead.")
-                Text("github issue: https://github.com/fosrl/pangolin/issues/1423")
-            }) {
+            Section {
                 ForEach(self.appService.users, id: \.id) { user in
                     Button {
                         if selectedUsers.contains(user.id) {
