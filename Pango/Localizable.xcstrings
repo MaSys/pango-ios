@@ -312,7 +312,7 @@
         }
       }
     },
-    "Pangolin API **v1.9.4**" : {
+    "Pangolin API **v1.10.3**" : {
 
     },
     "PASSWORD" : {
@@ -325,22 +325,12 @@
         }
       }
     },
-    "PASSWORD_PROTECTION_DISABLED" : {
+    "PASSWORD_PROTECTION" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Password Protection Disabled"
-          }
-        }
-      }
-    },
-    "PASSWORD_PROTECTION_ENABLED" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Password Protection Enabled"
+            "value" : "Password Protection"
           }
         }
       }
@@ -355,22 +345,12 @@
         }
       }
     },
-    "PIN_CODE_PROTECTION_DISABLED" : {
+    "PIN_CODE_PROTECTION" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "PIN Code Protection Disabled"
-          }
-        }
-      }
-    },
-    "PIN_CODE_PROTECTION_ENABLED" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PIN Code Protection Enabled"
+            "value" : "PIN Code Protection"
           }
         }
       }

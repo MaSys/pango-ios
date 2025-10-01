@@ -191,7 +191,15 @@ extension ResourceView {
                 ResourceSSOView(resource: self.resource)
                     .environmentObject(self.appService)
             } label: {
-                Text("USERS_AND_ROLES")
+                HStack {
+                    Text("USERS_AND_ROLES")
+                    Spacer()
+                    if self.resource.sso == false {
+                        Text("DISABLED").foregroundStyle(.gray)
+                    } else {
+                        Text("ENABLED").foregroundStyle(.green)
+                    }
+                }
             }
             
             NavigationLink {
@@ -199,14 +207,13 @@ extension ResourceView {
                     .environmentObject(self.appService)
             } label: {
                 HStack {
-                    if self.resource.passwordId == nil {
-                        Text("PASSWORD_PROTECTION_DISABLED")
-                            .foregroundStyle(.gray)
-                    } else {
-                        Text("PASSWORD_PROTECTION_ENABLED")
-                            .foregroundStyle(.green)
-                    }
+                    Text("PASSWORD_PROTECTION")
                     Spacer()
+                    if self.resource.passwordId == nil {
+                        Text("DISABLED").foregroundStyle(.gray)
+                    } else {
+                        Text("ENABLED").foregroundStyle(.green)
+                    }
                 }
             }
             
@@ -214,14 +221,13 @@ extension ResourceView {
                 ResourcePinCodeView(resource: self.resource)
             } label: {
                 HStack {
-                    if self.resource.pincodeId == nil {
-                        Text("PIN_CODE_PROTECTION_DISABLED")
-                            .foregroundStyle(.gray)
-                    } else {
-                        Text("PIN_CODE_PROTECTION_ENABLED")
-                            .foregroundStyle(.green)
-                    }
+                    Text("PIN_CODE_PROTECTION")
                     Spacer()
+                    if self.resource.pincodeId == nil {
+                        Text("DISABLED").foregroundStyle(.gray)
+                    } else {
+                        Text("ENABLED").foregroundStyle(.green)
+                    }
                 }
             }
         }//Section
