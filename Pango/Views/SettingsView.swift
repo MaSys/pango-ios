@@ -58,11 +58,19 @@ struct SettingsView: View {
                     } label: {
                         Text("ROLES")
                     }
+                    
                     NavigationLink {
                         UsersView()
                             .environmentObject(self.appService)
                     } label: {
                         Text("USERS")
+                    }
+                    
+                    NavigationLink {
+                        InvitationsView()
+                            .environmentObject(self.appService)
+                    } label: {
+                        Text("INVITATIONS")
                     }
                 }//section
                 .textCase(nil)

@@ -51,5 +51,9 @@ struct ResourceUsersResponse: Decodable {
     var users: [ResourceUser]
 }
 
+struct InvitationsResponse: Decodable {
+    var invitations: [Invitation]
+}
+
 struct EmptyResponse: Decodable {
 }

@@ -43,6 +43,17 @@ struct UsersView: View {
             .onAppear {
                 self.appService.fetchUsers()
             }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        InvitationCreateView()
+                            .environmentObject(self.appService)
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+
+                }
+            }
         }
     }
 }
