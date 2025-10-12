@@ -263,6 +263,16 @@
         }
       }
     },
+    "INVITE_USER" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invite User"
+          }
+        }
+      }
+    },
     "IP_HOSTNAME" : {
       "localizations" : {
         "en" : {

@@ -40,6 +40,7 @@ struct UsersView: View {
                     }//vstack
                 }//loop
             }//list
+            .navigationTitle("USERS")
             .onAppear {
                 self.appService.fetchUsers()
             }

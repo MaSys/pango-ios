@@ -50,6 +50,7 @@ struct InvitationCreateView: View {
             }
             .pickerStyle(.navigationLink)
         }//form
+        .navigationTitle("INVITE_USER")
         .onAppear {
             self.appService.fetchRoles()
         }
