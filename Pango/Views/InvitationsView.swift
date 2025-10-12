@@ -30,6 +30,7 @@ struct InvitationsView: View {
                 }
             }
         }
+        .navigationTitle("INVITATIONS")
         .onAppear {
             self.fetch()
         }
