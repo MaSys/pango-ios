@@ -30,7 +30,7 @@ func humanMegabyte(from num: Float) -> String {
     } else if (num / 1024) <= 1024 {
         return "\(String(format: "%.2f", num / 1024)) GB"
     } else if (num / 1024 / 1024) <= 1024 {
-        return "\(String(format: "%.2f", num / 1024)) TB"
+        return "\(String(format: "%.2f", num / 1024 / 1024)) TB"
     }
     return ""
 }
