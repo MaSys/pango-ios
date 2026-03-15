@@ -5,82 +5,61 @@
 
 import SwiftUI
 
-struct AccessLog: Decodable {
-    var id: String
-    var timestamp: String
-    var userId: String?
-    var userName: String?
-    var userEmail: String?
+// The Pangolin API has a single log type: request audit logs
+struct RequestAuditLog: Decodable, Identifiable {
+    var id: Int
+    var timestamp: Int  // unix timestamp
+    var orgId: String?
+    var action: Bool?
+    var reason: Int?
+    var actorType: String?
+    var actor: String?
+    var actorId: String?
     var resourceId: Int?
     var resourceName: String?
-    var action: String?
-    var success: Bool?
+    var resourceNiceId: String?
     var ip: String?
-    var country: String?
+    var location: String?
     var userAgent: String?
-}
-
-struct ActionLog: Decodable {
-    var id: String
-    var timestamp: String
-    var userId: String?
-    var userName: String?
-    var userEmail: String?
-    var action: String?
-    var target: String?
-    var targetId: String?
-    var details: String?
-}
-
-struct RequestLog: Decodable {
-    var id: String
-    var timestamp: String
-    var method: String?
+    var metadata: String?
+    var headers: String?
+    var query: String?
+    var originalRequestURL: String?
+    var scheme: String?
+    var host: String?
     var path: String?
-    var statusCode: Int?
-    var ip: String?
-    var userAgent: String?
-    var resourceId: Int?
-    var resourceName: String?
-    var decision: String?
-    var duration: Int?
-}
+    var method: String?
+    var tls: Bool?
 
-private enum TimestampFormatting {
-    static let isoFormatter: ISO8601DateFormatter = {
-        let f = ISO8601DateFormatter()
-        f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return f
-    }()
-    static let displayFormatter: DateFormatter = {
+    var formattedTimestamp: String {
+        let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
+        return Self.displayFormatter.string(from: date)
+    }
+
+    var actionString: String {
+        action == true ? "Allowed" : "Denied"
+    }
+
+    private static let displayFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateStyle = .short
         f.timeStyle = .medium
         return f
     }()
-
-    static func format(_ timestamp: String) -> String {
-        if let date = isoFormatter.date(from: timestamp) {
-            return displayFormatter.string(from: date)
-        }
-        return timestamp
-    }
 }
 
-extension AccessLog {
-    var formattedTimestamp: String {
-        TimestampFormatting.format(timestamp)
-    }
+struct RequestAuditLogResponse: Decodable {
+    var log: [RequestAuditLog]
+    var pagination: LogPagination?
 }
 
-extension ActionLog {
-    var formattedTimestamp: String {
-        TimestampFormatting.format(timestamp)
-    }
+struct LogPagination: Decodable {
+    var total: Int?
+    var limit: Int?
+    var offset: Int?
 }
 
-extension RequestLog {
-    var formattedTimestamp: String {
-        TimestampFormatting.format(timestamp)
-    }
-}
+// Keep legacy types for backward compat with any remaining references
+typealias AccessLog = RequestAuditLog
+typealias ActionLog = RequestAuditLog
+typealias RequestLog = RequestAuditLog

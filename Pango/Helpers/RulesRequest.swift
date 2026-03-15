@@ -40,6 +40,7 @@ class RulesRequest {
     }
 
     static func update(
+        resourceId: Int,
         ruleId: Int,
         action: String?,
         match: String?,
@@ -47,7 +48,7 @@ class RulesRequest {
         enabled: Bool?
     ) async throws -> Bool {
         let config = try BaseRequest.config()
-        let url = config.url("rule/\(ruleId)")
+        let url = config.url("resource/\(resourceId)/rule/\(ruleId)")
         var params: [String: Any] = [:]
         if let action = action { params["action"] = action }
         if let match = match { params["match"] = match }
@@ -62,9 +63,9 @@ class RulesRequest {
         return response.success
     }
 
-    static func delete(ruleId: Int) async throws -> Bool {
+    static func delete(resourceId: Int, ruleId: Int) async throws -> Bool {
         let config = try BaseRequest.config()
-        let url = config.url("rule/\(ruleId)")
+        let url = config.url("resource/\(resourceId)/rule/\(ruleId)")
         let response = try await BaseRequest.delete(
             MainResponse<EmptyResponse>.self,
             url: url,

@@ -28,9 +28,9 @@ enum APIError: LocalizedError {
 struct PaginatedResponse<T: Decodable>: Decodable {
     var data: T?
     var success: Bool
-    var error: Bool
-    var message: String
-    var status: Int
+    var error: Bool?
+    var message: String?
+    var status: Int?
     var pagination: Pagination?
 }
 
@@ -91,11 +91,17 @@ class BaseRequest {
         let response = await AF.request(url, headers: headers)
             .serializingDecodable(MainResponse<T>.self)
             .response
+        if let statusCode = response.response?.statusCode, statusCode == 404 {
+            throw APIError.requestFailed("This feature is not available via the API")
+        }
         guard let value = response.value else {
+            if let data = response.data, let raw = String(data: data, encoding: .utf8) {
+                NSLog("[BaseRequest] Decode failed for %@. Error: %@. Raw: %@", url.absoluteString, String(describing: response.error), String(raw.prefix(1000)))
+            }
             throw APIError.decodingFailed
         }
         guard value.success else {
-            throw APIError.requestFailed(value.message)
+            throw APIError.requestFailed(value.message ?? "Request failed")
         }
         return value.data
     }
@@ -112,7 +118,7 @@ class BaseRequest {
             throw APIError.decodingFailed
         }
         guard value.success else {
-            throw APIError.requestFailed(value.message)
+            throw APIError.requestFailed(value.message ?? "Request failed")
         }
         return (value.data, value.pagination)
     }
@@ -135,6 +141,9 @@ class BaseRequest {
         )
         .serializingDecodable(MainResponse<T>.self)
         .response
+        if let statusCode = response.response?.statusCode, statusCode == 404 {
+            throw APIError.requestFailed("This feature is not available via the API")
+        }
         guard let value = response.value else {
             throw APIError.decodingFailed
         }

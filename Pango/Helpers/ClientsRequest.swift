@@ -31,11 +31,10 @@ class ClientsRequest {
 
     static func block(clientId: String) async throws -> Bool {
         let config = try BaseRequest.config()
-        let url = config.url("client/\(clientId)")
+        let url = config.url("client/\(clientId)/block")
         let response = try await BaseRequest.post(
             MainResponse<EmptyResponse>.self,
             url: url,
-            parameters: ["blocked": true],
             headers: config.headers
         )
         return response.success
@@ -43,11 +42,10 @@ class ClientsRequest {
 
     static func unblock(clientId: String) async throws -> Bool {
         let config = try BaseRequest.config()
-        let url = config.url("client/\(clientId)")
+        let url = config.url("client/\(clientId)/unblock")
         let response = try await BaseRequest.post(
             MainResponse<EmptyResponse>.self,
             url: url,
-            parameters: ["blocked": false],
             headers: config.headers
         )
         return response.success
@@ -55,11 +53,21 @@ class ClientsRequest {
 
     static func archive(clientId: String) async throws -> Bool {
         let config = try BaseRequest.config()
-        let url = config.url("client/\(clientId)")
+        let url = config.url("client/\(clientId)/archive")
         let response = try await BaseRequest.post(
             MainResponse<EmptyResponse>.self,
             url: url,
-            parameters: ["archived": true],
+            headers: config.headers
+        )
+        return response.success
+    }
+
+    static func unarchive(clientId: String) async throws -> Bool {
+        let config = try BaseRequest.config()
+        let url = config.url("client/\(clientId)/unarchive")
+        let response = try await BaseRequest.post(
+            MainResponse<EmptyResponse>.self,
+            url: url,
             headers: config.headers
         )
         return response.success

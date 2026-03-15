@@ -4,49 +4,59 @@
 //
 
 struct Client: Decodable {
-    var clientId: String
+    var clientId: Int
+    var orgId: String?
     var name: String?
-    var fingerprint: String?
-    var status: String?
-    var lastSeen: String?
-    var ip: String?
-    var os: String?
-    var version: String?
+    var pubKey: String?
+    var subnet: String?
+    var megabytesIn: Float?
+    var megabytesOut: Float?
+    var orgName: String?
+    var type: String?
+    var online: Bool?
+    var olmVersion: String?
     var userId: String?
+    var username: String?
     var userEmail: String?
-    var siteId: Int?
-    var siteName: String?
-    var approved: Bool?
-    var blocked: Bool?
+    var niceId: String?
+    var agent: String?
+    var approvalState: String?
+    var olmArchived: Bool?
     var archived: Bool?
-    var dateCreated: String?
+    var blocked: Bool?
 
     var displayStatus: String {
         if blocked == true { return "Blocked" }
         if archived == true { return "Archived" }
-        if approved == false { return "Pending" }
-        return status?.capitalized ?? "Active"
+        if approvalState == "pending" { return "Pending" }
+        if online == true { return "Online" }
+        return "Offline"
     }
 
     var isActive: Bool {
-        return blocked != true && archived != true
+        return online == true && blocked != true && archived != true
+    }
+
+    var isPending: Bool {
+        return approvalState == "pending"
+    }
+
+    var clientIdString: String {
+        return String(clientId)
     }
 }
 
 extension Client {
     static func fake() -> Client {
         return Client(
-            clientId: "abc123",
+            clientId: 1,
             name: "Test Client",
-            fingerprint: "aa:bb:cc:dd",
-            status: "active",
-            lastSeen: "2025-01-01T00:00:00Z",
-            ip: "192.168.1.1",
-            os: "macOS",
-            version: "1.0.0",
-            approved: true,
-            blocked: false,
-            archived: false
+            type: "olm",
+            online: true,
+            olmVersion: "1.0.0",
+            approvalState: "approved",
+            archived: false,
+            blocked: false
         )
     }
 }

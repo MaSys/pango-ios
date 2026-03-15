@@ -33,7 +33,7 @@ class ShareableLinksRequest {
             headers: config.headers
         )
         guard response.success else {
-            throw APIError.requestFailed(response.message)
+            throw APIError.requestFailed(response.message ?? "Request failed")
         }
         return response.data
     }

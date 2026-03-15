@@ -9,7 +9,7 @@ class IdentityProvidersRequest {
 
     static func fetch() async throws -> [IdentityProvider] {
         let config = try BaseRequest.config()
-        let url = config.orgURL("idps")
+        let url = config.url("idp")
         let data = try await BaseRequest.get(
             MainResponse<IdentityProvidersResponse>.self,
             url: url,
@@ -29,7 +29,7 @@ class IdentityProvidersRequest {
         autoProvision: Bool
     ) async throws -> Bool {
         let config = try BaseRequest.config()
-        let url = config.orgURL("idp")
+        let url = config.url("idp/oidc")
         var params: [String: Any] = [
             "name": name,
             "type": type,
@@ -56,7 +56,7 @@ class IdentityProvidersRequest {
         autoProvision: Bool?
     ) async throws -> Bool {
         let config = try BaseRequest.config()
-        let url = config.url("idp/\(idpId)")
+        let url = config.url("idp/\(idpId)/oidc")
         var params: [String: Any] = [:]
         if let name = name { params["name"] = name }
         if let enabled = enabled { params["enabled"] = enabled }
@@ -73,11 +73,15 @@ class IdentityProvidersRequest {
     static func delete(idpId: Int) async throws -> Bool {
         let config = try BaseRequest.config()
         let url = config.url("idp/\(idpId)")
-        let response = try await BaseRequest.delete(
-            MainResponse<EmptyResponse>.self,
-            url: url,
-            headers: config.headers
-        )
-        return response.success
+        do {
+            let response = try await BaseRequest.delete(
+                MainResponse<EmptyResponse>.self,
+                url: url,
+                headers: config.headers
+            )
+            return response.success
+        } catch {
+            return false
+        }
     }
 }

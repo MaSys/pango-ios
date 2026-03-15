@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct StatusIconView: View {
-    
+
     var online: Bool
-    
+
     var body: some View {
         Image(systemName: "circle.fill")
-            .resizable()
-            .frame(width: 11, height: 11)
-            .foregroundStyle(self.online ? .green : .red)
+            .font(.system(size: 8))
+            .foregroundStyle(self.online ? Color(.systemGreen) : Color(.systemRed))
+            .accessibilityLabel(self.online ? "Online" : "Offline")
     }
 }
 

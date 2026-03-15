@@ -10,9 +10,9 @@
 struct MainResponse<T: Decodable>: Decodable {
     var data: T?
     var success: Bool
-    var error: Bool
-    var message: String
-    var status: Int
+    var error: Bool?
+    var message: String?
+    var status: Int?
 }
 
 struct HealthCheckResponse: Decodable {
@@ -64,17 +64,7 @@ struct ClientsResponse: Decodable {
     var clients: [Client]
 }
 
-struct AccessLogsResponse: Decodable {
-    var logs: [AccessLog]
-}
-
-struct ActionLogsResponse: Decodable {
-    var logs: [ActionLog]
-}
-
-struct RequestLogsResponse: Decodable {
-    var logs: [RequestLog]
-}
+// Log response types moved to Log.swift (RequestAuditLogResponse)
 
 struct RulesResponse: Decodable {
     var rules: [Rule]

@@ -8,25 +8,26 @@
 import SwiftUI
 
 struct NewtView: View {
-    
+
     var site: Site
-    
+
     var body: some View {
         Group {
             HStack {
                 Text(site.type.capitalized)
-                    .font(.system(size: 14))
+                    .font(.caption)
                 if let version = site.newtVersion {
                     Text("v\(version)")
-                        .foregroundStyle(.gray)
-                        .font(.system(size: 14))
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
                 }
             }
             .padding(.horizontal, 7)
             .padding(.vertical, 3)
         }
-        .background(Color.init(uiColor: UIColor(white: 0.8, alpha: 0.3)))
+        .background(Color(.quaternarySystemFill))
         .cornerRadius(15)
+        .accessibilityElement(children: .combine)
     }
 }
 

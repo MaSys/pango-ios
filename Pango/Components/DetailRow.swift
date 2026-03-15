@@ -17,6 +17,7 @@ struct DetailRow: View {
             Text(value)
                 .multilineTextAlignment(.trailing)
         }
+        .accessibilityElement(children: .combine)
     }
 }
 

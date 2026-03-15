@@ -8,28 +8,32 @@
 import SwiftUI
 
 struct SiteUsageView: View {
-    
+
     var site: Site
-    
+
     var body: some View {
         Group {
-            HStack {
+            HStack(spacing: 4) {
+                Image(systemName: "arrow.up")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
                 Text(humanMegabyte(from: site.megabytesIn ?? 0))
-                    .font(.system(size: 14))
-                Image(systemName: "arrowshape.up.fill")
-                    .resizable()
-                    .frame(width: 11, height: 11)
-                    .foregroundStyle(.red)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
-            
-            HStack {
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Upload: \(humanMegabyte(from: site.megabytesIn ?? 0))")
+
+            HStack(spacing: 4) {
+                Image(systemName: "arrow.down")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
                 Text(humanMegabyte(from: site.megabytesOut ?? 0))
-                    .font(.system(size: 14))
-                Image(systemName: "arrowshape.down.fill")
-                    .resizable()
-                    .frame(width: 11, height: 11)
-                    .foregroundStyle(.green)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Download: \(humanMegabyte(from: site.megabytesOut ?? 0))")
         }
     }
 }

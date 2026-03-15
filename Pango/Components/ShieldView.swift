@@ -8,20 +8,23 @@
 import SwiftUI
 
 struct ShieldView: View {
-    
+
     var resource: Resource
     var showText: Bool = false
-    
+
     var body: some View {
         HStack {
             Image(systemName: self.resource.protected ? "checkmark.shield" : "xmark.shield")
-                .foregroundStyle(self.resource.protected ? .green : .yellow)
+                .symbolRenderingMode(.hierarchical)
+                .foregroundStyle(self.resource.protected ? Color(.systemGreen) : .orange)
             if self.showText {
                 Text(resource.protected ? "PROTECTED" : "NOT_PROTECTED")
-                    .font(.system(size: 14))
-                    .foregroundStyle(self.resource.protected ? .green : .yellow)
+                    .font(.subheadline)
+                    .foregroundStyle(self.resource.protected ? Color(.systemGreen) : .orange)
             }
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(resource.protected ? "Protected" : "Not protected")
     }
 }
 

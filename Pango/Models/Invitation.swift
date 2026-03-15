@@ -12,7 +12,7 @@ struct Invitation: Decodable {
     var email: String
     var expiresAt: Int
     var roleId: Int
-    var roleName: String
+    var roleName: String?
 }
 
 extension Invitation {

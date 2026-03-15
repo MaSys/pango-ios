@@ -13,8 +13,8 @@ struct User: Decodable {
     var orgId: String?
     var username: String?
     var name: String?
-    var type: String
-    var roleId: Int
+    var type: String?
+    var roleId: Int?
     var roleName: String?
     var isOwner: Bool?
     var idpName: String?

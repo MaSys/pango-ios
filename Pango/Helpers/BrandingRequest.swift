@@ -3,6 +3,7 @@
 //  Pango
 //
 
+import Foundation
 import Alamofire
 
 class BrandingRequest {

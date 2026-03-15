@@ -15,7 +15,7 @@ struct ResourceRowView: View {
         NavigationLink {
             ResourceView(resource: self.resource)
         } label: {
-            VStack {
+            VStack(alignment: .leading, spacing: 4) {
                 HStack {
                     ShieldView(resource: resource)
                     Text(resource.name)
@@ -23,11 +23,11 @@ struct ResourceRowView: View {
                     Spacer()
                     if resource.resourceType == .privateResource {
                         Text("PRIVATE")
-                            .font(.system(size: 14))
-                            .foregroundStyle(.purple)
+                            .font(.caption)
+                            .foregroundStyle(.indigo)
                     } else {
                         Text(resource.protocolString.uppercased())
-                            .font(.system(size: 14))
+                            .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                     StatusIconView(online: resource.enabled)
@@ -35,23 +35,22 @@ struct ResourceRowView: View {
                 HStack {
                     if resource.resourceType == .privateResource {
                         Text(resource.host ?? resource.cidr ?? "Private")
-                            .font(.system(size: 14))
+                            .font(.subheadline)
                             .foregroundStyle(.secondary)
                     } else if self.resource.http {
                         Text(fullURL(from: resource.fullDomain ?? "", ssl: resource.ssl))
-                            .font(.system(size: 14))
+                            .font(.subheadline)
                             .foregroundStyle(.secondary)
                     } else {
                         Text(String(self.resource.proxyPort ?? 0))
-                            .font(.system(size: 14))
+                            .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
                 }
             }
-            .cardStyle(verticalPadding: 4)
         }
-        .tint(.primary)
+        .accessibilityElement(children: .combine)
     }
 }
 
