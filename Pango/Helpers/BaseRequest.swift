@@ -119,7 +119,8 @@ class BaseRequest {
 
     // MARK: - Async POST/PUT/DELETE
 
-    static func post<T: Decodable>(
+    private static func mutate<T: Decodable>(
+        method: HTTPMethod,
         _ responseType: MainResponse<T>.Type,
         url: URL,
         parameters: Parameters? = nil,
@@ -127,7 +128,7 @@ class BaseRequest {
     ) async throws -> MainResponse<T> {
         let response = await AF.request(
             url,
-            method: .post,
+            method: method,
             parameters: parameters,
             encoding: JSONEncoding.default,
             headers: headers
@@ -138,6 +139,15 @@ class BaseRequest {
             throw APIError.decodingFailed
         }
         return value
+    }
+
+    static func post<T: Decodable>(
+        _ responseType: MainResponse<T>.Type,
+        url: URL,
+        parameters: Parameters? = nil,
+        headers: HTTPHeaders
+    ) async throws -> MainResponse<T> {
+        try await mutate(method: .post, responseType, url: url, parameters: parameters, headers: headers)
     }
 
     static func put<T: Decodable>(
@@ -146,19 +156,7 @@ class BaseRequest {
         parameters: Parameters? = nil,
         headers: HTTPHeaders
     ) async throws -> MainResponse<T> {
-        let response = await AF.request(
-            url,
-            method: .put,
-            parameters: parameters,
-            encoding: JSONEncoding.default,
-            headers: headers
-        )
-        .serializingDecodable(MainResponse<T>.self)
-        .response
-        guard let value = response.value else {
-            throw APIError.decodingFailed
-        }
-        return value
+        try await mutate(method: .put, responseType, url: url, parameters: parameters, headers: headers)
     }
 
     static func delete<T: Decodable>(
@@ -167,18 +165,6 @@ class BaseRequest {
         parameters: Parameters? = nil,
         headers: HTTPHeaders
     ) async throws -> MainResponse<T> {
-        let response = await AF.request(
-            url,
-            method: .delete,
-            parameters: parameters,
-            encoding: JSONEncoding.default,
-            headers: headers
-        )
-        .serializingDecodable(MainResponse<T>.self)
-        .response
-        guard let value = response.value else {
-            throw APIError.decodingFailed
-        }
-        return value
+        try await mutate(method: .delete, responseType, url: url, parameters: parameters, headers: headers)
     }
 }

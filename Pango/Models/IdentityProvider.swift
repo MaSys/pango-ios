@@ -18,13 +18,17 @@ struct IdentityProvider: Decodable {
     var dateCreated: String?
 
     var displayType: String {
-        switch type?.lowercased() {
+        Self.displayName(for: type ?? "")
+    }
+
+    static func displayName(for type: String) -> String {
+        switch type.lowercased() {
         case "azure": return "Azure Entra ID"
         case "google": return "Google SSO"
         case "oidc": return "OAuth2/OIDC"
         case "pocketid": return "Pocket ID"
         case "zitadel": return "Zitadel"
-        default: return type?.capitalized ?? "Unknown"
+        default: return type.capitalized
         }
     }
 }

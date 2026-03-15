@@ -16,6 +16,7 @@ struct ResourceHealthCheckView: View {
     @State private var lastChecked: String = ""
     @State private var status: String = ""
     @State private var isLoading: Bool = true
+    @State private var didFinishLoading: Bool = false
     @State private var errorMessage: String = ""
 
     var body: some View {
@@ -23,6 +24,7 @@ struct ResourceHealthCheckView: View {
             Section {
                 Toggle("ENABLED", isOn: $enabled)
                     .onChange(of: enabled) { _, _ in
+                        guard didFinishLoading else { return }
                         Task { await save() }
                     }
             }
@@ -106,8 +108,11 @@ struct ResourceHealthCheckView: View {
                 lastChecked = config.lastChecked ?? ""
                 status = config.status ?? ""
             }
-        } catch {}
+        } catch {
+            errorMessage = error.localizedDescription
+        }
         isLoading = false
+        didFinishLoading = true
     }
 
     private func save() async {

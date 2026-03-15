@@ -80,7 +80,9 @@ struct NodesView: View {
         isLoading = true
         do {
             nodes = try await NodesRequest.fetch()
-        } catch {}
+        } catch {
+            // Node operation failed silently
+        }
         isLoading = false
     }
 
@@ -88,7 +90,9 @@ struct NodesView: View {
         do {
             _ = try await NodesRequest.delete(nodeId: node.nodeId)
             await fetch()
-        } catch {}
+        } catch {
+            // Node operation failed silently
+        }
     }
 }
 

@@ -47,14 +47,11 @@ struct LogsView: View {
                 }
             }
             .navigationTitle(Text("LOGS"))
-            .task {
+            .task(id: selectedTab) {
                 await fetchLogs()
             }
             .refreshable {
                 await fetchLogs()
-            }
-            .onChange(of: selectedTab) { _, _ in
-                Task { await fetchLogs() }
             }
         }
     }
@@ -164,14 +161,7 @@ struct AccessLogRowView: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color(uiColor: UIColor.secondarySystemBackground))
-                .shadow(color: .gray.opacity(0.2), radius: 2, y: 1)
-        )
-        .padding(.horizontal)
-        .padding(.vertical, 2)
+        .cardStyle()
     }
 }
 
@@ -199,14 +189,7 @@ struct ActionLogRowView: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color(uiColor: UIColor.secondarySystemBackground))
-                .shadow(color: .gray.opacity(0.2), radius: 2, y: 1)
-        )
-        .padding(.horizontal)
-        .padding(.vertical, 2)
+        .cardStyle()
     }
 }
 
@@ -240,14 +223,7 @@ struct RequestLogRowView: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color(uiColor: UIColor.secondarySystemBackground))
-                .shadow(color: .gray.opacity(0.2), radius: 2, y: 1)
-        )
-        .padding(.horizontal)
-        .padding(.vertical, 2)
+        .cardStyle()
     }
 }
 

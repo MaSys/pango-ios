@@ -11,19 +11,19 @@ struct AccessLogDetailView: View {
     var body: some View {
         List {
             Section {
-                detailRow("ACTION", log.action ?? "-")
-                detailRow("STATUS", log.success == true ? "Success" : "Failed")
-                detailRow("TIMESTAMP", log.formattedTimestamp)
+                DetailRow(label: "ACTION", value: log.action ?? "-")
+                DetailRow(label: "STATUS", value: log.success == true ? "Success" : "Failed")
+                DetailRow(label: "TIMESTAMP", value: log.formattedTimestamp)
             }
             Section(header: Text("USER")) {
-                detailRow("EMAIL", log.userEmail ?? "-")
-                detailRow("NAME", log.userName ?? "-")
-                detailRow("USER_ID", log.userId ?? "-")
+                DetailRow(label: "EMAIL", value: log.userEmail ?? "-")
+                DetailRow(label: "NAME", value: log.userName ?? "-")
+                DetailRow(label: "USER_ID", value: log.userId ?? "-")
             }
             Section(header: Text("DETAILS")) {
-                detailRow("RESOURCE", log.resourceName ?? "-")
-                detailRow("IP", log.ip ?? "-")
-                detailRow("COUNTRY", log.country ?? "-")
+                DetailRow(label: "RESOURCE", value: log.resourceName ?? "-")
+                DetailRow(label: "IP", value: log.ip ?? "-")
+                DetailRow(label: "COUNTRY", value: log.country ?? "-")
                 if let userAgent = log.userAgent {
                     VStack(alignment: .leading) {
                         Text("USER_AGENT")
@@ -46,16 +46,16 @@ struct ActionLogDetailView: View {
     var body: some View {
         List {
             Section {
-                detailRow("ACTION", log.action ?? "-")
-                detailRow("TIMESTAMP", log.formattedTimestamp)
+                DetailRow(label: "ACTION", value: log.action ?? "-")
+                DetailRow(label: "TIMESTAMP", value: log.formattedTimestamp)
             }
             Section(header: Text("USER")) {
-                detailRow("EMAIL", log.userEmail ?? "-")
-                detailRow("NAME", log.userName ?? "-")
+                DetailRow(label: "EMAIL", value: log.userEmail ?? "-")
+                DetailRow(label: "NAME", value: log.userName ?? "-")
             }
             Section(header: Text("TARGET")) {
-                detailRow("TARGET", log.target ?? "-")
-                detailRow("TARGET_ID", log.targetId ?? "-")
+                DetailRow(label: "TARGET", value: log.target ?? "-")
+                DetailRow(label: "TARGET_ID", value: log.targetId ?? "-")
                 if let details = log.details {
                     VStack(alignment: .leading) {
                         Text("DETAILS")
@@ -78,17 +78,17 @@ struct RequestLogDetailView: View {
     var body: some View {
         List {
             Section {
-                detailRow("METHOD", log.method ?? "-")
-                detailRow("PATH", log.path ?? "-")
-                detailRow("STATUS_CODE", log.statusCode != nil ? "\(log.statusCode!)" : "-")
-                detailRow("TIMESTAMP", log.formattedTimestamp)
+                DetailRow(label: "METHOD", value: log.method ?? "-")
+                DetailRow(label: "PATH", value: log.path ?? "-")
+                DetailRow(label: "STATUS_CODE", value: log.statusCode != nil ? "\(log.statusCode!)" : "-")
+                DetailRow(label: "TIMESTAMP", value: log.formattedTimestamp)
             }
             Section(header: Text("DETAILS")) {
-                detailRow("RESOURCE", log.resourceName ?? "-")
-                detailRow("IP", log.ip ?? "-")
-                detailRow("DECISION", log.decision ?? "-")
+                DetailRow(label: "RESOURCE", value: log.resourceName ?? "-")
+                DetailRow(label: "IP", value: log.ip ?? "-")
+                DetailRow(label: "DECISION", value: log.decision ?? "-")
                 if let duration = log.duration {
-                    detailRow("DURATION", "\(duration)ms")
+                    DetailRow(label: "DURATION", value: "\(duration)ms")
                 }
                 if let userAgent = log.userAgent {
                     VStack(alignment: .leading) {
@@ -103,15 +103,5 @@ struct RequestLogDetailView: View {
         }
         .navigationTitle("REQUEST_LOG")
         .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-private func detailRow(_ label: String, _ value: String) -> some View {
-    HStack {
-        Text(LocalizedStringResource(stringLiteral: label))
-            .foregroundStyle(.secondary)
-        Spacer()
-        Text(value)
-            .multilineTextAlignment(.trailing)
     }
 }

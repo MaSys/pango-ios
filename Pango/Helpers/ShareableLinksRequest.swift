@@ -3,8 +3,6 @@
 //  Pango
 //
 
-import Alamofire
-
 class ShareableLinksRequest {
 
     static func fetch(resourceId: Int) async throws -> [ShareableLink] {
@@ -28,19 +26,16 @@ class ShareableLinksRequest {
         var params: [String: Any] = [:]
         if let maxUses = maxUses { params["maxUses"] = maxUses }
         if let expiresInHours = expiresInHours { params["expiresInHours"] = expiresInHours }
-        let response = await AF.request(
-            url,
-            method: .put,
+        let response = try await BaseRequest.put(
+            MainResponse<ShareableLink>.self,
+            url: url,
             parameters: params,
-            encoding: JSONEncoding.default,
             headers: config.headers
         )
-        .serializingDecodable(MainResponse<ShareableLink>.self)
-        .response
-        guard let value = response.value, value.success else {
-            throw APIError.requestFailed(response.value?.message ?? "Failed to create link")
+        guard response.success else {
+            throw APIError.requestFailed(response.message)
         }
-        return value.data
+        return response.data
     }
 
     static func delete(linkId: String) async throws -> Bool {

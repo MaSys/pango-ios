@@ -81,7 +81,9 @@ struct ResourceRulesView: View {
         isLoading = true
         do {
             rules = try await RulesRequest.fetch(resourceId: resource.resourceId)
-        } catch {}
+        } catch {
+            // Rule operation failed
+        }
         isLoading = false
     }
 
@@ -89,7 +91,9 @@ struct ResourceRulesView: View {
         do {
             _ = try await RulesRequest.delete(ruleId: rule.ruleId)
             await fetch()
-        } catch {}
+        } catch {
+            // Rule operation failed
+        }
     }
 }
 

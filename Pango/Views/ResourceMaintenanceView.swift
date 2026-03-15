@@ -13,6 +13,7 @@ struct ResourceMaintenanceView: View {
     @State private var title: String = ""
     @State private var message: String = ""
     @State private var isLoading: Bool = true
+    @State private var didFinishLoading: Bool = false
     @State private var errorMessage: String = ""
 
     var body: some View {
@@ -20,6 +21,7 @@ struct ResourceMaintenanceView: View {
             Section(footer: Text("MAINTENANCE_HINT")) {
                 Toggle("MAINTENANCE_MODE", isOn: $enabled)
                     .onChange(of: enabled) { _, _ in
+                        guard didFinishLoading else { return }
                         Task { await save() }
                     }
             }
@@ -62,8 +64,11 @@ struct ResourceMaintenanceView: View {
                 title = config.title ?? ""
                 message = config.message ?? ""
             }
-        } catch {}
+        } catch {
+            errorMessage = error.localizedDescription
+        }
         isLoading = false
+        didFinishLoading = true
     }
 
     private func save() async {

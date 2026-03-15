@@ -49,14 +49,7 @@ struct ResourceRowView: View {
                     Spacer()
                 }
             }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color(uiColor: UIColor.secondarySystemBackground))
-                    .shadow(color: .gray.opacity(0.2), radius: 2, y: 1)
-            )
-            .padding(.horizontal)
-            .padding(.vertical, 4)
+            .cardStyle(verticalPadding: 4)
         }
         .tint(.primary)
     }

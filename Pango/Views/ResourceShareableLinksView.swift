@@ -90,7 +90,9 @@ struct ResourceShareableLinksView: View {
         isLoading = true
         do {
             links = try await ShareableLinksRequest.fetch(resourceId: resource.resourceId)
-        } catch {}
+        } catch {
+            // Link operation failed
+        }
         isLoading = false
     }
 
@@ -98,7 +100,9 @@ struct ResourceShareableLinksView: View {
         do {
             _ = try await ShareableLinksRequest.delete(linkId: link.linkId)
             await fetch()
-        } catch {}
+        } catch {
+            // Link operation failed
+        }
     }
 }
 

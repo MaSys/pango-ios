@@ -80,7 +80,9 @@ struct DeviceApprovalsView: View {
         isLoading = true
         do {
             approvals = try await DeviceApprovalsRequest.fetchPending()
-        } catch {}
+        } catch {
+            // Approval operation failed
+        }
         isLoading = false
     }
 
@@ -88,14 +90,18 @@ struct DeviceApprovalsView: View {
         do {
             _ = try await DeviceApprovalsRequest.approve(approvalId: approval.approvalId)
             await fetch()
-        } catch {}
+        } catch {
+            // Approval operation failed
+        }
     }
 
     private func deny(_ approval: DeviceApproval) async {
         do {
             _ = try await DeviceApprovalsRequest.deny(approvalId: approval.approvalId)
             await fetch()
-        } catch {}
+        } catch {
+            // Approval operation failed
+        }
     }
 }
 

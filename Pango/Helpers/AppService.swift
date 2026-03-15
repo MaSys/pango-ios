@@ -76,25 +76,34 @@ class AppService: ObservableObject {
     }
 
     public func fetchSitesAsync() async {
-        SitesRequest.fetch { success, sites in
-            Task { @MainActor in
-                self.sites = sites
+        await withCheckedContinuation { continuation in
+            SitesRequest.fetch { _, sites in
+                Task { @MainActor in
+                    self.sites = sites
+                    continuation.resume()
+                }
             }
         }
     }
 
     public func fetchResourcesAsync() async {
-        ResourcesRequest.fetch { success, resources in
-            Task { @MainActor in
-                self.resources = resources
+        await withCheckedContinuation { continuation in
+            ResourcesRequest.fetch { _, resources in
+                Task { @MainActor in
+                    self.resources = resources
+                    continuation.resume()
+                }
             }
         }
     }
 
     public func fetchDomainsAsync() async {
-        DomainsRequest.fetch { success, domains in
-            Task { @MainActor in
-                self.domains = domains
+        await withCheckedContinuation { continuation in
+            DomainsRequest.fetch { _, domains in
+                Task { @MainActor in
+                    self.domains = domains
+                    continuation.resume()
+                }
             }
         }
     }

@@ -46,32 +46,41 @@ struct RequestLog: Decodable {
     var duration: Int?
 }
 
+private enum TimestampFormatting {
+    static let isoFormatter: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return f
+    }()
+    static let displayFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .short
+        f.timeStyle = .medium
+        return f
+    }()
+
+    static func format(_ timestamp: String) -> String {
+        if let date = isoFormatter.date(from: timestamp) {
+            return displayFormatter.string(from: date)
+        }
+        return timestamp
+    }
+}
+
 extension AccessLog {
     var formattedTimestamp: String {
-        return formatTimestamp(timestamp)
+        TimestampFormatting.format(timestamp)
     }
 }
 
 extension ActionLog {
     var formattedTimestamp: String {
-        return formatTimestamp(timestamp)
+        TimestampFormatting.format(timestamp)
     }
 }
 
 extension RequestLog {
     var formattedTimestamp: String {
-        return formatTimestamp(timestamp)
+        TimestampFormatting.format(timestamp)
     }
-}
-
-private func formatTimestamp(_ timestamp: String) -> String {
-    let formatter = ISO8601DateFormatter()
-    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    if let date = formatter.date(from: timestamp) {
-        let display = DateFormatter()
-        display.dateStyle = .short
-        display.timeStyle = .medium
-        return display.string(from: date)
-    }
-    return timestamp
 }

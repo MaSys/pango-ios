@@ -57,7 +57,9 @@ struct IdentityProvidersView: View {
         isLoading = true
         do {
             idps = try await IdentityProvidersRequest.fetch()
-        } catch {}
+        } catch {
+            // IDP operation failed
+        }
         isLoading = false
     }
 }
@@ -206,7 +208,7 @@ struct IdentityProviderCreateView: View {
 
                 Picker("TYPE", selection: $type) {
                     ForEach(typeOptions, id: \.self) { option in
-                        Text(displayTypeName(option)).tag(option)
+                        Text(IdentityProvider.displayName(for: option)).tag(option)
                     }
                 }
                 .pickerStyle(.menu)
@@ -245,17 +247,6 @@ struct IdentityProviderCreateView: View {
                 }
                 .disabled(!validForm)
             }
-        }
-    }
-
-    private func displayTypeName(_ type: String) -> String {
-        switch type {
-        case "azure": return "Azure Entra ID"
-        case "google": return "Google SSO"
-        case "oidc": return "OAuth2/OIDC"
-        case "pocketid": return "Pocket ID"
-        case "zitadel": return "Zitadel"
-        default: return type.capitalized
         }
     }
 

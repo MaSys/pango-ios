@@ -54,7 +54,9 @@ struct BlueprintsView: View {
         isLoading = true
         do {
             blueprints = try await BlueprintsRequest.fetch()
-        } catch {}
+        } catch {
+            // Blueprints may not be available on all instances
+        }
         isLoading = false
     }
 }

@@ -15,13 +15,17 @@ struct ShareableLink: Decodable {
     var url: String?
     var dateCreated: String?
 
+    private static let expiresFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .medium
+        f.timeStyle = .short
+        return f
+    }()
+
     var formattedExpiresAt: String? {
         guard let expiresAt = expiresAt else { return nil }
         let date = Date(timeIntervalSince1970: Double(expiresAt / 1000))
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
+        return Self.expiresFormatter.string(from: date)
     }
 
     var isExpired: Bool {

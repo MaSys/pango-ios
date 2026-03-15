@@ -17,9 +17,9 @@ struct ClientDetailView: View {
     var body: some View {
         List {
             Section(header: Text("DETAILS")) {
-                row("NAME", client.name ?? "-")
-                row("STATUS", client.displayStatus)
-                row("CLIENT_ID", client.clientId)
+                DetailRow(label: "NAME", value: client.name ?? "-")
+                DetailRow(label: "STATUS", value: client.displayStatus)
+                DetailRow(label: "CLIENT_ID", value: client.clientId)
                 if let fingerprint = client.fingerprint {
                     VStack(alignment: .leading) {
                         Text("FINGERPRINT")
@@ -32,46 +32,46 @@ struct ClientDetailView: View {
             }
 
             Section(header: Text("CONNECTION")) {
-                row("IP", client.ip ?? "-")
-                row("OS", client.os ?? "-")
-                row("VERSION", client.version ?? "-")
-                row("LAST_SEEN", client.lastSeen ?? "-")
+                DetailRow(label: "IP", value: client.ip ?? "-")
+                DetailRow(label: "OS", value: client.os ?? "-")
+                DetailRow(label: "VERSION", value: client.version ?? "-")
+                DetailRow(label: "LAST_SEEN", value: client.lastSeen ?? "-")
             }
 
             if let email = client.userEmail {
                 Section(header: Text("USER")) {
-                    row("EMAIL", email)
+                    DetailRow(label: "EMAIL", value: email)
                 }
             }
 
             if let siteName = client.siteName {
                 Section(header: Text("SITE")) {
-                    row("SITE", siteName)
+                    DetailRow(label: "SITE", value: siteName)
                 }
             }
 
             Section(header: Text("ACTIONS")) {
                 if client.approved == false {
                     Button("APPROVE") {
-                        Task { await approve() }
+                        performAction { try await ClientsRequest.approve(clientId: client.clientId) }
                     }
                     .foregroundStyle(.green)
                 }
 
                 if client.blocked == true {
                     Button("UNBLOCK") {
-                        Task { await unblock() }
+                        performAction { try await ClientsRequest.unblock(clientId: client.clientId) }
                     }
                 } else {
                     Button("BLOCK") {
-                        Task { await block() }
+                        performAction { try await ClientsRequest.block(clientId: client.clientId) }
                     }
                     .foregroundStyle(.orange)
                 }
 
                 if client.archived != true {
                     Button("ARCHIVE") {
-                        Task { await archive() }
+                        performAction { try await ClientsRequest.archive(clientId: client.clientId) }
                     }
                     .foregroundStyle(.orange)
                 }
@@ -85,7 +85,7 @@ struct ClientDetailView: View {
                     isPresented: $showDeleteConfirmation
                 ) {
                     Button("DELETE", role: .destructive) {
-                        Task { await deleteClient() }
+                        performAction { try await ClientsRequest.delete(clientId: client.clientId) }
                     }
                     Button("CANCEL", role: .cancel) {}
                 }
@@ -101,63 +101,15 @@ struct ClientDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    private func row(_ label: String, _ value: String) -> some View {
-        HStack {
-            Text(LocalizedStringResource(stringLiteral: label))
-                .foregroundStyle(.secondary)
-            Spacer()
-            Text(value)
-                .multilineTextAlignment(.trailing)
-        }
-    }
-
-    private func approve() async {
-        do {
-            _ = try await ClientsRequest.approve(clientId: client.clientId)
-            onUpdate()
-            dismiss()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    private func block() async {
-        do {
-            _ = try await ClientsRequest.block(clientId: client.clientId)
-            onUpdate()
-            dismiss()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    private func unblock() async {
-        do {
-            _ = try await ClientsRequest.unblock(clientId: client.clientId)
-            onUpdate()
-            dismiss()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    private func archive() async {
-        do {
-            _ = try await ClientsRequest.archive(clientId: client.clientId)
-            onUpdate()
-            dismiss()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    private func deleteClient() async {
-        do {
-            _ = try await ClientsRequest.delete(clientId: client.clientId)
-            onUpdate()
-            dismiss()
-        } catch {
-            errorMessage = error.localizedDescription
+    private func performAction(_ action: @escaping () async throws -> Bool) {
+        Task {
+            do {
+                _ = try await action()
+                onUpdate()
+                dismiss()
+            } catch {
+                errorMessage = error.localizedDescription
+            }
         }
     }
 }
