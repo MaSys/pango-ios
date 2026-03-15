@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct ResourcePinCodeView: View {
-    
+
     @EnvironmentObject var appService: AppService
     @Environment(\.dismiss) var dismiss
-    
+
     var resource: Resource
-    
+
     @State private var pinCode: String = ""
-    
+
     var body: some View {
         Form {
             Section(footer: Text("RESOURCE_PIN_CODE_HINT")) {
@@ -30,14 +30,14 @@ struct ResourcePinCodeView: View {
                 } label: {
                     Text("SAVE")
                 }
-
             }
         }
     }
-    
+
     private func save() {
         ResourcesRequest.setPinCode(id: self.resource.resourceId, pinCode: self.pinCode) { success, response in
             if let res = response, res.success {
+                hapticSuccess()
                 self.appService.fetchResources()
                 self.dismiss()
             }

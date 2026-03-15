@@ -54,8 +54,8 @@ struct ResourcesCreateView: View {
 
             if !self.errorMessage.isEmpty {
                 Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
+                    .foregroundStyle(Color(.systemRed))
+                    .font(.subheadline)
             }
         }
         .onChange(of: self.resourceType) { oldValue, newValue in
@@ -104,6 +104,7 @@ struct ResourcesCreateView: View {
                 proxyPort: nil
             ) { success, response in
                 if success {
+                    hapticSuccess()
                     self.dismiss()
                 } else {
                     if let msg = response?.message {
@@ -121,6 +122,7 @@ struct ResourcesCreateView: View {
                 proxyPort: self.proxyPort.isEmpty ? nil : Int(self.proxyPort)
             ) { success, response in
                 if success {
+                    hapticSuccess()
                     self.dismiss()
                 } else {
                     if let msg = response?.message {
@@ -138,6 +140,7 @@ struct ResourcesCreateView: View {
                 proxyPort: nil
             ) { success, response in
                 if success {
+                    hapticSuccess()
                     self.dismiss()
                 } else {
                     if let msg = response?.message {
@@ -161,7 +164,7 @@ extension ResourcesCreateView {
     var httpsResourceType: some View {
         Group {
             TextField("SUBDOMAIN", text: $subdomain)
-                .autocapitalization(.none)
+                .textInputAutocapitalization(.never)
                 .autocorrectionDisabled(true)
             List {
                 ForEach(self.appService.domains, id: \.domainId) { domain in
@@ -170,7 +173,7 @@ extension ResourcesCreateView {
                     } label: {
                         HStack {
                             Text(domain.baseDomain)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(.primary)
                             Spacer()
                             if self.selectedDomain == domain.domainId {
                                 Image(systemName: "checkmark")
@@ -198,16 +201,16 @@ extension ResourcesCreateView {
     var privateResourceType: some View {
         Group {
             TextField("HOST", text: $host)
-                .autocapitalization(.none)
+                .textInputAutocapitalization(.never)
                 .autocorrectionDisabled(true)
                 .keyboardType(.numbersAndPunctuation)
 
             TextField("CIDR_OPTIONAL", text: $cidr)
-                .autocapitalization(.none)
+                .textInputAutocapitalization(.never)
                 .autocorrectionDisabled(true)
 
             TextField("PORTS_OPTIONAL", text: $ports)
-                .autocapitalization(.none)
+                .textInputAutocapitalization(.never)
                 .autocorrectionDisabled(true)
                 .keyboardType(.numbersAndPunctuation)
 

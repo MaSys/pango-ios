@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct ResourceTargetsView: View {
-    
+
     @EnvironmentObject var appService: AppService
-    
+
     var resource: Resource
-    
+
     @State private var targets: [Target] = []
     @State private var schema: String = ""
     @State private var ipAddress: String = ""
     @State private var port: String = ""
-    
+
     var body: some View {
         List {
             ForEach(targets, id: \.targetId) { target in
@@ -44,6 +44,11 @@ struct ResourceTargetsView: View {
             }
         }
         .navigationTitle("TARGETS")
+        .overlay {
+            if targets.isEmpty {
+                ContentUnavailableView("NO_TARGETS", systemImage: "target")
+            }
+        }
         .onAppear {
             self.fetch()
         }
@@ -54,19 +59,19 @@ struct ResourceTargetsView: View {
                 } label: {
                     Image(systemName: "plus")
                 }
-
             }
         }
     }
-    
+
     private func fetch() {
         TargetsRequest.fetch(id: self.resource.resourceId) { success, targets in
             self.targets = targets
         }
     }
-    
+
     private func delete(_ target: Target) {
         TargetsRequest.delete(id: target.targetId) { success, response in
+            if success { hapticSuccess() }
             self.fetch()
         }
     }

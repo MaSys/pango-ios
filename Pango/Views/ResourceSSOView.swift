@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct ResourceSSOView: View {
-    
+
     @EnvironmentObject var appService: AppService
     @Environment(\.dismiss) var dismiss
-    
+
     var resource: Resource
-    
+
     @State private var ssoEnabled: Bool = false
-    
+
     var body: some View {
         Form {
             Section {
@@ -24,7 +24,7 @@ struct ResourceSSOView: View {
                         self.updateSSO()
                     }
             }
-            
+
             Section {
                 NavigationLink {
                     ResourceUsersView(resource: self.resource)
@@ -33,7 +33,7 @@ struct ResourceSSOView: View {
                     Text("USERS")
                 }
                 .disabled(!self.ssoEnabled)
-                
+
                 NavigationLink {
                     ResourceRolesView(resource: self.resource)
                         .environmentObject(self.appService)
@@ -49,10 +49,11 @@ struct ResourceSSOView: View {
             self.appService.fetchRoles()
         }
     }
-    
+
     private func updateSSO() {
         ResourcesRequest.toggleSSO(id: self.resource.resourceId, sso: self.ssoEnabled) { success, response in
             if success {
+                hapticLight()
                 self.appService.fetchResources()
             }
         }
@@ -66,17 +67,17 @@ struct ResourceSSOView: View {
 
 
 struct ResourceUsersView: View {
-    
+
     @EnvironmentObject var appService: AppService
     @Environment(\.dismiss) var dismiss
-    
+
     var resource: Resource
-    
+
     @State private var isLoading: Bool = false
     @State private var selectedUsers: [String] = []
-    
+
     @State private var errorMessage: String = ""
-    
+
     var body: some View {
         List {
             Section {
@@ -100,13 +101,13 @@ struct ResourceUsersView: View {
                         }
                         .tint(.primary)
                     }
-                }//loop
-            }//section
-            
+                }
+            }
+
             if !self.errorMessage.isEmpty {
                 Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
+                    .foregroundStyle(Color(.systemRed))
+                    .font(.subheadline)
             }
         }
         .navigationTitle("USERS")
@@ -123,7 +124,7 @@ struct ResourceUsersView: View {
             }
         }
     }
-    
+
     private func fetch() {
         ResourcesRequest.users(id: self.resource.resourceId) { success, users in
             self.selectedUsers = users.map({ user in
@@ -131,12 +132,13 @@ struct ResourceUsersView: View {
             })
         }
     }
-    
+
     private func save() {
         self.errorMessage = ""
-        
+
         ResourcesRequest.setUser(id: self.resource.resourceId, userIds: self.selectedUsers) { success, response in
             if success && response?.success == true {
+                hapticSuccess()
                 self.appService.fetchResources()
                 self.dismiss()
             } else {
@@ -147,17 +149,17 @@ struct ResourceUsersView: View {
 }
 
 struct ResourceRolesView: View {
-    
+
     @EnvironmentObject var appService: AppService
     @Environment(\.dismiss) var dismiss
-    
+
     var resource: Resource
-    
+
     @State private var isLoading: Bool = false
     @State private var selectedRoles: [Int] = []
-    
+
     @State private var errorMessage: String = ""
-    
+
     var body: some View {
         List {
             ForEach(self.appService.roles.filter({ $0.isAdmin != true }), id: \.roleId) { role in
@@ -180,12 +182,12 @@ struct ResourceRolesView: View {
                     }
                     .tint(.primary)
                 }
-            }//loop
-            
+            }
+
             if !self.errorMessage.isEmpty {
                 Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
+                    .foregroundStyle(Color(.systemRed))
+                    .font(.subheadline)
             }
         }
         .navigationTitle("ROLES")
@@ -202,7 +204,7 @@ struct ResourceRolesView: View {
             }
         }
     }
-    
+
     private func fetch() {
         ResourcesRequest.roles(id: self.resource.resourceId) { success, roles in
             self.selectedRoles = roles.map({ role in
@@ -214,12 +216,13 @@ struct ResourceRolesView: View {
             }
         }
     }
-    
+
     private func save() {
         self.errorMessage = ""
-        
+
         ResourcesRequest.setRoles(id: self.resource.resourceId, roleIds: self.selectedRoles) { success, response in
             if success && response?.success == true {
+                hapticSuccess()
                 self.appService.fetchResources()
                 self.dismiss()
             } else {

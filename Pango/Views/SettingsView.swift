@@ -12,14 +12,14 @@ struct SettingsView: View {
     @AppStorage("pangolin_server_url") var pangolinServerUrl: String = ""
     @AppStorage("pangolin_api_key") var pangolinApiKey: String = ""
     @AppStorage("pangolin_organization_id") var pangolinOrganizationId: String = ""
-    @AppStorage("selectedTab") private var selectedTab: DefaultTab = .sites
+    @AppStorage("defaultTab") private var defaultTab: DefaultTab = .sites
 
     @EnvironmentObject var appService: AppService
 
     var body: some View {
         NavigationStack {
             List {
-                Section(header: Text("")) {
+                Section {
                     NavigationLink {
                         InstanceView()
                             .environmentObject(self.appService)
@@ -28,8 +28,8 @@ struct SettingsView: View {
                             Text("INSTANCE")
                             if !self.pangolinServerUrl.isEmpty {
                                 Text(self.pangolinServerUrl)
-                                    .foregroundStyle(.gray)
-                                    .font(.system(size: 14))
+                                    .foregroundStyle(.secondary)
+                                    .font(.subheadline)
                             }
                         }
                     }
@@ -84,43 +84,10 @@ struct SettingsView: View {
                     } label: {
                         Text("IDENTITY_PROVIDERS")
                     }
-
-                    NavigationLink {
-                        DeviceApprovalsView()
-                    } label: {
-                        Text("DEVICE_APPROVALS")
-                    }
-                }
-                .textCase(nil)
-
-                Section(header: Text("SECURITY")) {
-                    NavigationLink {
-                        OrgSecuritySettingsView()
-                    } label: {
-                        Text("SECURITY_SETTINGS")
-                    }
-
-                    NavigationLink {
-                        GeoBlockingView()
-                    } label: {
-                        Text("GEO_BLOCKING")
-                    }
-
-                    NavigationLink {
-                        ASNBlockingView()
-                    } label: {
-                        Text("ASN_BLOCKING")
-                    }
                 }
                 .textCase(nil)
 
                 Section(header: Text("INFRASTRUCTURE")) {
-                    NavigationLink {
-                        NodesView()
-                    } label: {
-                        Text("NODES")
-                    }
-
                     NavigationLink {
                         BlueprintsView()
                     } label: {
@@ -129,18 +96,9 @@ struct SettingsView: View {
                 }
                 .textCase(nil)
 
-                Section(header: Text("APPEARANCE")) {
-                    NavigationLink {
-                        BrandingView()
-                    } label: {
-                        Text("BRANDING")
-                    }
-                }
-                .textCase(nil)
-
                 Section(header: Text("SETTINGS")) {
-                    Picker("DEFAULT_TAB", selection: $selectedTab) {
-                        ForEach(DefaultTab.allCases, id: \.self) { tab in
+                    Picker("DEFAULT_TAB", selection: $defaultTab) {
+                        ForEach(DefaultTab.allCases.filter { $0 != .settings }, id: \.self) { tab in
                             Text(LocalizedStringResource(stringLiteral: tab.rawValue.capitalized))
                         }
                     }
@@ -154,7 +112,7 @@ struct SettingsView: View {
                         Spacer()
                         Text("Pangolin API **v2**")
                             .font(.callout)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
 
                     Button(action: {
@@ -197,13 +155,13 @@ struct SettingsFooterView: View {
             HStack {
                 Spacer()
                 Text(self.companyName)
-                    .font(.custom("Splash", size: 13))
-                    .foregroundColor(.gray)
+                    .font(.custom("Splash", size: 13, relativeTo: .caption))
+                    .foregroundStyle(.secondary)
                 Spacer()
             }
             Text(appDetails)
-                .font(.system(size: 13))
-                .foregroundColor(.gray)
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
         .padding(.top, 20)
     }

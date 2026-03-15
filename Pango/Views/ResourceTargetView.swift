@@ -8,27 +8,27 @@
 import SwiftUI
 
 struct ResourceTargetView: View {
-    
+
     @EnvironmentObject var appService: AppService
     @Environment(\.dismiss) var dismiss
-    
+
     var resource: Resource
     var target: Target?
-    
+
     @State private var method: String = "http"
     @State private var ipHostname: String = ""
     @State private var port: String = ""
     @State private var enabled: Bool = true
     @State private var siteId: Int = 0
-    
+
     var validForm: Bool {
         if self.siteId == 0 { return false }
         if self.port.isEmpty { return false }
         if self.ipHostname.isEmpty { return false }
-        
+
         return true
     }
-    
+
     var body: some View {
         Form {
             Picker("SITE", selection: $siteId) {
@@ -37,7 +37,7 @@ struct ResourceTargetView: View {
                         .tag(site.siteId)
                 }
             }.pickerStyle(.menu)
-            
+
             if self.resource.http {
                 Picker("METHOD", selection: $method) {
                     Text("http")
@@ -48,19 +48,19 @@ struct ResourceTargetView: View {
                         .tag("h2c")
                 }.pickerStyle(.segmented)
             }
-            
+
             HStack {
                 TextField("IP_HOSTNAME", text: $ipHostname)
                     .keyboardType(.numbersAndPunctuation)
-                    .autocapitalization(.none)
+                    .textInputAutocapitalization(.never)
             }
-            
+
             HStack {
                 TextField("PORT", text: $port)
                     .keyboardType(.numberPad)
-                    .autocapitalization(.none)
+                    .textInputAutocapitalization(.never)
             }
-            
+
             HStack {
                 Toggle("ENABLED", isOn: $enabled)
             }
@@ -89,17 +89,17 @@ struct ResourceTargetView: View {
             }
         }
     }
-    
+
     private func save() {
         if !self.validForm { return }
-        
+
         if self.target == nil {
             self.create()
         } else {
             self.update()
         }
     }
-    
+
     private func create() {
         TargetsRequest.create(
             resourceId: self.resource.resourceId,
@@ -110,11 +110,12 @@ struct ResourceTargetView: View {
             siteId: self.siteId
         ) { success, response in
             if success {
+                hapticSuccess()
                 self.dismiss()
             }
         }
     }
-    
+
     private func update() {
         TargetsRequest.update(
             id: self.target!.targetId,
@@ -125,6 +126,7 @@ struct ResourceTargetView: View {
             siteId: self.siteId
         ) { success, response in
             if success {
+                hapticSuccess()
                 self.dismiss()
             }
         }

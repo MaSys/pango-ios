@@ -26,6 +26,8 @@ struct ResourcesView: View {
     @State private var sort: ResourceSort = .name
     @State private var sortDesc: Bool = false
     @State private var filteredBy: ResourceFilter = .none
+    @State private var searchText: String = ""
+    @State private var isLoading: Bool = false
 
     var sortedResources: [Resource] {
         switch sort {
@@ -51,31 +53,41 @@ struct ResourcesView: View {
     }
 
     var filteredResources: [Resource] {
+        var result: [Resource]
         switch filteredBy {
         case .none:
-            return self.sortedResources
+            result = self.sortedResources
         case .enabled:
-            return self.sortedResources.filter({ $0.enabled })
+            result = self.sortedResources.filter({ $0.enabled })
         case .disabled:
-            return self.sortedResources.filter({ !$0.enabled })
+            result = self.sortedResources.filter({ !$0.enabled })
         case .protected:
-            return self.sortedResources.filter({ $0.protected })
+            result = self.sortedResources.filter({ $0.protected })
         case .notProtected:
-            return self.sortedResources.filter({ !$0.protected })
+            result = self.sortedResources.filter({ !$0.protected })
         }
+        if searchText.isEmpty {
+            return result
+        }
+        return result.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
     }
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVStack(spacing: 8) {
-                    ForEach(self.filteredResources, id: \.resourceId) { resource in
-                        ResourceRowView(resource: resource)
-                    }
+            List {
+                ForEach(self.filteredResources, id: \.resourceId) { resource in
+                    ResourceRowView(resource: resource)
                 }
-                .padding(.vertical, 8)
             }
+            .listStyle(.insetGrouped)
+            .searchable(text: $searchText, prompt: "SEARCH_RESOURCES")
             .navigationTitle(Text("RESOURCES"))
+            .overlay {
+                if !isLoading && appService.resources.isEmpty {
+                    ContentUnavailableView("NO_RESOURCES", systemImage: "point.bottomleft.forward.to.point.topright.filled.scurvepath",
+                        description: Text("CREATE_A_RESOURCE_TO_GET_STARTED"))
+                }
+            }
             .onAppear {
                 self.fetch()
             }
@@ -102,7 +114,11 @@ struct ResourcesView: View {
     }
 
     private func fetch() {
-        self.appService.fetchResources()
+        isLoading = true
+        Task {
+            await self.appService.fetchResourcesAsync()
+            isLoading = false
+        }
     }
 }
 

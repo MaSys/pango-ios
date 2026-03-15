@@ -19,17 +19,17 @@ struct ResourceSecurityKeysView: View {
                     Spacer()
                     if resource.securityKeyId != nil {
                         Text("ENABLED")
-                            .foregroundStyle(.green)
+                            .foregroundStyle(Color(.systemGreen))
                     } else {
                         Text("DISABLED")
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(.secondary)
                     }
                 }
             }
 
             Section {
                 Text("SECURITY_KEYS_INFO")
-                    .font(.system(size: 14))
+                    .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
         }

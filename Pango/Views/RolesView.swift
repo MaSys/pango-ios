@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct RolesView: View {
-    
+
     @EnvironmentObject var appService: AppService
-    
+
     @State private var showTransferDialog = false
     @State private var selectedRoleForTransfer: Role?
 
@@ -21,7 +21,7 @@ struct RolesView: View {
                     VStack(alignment: .leading) {
                         Text(role.name ?? "")
                             .fontWeight(.semibold)
-                        
+
                         Text(role.description ?? "")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
@@ -39,6 +39,11 @@ struct RolesView: View {
                 }
             }
             .navigationTitle("ROLES")
+            .overlay {
+                if appService.roles.isEmpty {
+                    ContentUnavailableView("NO_ROLES", systemImage: "person.badge.shield.checkmark")
+                }
+            }
             .onAppear {
                 self.fetch()
             }
@@ -65,12 +70,12 @@ struct RolesView: View {
 }
 
 struct DeleteRoleView: View {
-    
+
     @EnvironmentObject var appService: AppService
     @Environment(\.dismiss) var dismiss
-    
+
     var roleToDelete: Role
-    
+
     @State private var selectedRoleForTransfer: Role?
 
     var body: some View {
@@ -102,13 +107,13 @@ struct DeleteRoleView: View {
                                     Image(systemName: "checkmark")
                                         .foregroundStyle(Color.accentColor)
                                 }
-                            }//hstack
+                            }
                         }
                         .tint(.primary)
                     }
-                }//section
+                }
                 .textCase(.none)
-            }//list
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("SAVE") {
@@ -119,14 +124,15 @@ struct DeleteRoleView: View {
             }
         }
     }
-    
+
     private func save() {
         if self.selectedRoleForTransfer == nil {
             return
         }
-        
+
         RolesRequest.delete(id: self.roleToDelete.roleId, roleId: self.selectedRoleForTransfer!.roleId) { success in
             if success {
+                hapticSuccess()
                 self.appService.fetchRoles()
                 self.dismiss()
             }

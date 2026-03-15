@@ -13,6 +13,7 @@ struct BlockingListView: View {
     var inputPlaceholder: String
     var keyboardType: UIKeyboardType
     var autoCapitalization: TextInputAutocapitalization
+    var uppercaseInput: Bool = false
     var fetchData: () async throws -> (enabled: Bool, items: [String], mode: String)
     var saveData: (Bool, [String], String) async throws -> Bool
 
@@ -59,7 +60,7 @@ struct BlockingListView: View {
                             .keyboardType(keyboardType)
                         Button {
                             let value = newItem.trimmingCharacters(in: .whitespaces)
-                            let normalized = autoCapitalization == .characters ? value.uppercased() : value
+                            let normalized = uppercaseInput ? value.uppercased() : value
                             if !normalized.isEmpty && !items.contains(normalized) {
                                 items.append(normalized)
                                 newItem = ""
@@ -74,8 +75,8 @@ struct BlockingListView: View {
 
             if !errorMessage.isEmpty {
                 Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
+                    .foregroundStyle(Color(.systemRed))
+                    .font(.subheadline)
             }
         }
         .navigationTitle(LocalizedStringResource(stringLiteral: title))
@@ -109,6 +110,7 @@ struct BlockingListView: View {
         errorMessage = ""
         do {
             _ = try await saveData(enabled, items, mode)
+            hapticSuccess()
         } catch {
             errorMessage = error.localizedDescription
         }

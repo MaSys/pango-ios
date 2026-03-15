@@ -22,13 +22,13 @@ struct BlueprintsView: View {
                         HStack {
                             if let status = blueprint.status {
                                 Text(status.capitalized)
-                                    .font(.system(size: 14))
+                                    .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
                             Spacer()
                             if let count = blueprint.resourceCount {
                                 Text("\(count) resources")
-                                    .font(.system(size: 14))
+                                    .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
                         }
@@ -83,7 +83,7 @@ struct BlueprintDetailView: View {
                             .foregroundStyle(.secondary)
                         Spacer()
                         Text(lastApplied)
-                            .font(.system(size: 14))
+                            .font(.subheadline)
                     }
                     .padding(.horizontal)
                 }
@@ -95,7 +95,7 @@ struct BlueprintDetailView: View {
                             .padding(.horizontal)
                         ScrollView(.horizontal, showsIndicators: true) {
                             Text(yaml)
-                                .font(.system(size: 12, design: .monospaced))
+                                .font(.caption2.monospaced())
                                 .padding()
                                 .textSelection(.enabled)
                         }

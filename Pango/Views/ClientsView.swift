@@ -17,61 +17,62 @@ struct ClientsView: View {
 
     @State private var clients: [Client] = []
     @State private var filter: ClientFilter = .all
-    @State private var isLoading: Bool = false
+    @State private var isLoading: Bool = true
     @State private var errorMessage: String = ""
 
     var filteredClients: [Client] {
+        var result: [Client]
         switch filter {
         case .all:
-            return clients
+            result = clients
         case .active:
-            return clients.filter { $0.isActive && $0.approved != false }
+            result = clients.filter { $0.isActive }
         case .blocked:
-            return clients.filter { $0.blocked == true }
+            result = clients.filter { $0.blocked == true }
         case .archived:
-            return clients.filter { $0.archived == true }
+            result = clients.filter { $0.archived == true }
         case .pending:
-            return clients.filter { $0.approved == false && $0.blocked != true }
+            result = clients.filter { $0.isPending && $0.blocked != true }
         }
+        return result
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            Picker("FILTER", selection: $filter) {
-                ForEach(ClientFilter.allCases, id: \.self) { f in
-                    Text(LocalizedStringResource(stringLiteral: f.rawValue))
-                        .tag(f)
+        List {
+            Section {
+                Picker("FILTER", selection: $filter) {
+                    ForEach(ClientFilter.allCases, id: \.self) { f in
+                        Text(LocalizedStringResource(stringLiteral: f.rawValue))
+                            .tag(f)
+                    }
+                }
+                .pickerStyle(.menu)
+            }
+
+            if !errorMessage.isEmpty && clients.isEmpty {
+                Section {
+                    Text(errorMessage)
+                        .foregroundStyle(Color(.systemRed))
+                        .font(.subheadline)
                 }
             }
-            .pickerStyle(.segmented)
-            .padding()
 
-            if isLoading {
-                Spacer()
-                ProgressView()
-                Spacer()
-            } else {
-                ScrollView {
-                    LazyVStack(spacing: 8) {
-                        if filteredClients.isEmpty {
-                            VStack {
-                                Spacer().frame(height: 40)
-                                Text("NO_CLIENTS")
-                                    .foregroundStyle(.secondary)
-                            }
-                        } else {
-                            ForEach(filteredClients, id: \.clientId) { client in
-                                NavigationLink {
-                                    ClientDetailView(client: client, onUpdate: { Task { await fetch() } })
-                                } label: {
-                                    ClientRowView(client: client)
-                                }
-                                .tint(.primary)
-                            }
-                        }
+            Section {
+                ForEach(filteredClients, id: \.clientId) { client in
+                    NavigationLink {
+                        ClientDetailView(client: client, onUpdate: { Task { await fetch() } })
+                    } label: {
+                        ClientRowView(client: client)
                     }
-                    .padding(.vertical, 8)
                 }
+            }
+        }
+        .listStyle(.insetGrouped)
+        .overlay {
+            if isLoading && clients.isEmpty {
+                ProgressView()
+            } else if !isLoading && filteredClients.isEmpty {
+                ContentUnavailableView("NO_CLIENTS", systemImage: "laptopcomputer")
             }
         }
         .navigationTitle("CLIENTS")
@@ -84,7 +85,7 @@ struct ClientsView: View {
     }
 
     private func fetch() async {
-        isLoading = true
+        if clients.isEmpty { isLoading = true }
         errorMessage = ""
         do {
             clients = try await ClientsRequest.fetch()
@@ -101,34 +102,34 @@ struct ClientRowView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
-                Text(client.name ?? client.clientId)
+                Text(client.name ?? client.niceId ?? client.clientIdString)
                     .fontWeight(.semibold)
                 Spacer()
-                StatusIconView(online: client.isActive)
+                StatusIconView(online: client.online ?? false)
             }
             HStack {
-                if let os = client.os {
-                    Text(os)
-                        .font(.system(size: 14))
+                if let agent = client.agent {
+                    Text(agent)
+                        .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
-                if let version = client.version {
+                if let version = client.olmVersion {
                     Text("v\(version)")
-                        .font(.system(size: 14))
+                        .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
                 Text(client.displayStatus)
-                    .font(.system(size: 14))
+                    .font(.caption)
                     .foregroundStyle(.secondary)
             }
-            if let ip = client.ip {
-                Text(ip)
-                    .font(.system(size: 13))
+            if let email = client.userEmail {
+                Text(email)
+                    .font(.caption)
                     .foregroundStyle(.secondary)
             }
         }
-        .cardStyle()
+        .accessibilityElement(children: .combine)
     }
 }
 

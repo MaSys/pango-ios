@@ -5,103 +5,64 @@
 
 import SwiftUI
 
-struct AccessLogDetailView: View {
-    var log: AccessLog
-
-    var body: some View {
-        List {
-            Section {
-                DetailRow(label: "ACTION", value: log.action ?? "-")
-                DetailRow(label: "STATUS", value: log.success == true ? "Success" : "Failed")
-                DetailRow(label: "TIMESTAMP", value: log.formattedTimestamp)
-            }
-            Section(header: Text("USER")) {
-                DetailRow(label: "EMAIL", value: log.userEmail ?? "-")
-                DetailRow(label: "NAME", value: log.userName ?? "-")
-                DetailRow(label: "USER_ID", value: log.userId ?? "-")
-            }
-            Section(header: Text("DETAILS")) {
-                DetailRow(label: "RESOURCE", value: log.resourceName ?? "-")
-                DetailRow(label: "IP", value: log.ip ?? "-")
-                DetailRow(label: "COUNTRY", value: log.country ?? "-")
-                if let userAgent = log.userAgent {
-                    VStack(alignment: .leading) {
-                        Text("USER_AGENT")
-                            .font(.system(size: 14))
-                            .foregroundStyle(.secondary)
-                        Text(userAgent)
-                            .font(.system(size: 13))
-                    }
-                }
-            }
-        }
-        .navigationTitle("ACCESS_LOG")
-        .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-struct ActionLogDetailView: View {
-    var log: ActionLog
-
-    var body: some View {
-        List {
-            Section {
-                DetailRow(label: "ACTION", value: log.action ?? "-")
-                DetailRow(label: "TIMESTAMP", value: log.formattedTimestamp)
-            }
-            Section(header: Text("USER")) {
-                DetailRow(label: "EMAIL", value: log.userEmail ?? "-")
-                DetailRow(label: "NAME", value: log.userName ?? "-")
-            }
-            Section(header: Text("TARGET")) {
-                DetailRow(label: "TARGET", value: log.target ?? "-")
-                DetailRow(label: "TARGET_ID", value: log.targetId ?? "-")
-                if let details = log.details {
-                    VStack(alignment: .leading) {
-                        Text("DETAILS")
-                            .font(.system(size: 14))
-                            .foregroundStyle(.secondary)
-                        Text(details)
-                            .font(.system(size: 13))
-                    }
-                }
-            }
-        }
-        .navigationTitle("ACTION_LOG")
-        .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-struct RequestLogDetailView: View {
-    var log: RequestLog
+struct LogDetailView: View {
+    var log: RequestAuditLog
 
     var body: some View {
         List {
             Section {
                 DetailRow(label: "METHOD", value: log.method ?? "-")
                 DetailRow(label: "PATH", value: log.path ?? "-")
-                DetailRow(label: "STATUS_CODE", value: log.statusCode != nil ? "\(log.statusCode!)" : "-")
+                DetailRow(label: "ACTION", value: log.actionString)
                 DetailRow(label: "TIMESTAMP", value: log.formattedTimestamp)
             }
+            if let host = log.host {
+                Section(header: Text("REQUEST")) {
+                    DetailRow(label: "HOST", value: host)
+                    if let scheme = log.scheme {
+                        DetailRow(label: "SCHEME", value: scheme)
+                    }
+                    if let url = log.originalRequestURL {
+                        VStack(alignment: .leading) {
+                            Text("URL")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Text(url)
+                                .font(.caption)
+                                .textSelection(.enabled)
+                        }
+                    }
+                }
+            }
             Section(header: Text("DETAILS")) {
-                DetailRow(label: "RESOURCE", value: log.resourceName ?? "-")
+                if let resource = log.resourceName {
+                    DetailRow(label: "RESOURCE", value: resource)
+                }
+                if let actor = log.actor {
+                    DetailRow(label: "ACTOR", value: actor)
+                }
+                if let actorType = log.actorType {
+                    DetailRow(label: "ACTOR_TYPE", value: actorType)
+                }
                 DetailRow(label: "IP", value: log.ip ?? "-")
-                DetailRow(label: "DECISION", value: log.decision ?? "-")
-                if let duration = log.duration {
-                    DetailRow(label: "DURATION", value: "\(duration)ms")
+                if let location = log.location {
+                    DetailRow(label: "LOCATION", value: location)
+                }
+                if let tls = log.tls {
+                    DetailRow(label: "TLS", value: tls ? "Yes" : "No")
                 }
                 if let userAgent = log.userAgent {
                     VStack(alignment: .leading) {
                         Text("USER_AGENT")
-                            .font(.system(size: 14))
+                            .font(.subheadline)
                             .foregroundStyle(.secondary)
                         Text(userAgent)
-                            .font(.system(size: 13))
+                            .font(.caption)
                     }
                 }
             }
         }
-        .navigationTitle("REQUEST_LOG")
+        .navigationTitle("LOG_DETAIL")
         .navigationBarTitleDisplayMode(.inline)
     }
 }

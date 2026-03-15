@@ -14,6 +14,7 @@ struct GeoBlockingView: View {
             inputPlaceholder: "COUNTRY_CODE",
             keyboardType: .default,
             autoCapitalization: .characters,
+            uppercaseInput: true,
             fetchData: {
                 let config = try await SecuritySettingsRequest.fetchGeoBlocking()
                 return (

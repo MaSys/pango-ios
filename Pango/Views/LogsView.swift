@@ -5,49 +5,36 @@
 
 import SwiftUI
 
-enum LogTab: String, CaseIterable {
-    case access = "ACCESS"
-    case action = "ACTION"
-    case request = "REQUEST"
-}
-
 struct LogsView: View {
 
-    @State private var selectedTab: LogTab = .access
-    @State private var accessLogs: [AccessLog] = []
-    @State private var actionLogs: [ActionLog] = []
-    @State private var requestLogs: [RequestLog] = []
-    @State private var isLoading: Bool = false
+    @State private var logs: [RequestAuditLog] = []
+    @State private var isLoading: Bool = true
     @State private var errorMessage: String = ""
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                Picker("LOG_TYPE", selection: $selectedTab) {
-                    ForEach(LogTab.allCases, id: \.self) { tab in
-                        Text(LocalizedStringResource(stringLiteral: tab.rawValue))
-                            .tag(tab)
+            List {
+                ForEach(logs) { log in
+                    NavigationLink {
+                        LogDetailView(log: log)
+                    } label: {
+                        LogRowView(log: log)
                     }
                 }
-                .pickerStyle(.segmented)
-                .padding()
-
-                if isLoading {
-                    Spacer()
+            }
+            .listStyle(.insetGrouped)
+            .overlay {
+                if isLoading && logs.isEmpty {
                     ProgressView()
-                    Spacer()
-                } else if !errorMessage.isEmpty {
-                    Spacer()
-                    Text(errorMessage)
-                        .foregroundStyle(.secondary)
-                        .padding()
-                    Spacer()
-                } else {
-                    logList
+                } else if !errorMessage.isEmpty && logs.isEmpty {
+                    ContentUnavailableView("ERROR", systemImage: "exclamationmark.triangle",
+                        description: Text(errorMessage))
+                } else if !isLoading && logs.isEmpty {
+                    ContentUnavailableView("NO_LOGS", systemImage: "doc.text")
                 }
             }
             .navigationTitle(Text("LOGS"))
-            .task(id: selectedTab) {
+            .task {
                 await fetchLogs()
             }
             .refreshable {
@@ -56,76 +43,11 @@ struct LogsView: View {
         }
     }
 
-    @ViewBuilder
-    var logList: some View {
-        ScrollView {
-            LazyVStack(spacing: 8) {
-                switch selectedTab {
-                case .access:
-                    if accessLogs.isEmpty {
-                        emptyState("NO_ACCESS_LOGS")
-                    } else {
-                        ForEach(accessLogs, id: \.id) { log in
-                            NavigationLink {
-                                AccessLogDetailView(log: log)
-                            } label: {
-                                AccessLogRowView(log: log)
-                            }
-                            .tint(.primary)
-                        }
-                    }
-                case .action:
-                    if actionLogs.isEmpty {
-                        emptyState("NO_ACTION_LOGS")
-                    } else {
-                        ForEach(actionLogs, id: \.id) { log in
-                            NavigationLink {
-                                ActionLogDetailView(log: log)
-                            } label: {
-                                ActionLogRowView(log: log)
-                            }
-                            .tint(.primary)
-                        }
-                    }
-                case .request:
-                    if requestLogs.isEmpty {
-                        emptyState("NO_REQUEST_LOGS")
-                    } else {
-                        ForEach(requestLogs, id: \.id) { log in
-                            NavigationLink {
-                                RequestLogDetailView(log: log)
-                            } label: {
-                                RequestLogRowView(log: log)
-                            }
-                            .tint(.primary)
-                        }
-                    }
-                }
-            }
-            .padding(.vertical, 8)
-        }
-    }
-
-    func emptyState(_ key: String) -> some View {
-        VStack {
-            Spacer().frame(height: 40)
-            Text(LocalizedStringResource(stringLiteral: key))
-                .foregroundStyle(.secondary)
-        }
-    }
-
     private func fetchLogs() async {
-        isLoading = true
+        if logs.isEmpty { isLoading = true }
         errorMessage = ""
         do {
-            switch selectedTab {
-            case .access:
-                accessLogs = try await LogsRequest.fetchAccessLogs()
-            case .action:
-                actionLogs = try await LogsRequest.fetchActionLogs()
-            case .request:
-                requestLogs = try await LogsRequest.fetchRequestLogs()
-            }
+            logs = try await LogsRequest.fetchRequestLogs()
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -133,97 +55,41 @@ struct LogsView: View {
     }
 }
 
-// MARK: - Row Views
+// MARK: - Row View
 
-struct AccessLogRowView: View {
-    var log: AccessLog
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(log.action ?? "Access")
-                    .fontWeight(.semibold)
-                Spacer()
-                Image(systemName: log.success == true ? "checkmark.circle.fill" : "xmark.circle.fill")
-                    .foregroundStyle(log.success == true ? .green : .red)
-            }
-            HStack {
-                Text(log.userEmail ?? log.userName ?? "Unknown")
-                    .font(.system(size: 14))
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Text(log.formattedTimestamp)
-                    .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
-            }
-            if let resource = log.resourceName {
-                Text(resource)
-                    .font(.system(size: 13))
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .cardStyle()
-    }
-}
-
-struct ActionLogRowView: View {
-    var log: ActionLog
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(log.action ?? "Action")
-                    .fontWeight(.semibold)
-                Spacer()
-            }
-            HStack {
-                Text(log.userEmail ?? log.userName ?? "System")
-                    .font(.system(size: 14))
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Text(log.formattedTimestamp)
-                    .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
-            }
-            if let target = log.target {
-                Text(target)
-                    .font(.system(size: 13))
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .cardStyle()
-    }
-}
-
-struct RequestLogRowView: View {
-    var log: RequestLog
+struct LogRowView: View {
+    var log: RequestAuditLog
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text(log.method ?? "GET")
                     .fontWeight(.semibold)
-                    .font(.system(size: 14, design: .monospaced))
+                    .font(.subheadline.monospaced())
                 Text(log.path ?? "/")
-                    .font(.system(size: 14))
+                    .font(.subheadline)
                     .lineLimit(1)
                 Spacer()
-                if let code = log.statusCode {
-                    Text("\(code)")
-                        .font(.system(size: 14, design: .monospaced))
-                        .foregroundStyle(code < 400 ? .green : .red)
-                }
+                Image(systemName: log.action == true ? "checkmark.circle.fill" : "xmark.circle.fill")
+                    .foregroundStyle(log.action == true ? Color(.systemGreen) : Color(.systemRed))
             }
             HStack {
-                if let resource = log.resourceName {
-                    Text(resource)
-                        .font(.system(size: 13))
+                if let actor = log.actor {
+                    Text(actor)
+                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
                 Text(log.formattedTimestamp)
-                    .font(.system(size: 12))
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            if let resource = log.resourceName {
+                Text(resource)
+                    .font(.caption)
                     .foregroundStyle(.secondary)
             }
         }
-        .cardStyle()
+        .accessibilityElement(children: .combine)
     }
 }
 

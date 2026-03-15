@@ -36,8 +36,8 @@ struct ResourceMaintenanceView: View {
 
             if !errorMessage.isEmpty {
                 Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
+                    .foregroundStyle(Color(.systemRed))
+                    .font(.subheadline)
             }
         }
         .navigationTitle("MAINTENANCE")

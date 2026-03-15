@@ -35,7 +35,7 @@ struct ResourceHealthCheckView: View {
                         Text("ENDPOINT")
                         TextField("/health", text: $endpoint)
                             .multilineTextAlignment(.trailing)
-                            .autocapitalization(.none)
+                            .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
                     }
                     HStack {
@@ -59,7 +59,7 @@ struct ResourceHealthCheckView: View {
                                 Text("HEALTH_STATUS")
                                 Spacer()
                                 Text(status.capitalized)
-                                    .foregroundStyle(status == "healthy" ? .green : .red)
+                                    .foregroundStyle(status == "healthy" ? Color(.systemGreen) : Color(.systemRed))
                             }
                         }
                         if !lastChecked.isEmpty {
@@ -67,7 +67,7 @@ struct ResourceHealthCheckView: View {
                                 Text("LAST_CHECKED")
                                 Spacer()
                                 Text(lastChecked)
-                                    .font(.system(size: 14))
+                                    .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
                         }
@@ -77,8 +77,8 @@ struct ResourceHealthCheckView: View {
 
             if !errorMessage.isEmpty {
                 Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
+                    .foregroundStyle(Color(.systemRed))
+                    .font(.subheadline)
             }
         }
         .navigationTitle("HEALTH_CHECK")

@@ -23,7 +23,7 @@ struct RolesCreateView: View {
                 TextField("NAME", text: $name)
                     .multilineTextAlignment(.trailing)
                     .autocorrectionDisabled()
-                    .autocapitalization(.words)
+                    .textInputAutocapitalization(.words)
             }
             
             HStack {
@@ -32,7 +32,7 @@ struct RolesCreateView: View {
                 TextField("DESCRIPTION", text: $description)
                     .multilineTextAlignment(.trailing)
                     .autocorrectionDisabled()
-                    .autocapitalization(.words)
+                    .textInputAutocapitalization(.words)
             }
         }//form
         .toolbar {

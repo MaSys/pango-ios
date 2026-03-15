@@ -8,22 +8,22 @@
 import SwiftUI
 
 struct InvitationCreateView: View {
-    
+
     @EnvironmentObject var appService: AppService
     @Environment(\.dismiss) var dismiss
-    
+
     @State private var email: String = ""
     @State private var validHours: Int = 24
     @State private var roleId: Int = 0
-    
+
     var validForm: Bool {
         if self.email.isEmpty { return false }
         if self.validHours == 0 { return false }
         if self.roleId == 0 { return false }
-        
+
         return true
     }
-    
+
     var body: some View {
         Form {
             HStack {
@@ -32,7 +32,7 @@ struct InvitationCreateView: View {
                     .multilineTextAlignment(.trailing)
                     .keyboardType(.emailAddress)
                     .autocorrectionDisabled()
-                    .autocapitalization(.none)
+                    .textInputAutocapitalization(.never)
             }
             HStack {
                 Text("VALID_FOR")
@@ -49,7 +49,7 @@ struct InvitationCreateView: View {
                 }
             }
             .pickerStyle(.navigationLink)
-        }//form
+        }
         .navigationTitle("INVITE_USER")
         .onAppear {
             self.appService.fetchRoles()
@@ -63,12 +63,13 @@ struct InvitationCreateView: View {
             }
         }
     }
-    
+
     private func save() {
         if !self.validForm { return }
-        
+
         InvitationsRequest.create(email: self.email, validHours: self.validHours, roleId: self.roleId) { success in
             if success {
+                hapticSuccess()
                 self.dismiss()
             }
         }

@@ -21,7 +21,7 @@ struct IdentityProvidersView: View {
                             Text(idp.name ?? "Unnamed")
                                 .fontWeight(.semibold)
                             Text(idp.displayType)
-                                .font(.system(size: 14))
+                                .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
@@ -100,7 +100,7 @@ struct IdentityProviderDetailView: View {
                         Text("CLIENT_ID")
                         Spacer()
                         Text(clientId)
-                            .font(.system(size: 13))
+                            .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                     if let issuer = idp.issuerUrl {
@@ -108,7 +108,7 @@ struct IdentityProviderDetailView: View {
                             Text("ISSUER_URL")
                             Spacer()
                             Text(issuer)
-                                .font(.system(size: 13))
+                                .font(.caption)
                                 .foregroundStyle(.secondary)
                                 .lineLimit(1)
                         }
@@ -117,10 +117,9 @@ struct IdentityProviderDetailView: View {
             }
 
             Section {
-                Button("DELETE") {
+                Button("DELETE", role: .destructive) {
                     showDeleteConfirmation = true
                 }
-                .foregroundStyle(.red)
                 .confirmationDialog(
                     "DELETE_IDP_CONFIRMATION",
                     isPresented: $showDeleteConfirmation
@@ -134,8 +133,8 @@ struct IdentityProviderDetailView: View {
 
             if !errorMessage.isEmpty {
                 Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
+                    .foregroundStyle(Color(.systemRed))
+                    .font(.subheadline)
             }
         }
         .navigationTitle(idp.name ?? "IDP")
@@ -163,6 +162,7 @@ struct IdentityProviderDetailView: View {
                 enabled: enabled,
                 autoProvision: autoProvision
             )
+            hapticSuccess()
             onUpdate()
             dismiss()
         } catch {
@@ -173,6 +173,7 @@ struct IdentityProviderDetailView: View {
     private func deleteIdp() async {
         do {
             _ = try await IdentityProvidersRequest.delete(idpId: idp.idpId)
+            hapticSuccess()
             onUpdate()
             dismiss()
         } catch {
@@ -216,14 +217,14 @@ struct IdentityProviderCreateView: View {
 
             Section(header: Text("CREDENTIALS")) {
                 TextField("CLIENT_ID", text: $clientId)
-                    .autocapitalization(.none)
+                    .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
                 SecureField("CLIENT_SECRET", text: $clientSecret)
             }
 
             Section(header: Text("ENDPOINTS")) {
                 TextField("ISSUER_URL", text: $issuerUrl)
-                    .autocapitalization(.none)
+                    .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
                     .keyboardType(.URL)
             }
@@ -234,8 +235,8 @@ struct IdentityProviderCreateView: View {
 
             if !errorMessage.isEmpty {
                 Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
+                    .foregroundStyle(Color(.systemRed))
+                    .font(.subheadline)
             }
         }
         .navigationTitle("ADD_IDENTITY_PROVIDER")

@@ -21,28 +21,29 @@ struct ResourceShareableLinksView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
                         Text(link.linkId.prefix(12) + "...")
-                            .font(.system(size: 14, design: .monospaced))
+                            .font(.subheadline.monospaced())
                         Spacer()
                         if link.isExpired {
                             Text("EXPIRED")
-                                .font(.system(size: 12))
-                                .foregroundStyle(.red)
+                                .font(.caption2)
+                                .foregroundStyle(Color(.systemRed))
                         }
                     }
                     HStack {
                         if let uses = link.usageCount, let max = link.maxUses {
                             Text("\(uses)/\(max) uses")
-                                .font(.system(size: 13))
+                                .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
                         if let expires = link.formattedExpiresAt {
                             Text(expires)
-                                .font(.system(size: 12))
+                                .font(.caption2)
                                 .foregroundStyle(.secondary)
                         }
                     }
                 }
+                .accessibilityElement(children: .combine)
                 .swipeActions(edge: .trailing) {
                     Button(role: .destructive) {
                         Task { await deleteLink(link) }
@@ -99,6 +100,7 @@ struct ResourceShareableLinksView: View {
     private func deleteLink(_ link: ShareableLink) async {
         do {
             _ = try await ShareableLinksRequest.delete(linkId: link.linkId)
+            hapticSuccess()
             await fetch()
         } catch {
             // Link operation failed
@@ -125,7 +127,7 @@ struct CreateShareableLinkView: View {
                     Section(header: Text("CREATED_LINK")) {
                         if let url = link.url {
                             Text(url)
-                                .font(.system(size: 13, design: .monospaced))
+                                .font(.caption.monospaced())
                                 .textSelection(.enabled)
                             ShareLink(item: url) {
                                 Label("SHARE_LINK", systemImage: "square.and.arrow.up")
@@ -142,8 +144,8 @@ struct CreateShareableLinkView: View {
 
                     if !errorMessage.isEmpty {
                         Text(errorMessage)
-                            .foregroundStyle(.red)
-                            .font(.system(size: 14))
+                            .foregroundStyle(Color(.systemRed))
+                            .font(.subheadline)
                     }
                 }
             }

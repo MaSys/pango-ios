@@ -19,28 +19,29 @@ struct DeviceApprovalsView: View {
                             .fontWeight(.semibold)
                         Spacer()
                         Text(approval.status?.capitalized ?? "Pending")
-                            .font(.system(size: 14))
+                            .font(.subheadline)
                             .foregroundStyle(approval.isPending ? .orange : .secondary)
                     }
                     HStack {
                         if let email = approval.userEmail {
                             Text(email)
-                                .font(.system(size: 14))
+                                .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
                         if let ip = approval.ip {
                             Text(ip)
-                                .font(.system(size: 13))
+                                .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
                     }
                     if let os = approval.os {
                         Text(os)
-                            .font(.system(size: 13))
+                            .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
+                .accessibilityElement(children: .combine)
                 .swipeActions(edge: .leading) {
                     if approval.isPending {
                         Button {
@@ -89,6 +90,7 @@ struct DeviceApprovalsView: View {
     private func approve(_ approval: DeviceApproval) async {
         do {
             _ = try await DeviceApprovalsRequest.approve(approvalId: approval.approvalId)
+            hapticSuccess()
             await fetch()
         } catch {
             // Approval operation failed

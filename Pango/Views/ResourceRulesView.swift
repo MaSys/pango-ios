@@ -22,12 +22,12 @@ struct ResourceRulesView: View {
                                 .fontWeight(.semibold)
                                 .foregroundStyle(ruleActionColor(rule.action))
                             Text(rule.displayMatch)
-                                .font(.system(size: 14))
+                                .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
                         if let value = rule.value {
                             Text(value)
-                                .font(.system(size: 13, design: .monospaced))
+                                .font(.caption.monospaced())
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -36,6 +36,7 @@ struct ResourceRulesView: View {
                         StatusIconView(online: enabled)
                     }
                 }
+                .accessibilityElement(children: .combine)
                 .swipeActions {
                     Button(role: .destructive) {
                         Task { await deleteRule(rule) }
@@ -70,8 +71,8 @@ struct ResourceRulesView: View {
 
     private func ruleActionColor(_ action: String) -> Color {
         switch action.lowercased() {
-        case "allow": return .green
-        case "deny": return .red
+        case "allow": return Color(.systemGreen)
+        case "deny": return Color(.systemRed)
         case "pass": return .orange
         default: return .primary
         }
@@ -89,7 +90,8 @@ struct ResourceRulesView: View {
 
     private func deleteRule(_ rule: Rule) async {
         do {
-            _ = try await RulesRequest.delete(ruleId: rule.ruleId)
+            _ = try await RulesRequest.delete(resourceId: resource.resourceId, ruleId: rule.ruleId)
+            hapticSuccess()
             await fetch()
         } catch {
             // Rule operation failed
@@ -132,14 +134,14 @@ struct ResourceRuleCreateView: View {
                 .pickerStyle(.menu)
 
                 TextField("VALUE", text: $value)
-                    .autocapitalization(.none)
+                    .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
             }
 
             if !errorMessage.isEmpty {
                 Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
+                    .foregroundStyle(Color(.systemRed))
+                    .font(.subheadline)
             }
         }
         .navigationTitle("NEW_RULE")

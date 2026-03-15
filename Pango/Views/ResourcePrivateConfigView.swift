@@ -20,7 +20,7 @@ struct ResourcePrivateConfigView: View {
                             .foregroundStyle(.secondary)
                         Spacer()
                         Text(host)
-                            .font(.system(size: 14, design: .monospaced))
+                            .font(.subheadline.monospaced())
                     }
                 }
                 if let cidr = resource.cidr {
@@ -29,7 +29,7 @@ struct ResourcePrivateConfigView: View {
                             .foregroundStyle(.secondary)
                         Spacer()
                         Text(cidr)
-                            .font(.system(size: 14, design: .monospaced))
+                            .font(.subheadline.monospaced())
                     }
                 }
                 if let ports = resource.ports {
@@ -38,7 +38,7 @@ struct ResourcePrivateConfigView: View {
                             .foregroundStyle(.secondary)
                         Spacer()
                         Text(ports)
-                            .font(.system(size: 14, design: .monospaced))
+                            .font(.subheadline.monospaced())
                     }
                 }
             }
@@ -55,7 +55,7 @@ struct ResourcePrivateConfigView: View {
                         .foregroundStyle(.secondary)
                     Spacer()
                     Text(resource.enabled ? "ENABLED" : "DISABLED")
-                        .foregroundStyle(resource.enabled ? .green : .red)
+                        .foregroundStyle(resource.enabled ? Color(.systemGreen) : Color(.systemRed))
                 }
             }
         }

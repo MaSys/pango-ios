@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct UsersView: View {
-    
+
     @EnvironmentObject var appService: AppService
-    
+
     var body: some View {
         NavigationStack {
             List {
                 ForEach(self.appService.users, id: \.id) { user in
-                    VStack {
+                    VStack(alignment: .leading, spacing: 4) {
                         HStack {
                             Text(user.email)
                             Spacer()
-                        }//hstack
-                        
+                        }
+
                         HStack {
                             if user.isOwner == true {
                                 Image(systemName: "crown")
@@ -30,17 +30,22 @@ struct UsersView: View {
                             } else {
                                 Text(user.roleName ?? "")
                             }
-                            
+
                             Spacer()
-                            Text(user.type.capitalized)
+                            Text((user.type ?? "user").capitalized)
                         }
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .padding(.top, 2)
-                    }//vstack
-                }//loop
-            }//list
+                        .foregroundStyle(.secondary)
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+            }
             .navigationTitle("USERS")
+            .overlay {
+                if appService.users.isEmpty {
+                    ContentUnavailableView("NO_USERS", systemImage: "person.2")
+                }
+            }
             .onAppear {
                 self.appService.fetchUsers()
             }
@@ -52,7 +57,6 @@ struct UsersView: View {
                     } label: {
                         Image(systemName: "plus")
                     }
-
                 }
             }
         }

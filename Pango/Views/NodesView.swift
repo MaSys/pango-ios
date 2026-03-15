@@ -25,22 +25,23 @@ struct NodesView: View {
                     HStack {
                         if let address = node.address {
                             Text(address)
-                                .font(.system(size: 14))
+                                .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
                         if let region = node.region {
                             Text(region)
-                                .font(.system(size: 14))
+                                .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
                     }
                     if let version = node.version {
                         Text("v\(version)")
-                            .font(.system(size: 13))
+                            .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
+                .accessibilityElement(children: .combine)
                 .swipeActions {
                     Button(role: .destructive) {
                         nodeToDelete = node
@@ -89,6 +90,7 @@ struct NodesView: View {
     private func deleteNode(_ node: Node) async {
         do {
             _ = try await NodesRequest.delete(nodeId: node.nodeId)
+            hapticSuccess()
             await fetch()
         } catch {
             // Node operation failed silently

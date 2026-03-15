@@ -8,25 +8,24 @@
 import SwiftUI
 
 struct ResourceDomainView: View {
-    
+
     @EnvironmentObject var appService: AppService
     @Environment(\.dismiss) var dismiss
-    
+
     var resource: Resource
-    
+
     @State private var subdomain: String = ""
     @State private var selectedDomain: String = ""
-    
+
     var body: some View {
         VStack {
                 List {
                     Section {
                         TextField("SUBDOMAIN", text: self.$subdomain)
-                            .textInputAutocapitalization(.none)
-                            .autocapitalization(.none)
+                            .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
                     }
-                    
+
                     Section {
                         ForEach(self.appService.domains, id: \.domainId) { domain in
                             Button {
@@ -60,17 +59,18 @@ struct ResourceDomainView: View {
             }
         }
     }
-    
+
     private func save() {
         if self.subdomain.isEmpty || self.selectedDomain.isEmpty {
             return
         }
-        
+
         ResourcesRequest.updateSubdomain(
             id: self.resource.resourceId,
             domainId: self.selectedDomain,
             subdomain: self.subdomain) { success, response in
                 if let res = response, res.success {
+                    hapticSuccess()
                     self.appService.fetchResources()
                     self.dismiss()
                 }

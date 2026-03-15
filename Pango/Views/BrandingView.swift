@@ -46,13 +46,13 @@ struct BrandingView: View {
                     Text("PRIMARY_COLOR")
                     TextField("#000000", text: $primaryColor)
                         .multilineTextAlignment(.trailing)
-                        .autocapitalization(.none)
+                        .textInputAutocapitalization(.never)
                 }
                 HStack {
                     Text("ACCENT_COLOR")
                     TextField("#0066FF", text: $accentColor)
                         .multilineTextAlignment(.trailing)
-                        .autocapitalization(.none)
+                        .textInputAutocapitalization(.never)
                 }
             }
 
@@ -68,13 +68,13 @@ struct BrandingView: View {
 
             if !errorMessage.isEmpty {
                 Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
+                    .foregroundStyle(Color(.systemRed))
+                    .font(.subheadline)
             }
             if !successMessage.isEmpty {
                 Text(successMessage)
-                    .foregroundStyle(.green)
-                    .font(.system(size: 14))
+                    .foregroundStyle(Color(.systemGreen))
+                    .font(.subheadline)
             }
         }
         .navigationTitle("BRANDING")
@@ -118,6 +118,7 @@ struct BrandingView: View {
                 footerText: footerText.isEmpty ? nil : footerText
             )
             if success {
+                hapticSuccess()
                 successMessage = "Saved"
             }
         } catch {
