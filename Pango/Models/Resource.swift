@@ -20,8 +20,14 @@ struct Resource: Decodable {
         case proxyPort
         case enabled
         case domainId
+        case isPrivate
+        case host
+        case cidr
+        case ports
+        case securityKeyId
+        case shareableLinkCount
     }
-    
+
     var resourceId: Int
     var name: String
     var ssl: Bool
@@ -35,12 +41,40 @@ struct Resource: Decodable {
     var proxyPort: Int?
     var enabled: Bool
     var domainId: String?
-    
+    var isPrivate: Bool?
+    var host: String?
+    var cidr: String?
+    var ports: String?
+    var securityKeyId: Int?
+    var shareableLinkCount: Int?
+
     var protected: Bool {
         if passwordId != nil { return true }
         if pincodeId != nil { return true }
-        
+        if securityKeyId != nil { return true }
+        if shareableLinkCount ?? 0 > 0 { return true }
+
         return sso
+    }
+
+    var resourceType: ResourceType {
+        if isPrivate == true { return .privateResource }
+        if http { return .http }
+        return .rawTcpUdp
+    }
+}
+
+enum ResourceType: String, CaseIterable {
+    case http
+    case rawTcpUdp
+    case privateResource
+
+    var displayName: String {
+        switch self {
+        case .http: return "HTTPS"
+        case .rawTcpUdp: return "TCP/UDP"
+        case .privateResource: return "Private"
+        }
     }
 }
 

@@ -9,9 +9,9 @@ import SwiftUI
 import Alamofire
 
 struct SitesView: View {
-    
+
     @EnvironmentObject var appService: AppService
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -23,13 +23,13 @@ struct SitesView: View {
                                     .fontWeight(.semibold)
                                 Spacer()
                                 StatusIconView(online: site.online)
-                            }//HStack
+                            }
                             HStack {
                                 SiteUsageView(site: site)
                                 Spacer()
                                 NewtView(site: site)
                             }
-                        }//VStack
+                        }
                         .padding()
                         .background(
                             RoundedRectangle(cornerRadius: 10)
@@ -38,17 +38,20 @@ struct SitesView: View {
                         )
                         .padding(.horizontal)
                         .padding(.vertical, 4)
-                    }//loop
-                }//lazystack
+                    }
+                }
                 .padding(.vertical, 8)
-            }//scrollview
+            }
             .navigationTitle(Text("SITES"))
             .onAppear {
                 self.fetch()
             }
+            .refreshable {
+                await self.appService.fetchSitesAsync()
+            }
         }
     }
-    
+
     private func fetch() {
         self.appService.fetchSites { _, _ in }
     }

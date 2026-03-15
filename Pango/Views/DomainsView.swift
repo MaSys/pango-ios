@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct DomainsView: View {
-    
+
     @EnvironmentObject var appService: AppService
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -22,7 +22,7 @@ struct DomainsView: View {
                                     .fontWeight(.semibold)
                                 Spacer()
                             }
-                            
+
                             HStack {
                                 Text(domain.type.capitalized)
                                     .font(.system(size: 14))
@@ -32,7 +32,7 @@ struct DomainsView: View {
                                     .foregroundStyle(domain.verified == true ? .green : .red)
                             }
                             .padding(.top, 5)
-                        }//vstack
+                        }
                         .padding()
                         .background(
                             RoundedRectangle(cornerRadius: 10)
@@ -41,11 +41,14 @@ struct DomainsView: View {
                         )
                         .padding(.horizontal)
                         .padding(.vertical, 4)
-                    }//loop
-                }//lazy
+                    }
+                }
                 .padding(.vertical, 8)
-            }//scrollview
+            }
             .navigationTitle(Text("DOMAINS"))
+            .refreshable {
+                await self.appService.fetchDomainsAsync()
+            }
         }
         .onAppear {
             self.appService.fetchDomains()

@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ResourceRowView: View {
-    
+
     var resource: Resource
-    
+
     var body: some View {
         NavigationLink {
             ResourceView(resource: self.resource)
@@ -21,14 +21,24 @@ struct ResourceRowView: View {
                     Text(resource.name)
                         .fontWeight(.semibold)
                     Spacer()
-                    Text(resource.protocolString.uppercased())
-                        .font(.system(size: 14))
-                        .foregroundStyle(.secondary)
+                    if resource.resourceType == .privateResource {
+                        Text("PRIVATE")
+                            .font(.system(size: 14))
+                            .foregroundStyle(.purple)
+                    } else {
+                        Text(resource.protocolString.uppercased())
+                            .font(.system(size: 14))
+                            .foregroundStyle(.secondary)
+                    }
                     StatusIconView(online: resource.enabled)
-                }//HStack
+                }
                 HStack {
-                    if self.resource.http {
-                        Text(fullURL(from: resource.fullDomain!, ssl: resource.ssl))
+                    if resource.resourceType == .privateResource {
+                        Text(resource.host ?? resource.cidr ?? "Private")
+                            .font(.system(size: 14))
+                            .foregroundStyle(.secondary)
+                    } else if self.resource.http {
+                        Text(fullURL(from: resource.fullDomain ?? "", ssl: resource.ssl))
                             .font(.system(size: 14))
                             .foregroundStyle(.secondary)
                     } else {
@@ -37,8 +47,8 @@ struct ResourceRowView: View {
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
-                }//HStack
-            }//VStack
+                }
+            }
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 10)
