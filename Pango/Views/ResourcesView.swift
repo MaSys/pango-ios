@@ -20,13 +20,13 @@ enum ResourceFilter: String {
     case notProtected
 }
 struct ResourcesView: View {
-    
+
     @EnvironmentObject var appService: AppService
-    
+
     @State private var sort: ResourceSort = .name
     @State private var sortDesc: Bool = false
     @State private var filteredBy: ResourceFilter = .none
-    
+
     var sortedResources: [Resource] {
         switch sort {
         case .name:
@@ -49,7 +49,7 @@ struct ResourcesView: View {
             }
         }
     }
-    
+
     var filteredResources: [Resource] {
         switch filteredBy {
         case .none:
@@ -64,7 +64,7 @@ struct ResourcesView: View {
             return self.sortedResources.filter({ !$0.protected })
         }
     }
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -72,18 +72,21 @@ struct ResourcesView: View {
                     ForEach(self.filteredResources, id: \.resourceId) { resource in
                         ResourceRowView(resource: resource)
                     }
-                }//lazystack
+                }
                 .padding(.vertical, 8)
-            }//scrollview
+            }
             .navigationTitle(Text("RESOURCES"))
             .onAppear {
                 self.fetch()
+            }
+            .refreshable {
+                await self.appService.fetchResourcesAsync()
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     HStack {
                         filterMenu
-                        
+
                         sortMenu
                     }
                 }
@@ -97,7 +100,7 @@ struct ResourcesView: View {
             }
         }
     }
-    
+
     private func fetch() {
         self.appService.fetchResources()
     }
@@ -169,8 +172,8 @@ extension ResourcesView {
         } label: {
             Image(systemName: "line.3.horizontal.decrease")
         }
-    }//filterMenu
-    
+    }
+
     var sortMenu: some View {
         Menu {
             Button {
@@ -218,7 +221,7 @@ extension ResourcesView {
         } label: {
             Image(systemName: "arrow.up.arrow.down")
         }
-    }//sortMenu
+    }
 }
 
 #Preview {

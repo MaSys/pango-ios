@@ -11,16 +11,15 @@ enum DefaultTab: String, CaseIterable {
     case sites
     case resources
     case domains
+    case logs
 }
 
 struct ContentView: View {
-    
-    @AppStorage("selectedTab") private var defaultTab: DefaultTab = .sites
-    
+
+    @AppStorage("selectedTab") private var selectedTab: DefaultTab = .sites
+
     @EnvironmentObject var appService: AppService
-    
-    @State private var selectedTab: String = "sites"
-    
+
     var body: some View {
         TabView(selection: $selectedTab) {
             SitesView()
@@ -28,22 +27,28 @@ struct ContentView: View {
                 .tabItem {
                     Label("SITES", systemImage: "server.rack")
                 }
-                .tag("sites")
-            
+                .tag(DefaultTab.sites)
+
             ResourcesView()
                 .environmentObject(appService)
                 .tabItem {
                     Label("RESOURCES", systemImage: "point.bottomleft.forward.to.point.topright.filled.scurvepath")
                 }
-                .tag("resources")
-            
+                .tag(DefaultTab.resources)
+
             DomainsView()
                 .environmentObject(appService)
                 .tabItem {
                     Label("DOMAINS", systemImage: "globe")
                 }
-                .tag("domains")
-            
+                .tag(DefaultTab.domains)
+
+            LogsView()
+                .tabItem {
+                    Label("LOGS", systemImage: "chart.bar.doc.horizontal")
+                }
+                .tag(DefaultTab.logs)
+
             SettingsView()
                 .environmentObject(appService)
                 .tabItem {
@@ -52,7 +57,6 @@ struct ContentView: View {
                 .tag("settings")
         }
         .onAppear {
-            self.selectedTab = self.defaultTab.rawValue
             self.appService.fetchOrgs { _, _ in }
             self.appService.fetchDomains()
             self.appService.fetchSites { _, _ in }

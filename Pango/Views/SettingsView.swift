@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct SettingsView: View {
-    
+
     @AppStorage("pangolin_server_url") var pangolinServerUrl: String = ""
     @AppStorage("pangolin_api_key") var pangolinApiKey: String = ""
     @AppStorage("pangolin_organization_id") var pangolinOrganizationId: String = ""
     @AppStorage("selectedTab") private var selectedTab: DefaultTab = .sites
-    
+
     @EnvironmentObject var appService: AppService
-    
+
     var body: some View {
         NavigationStack {
             List {
@@ -32,8 +32,8 @@ struct SettingsView: View {
                                     .font(.system(size: 14))
                             }
                         }
-                    }//Link
-                    
+                    }
+
                     if self.appService.organizations.count > 0 {
                         Picker("ORGANIZATION", selection: $pangolinOrganizationId) {
                             ForEach(self.appService.organizations, id: \.orgId) { org in
@@ -48,9 +48,9 @@ struct SettingsView: View {
                             self.appService.fetchSites { _, _ in }
                         }
                     }
-                }//Section
+                }
                 .textCase(nil)
-                
+
                 Section(header: Text("ACCESS_CONTROL")) {
                     NavigationLink {
                         RolesView()
@@ -58,23 +58,86 @@ struct SettingsView: View {
                     } label: {
                         Text("ROLES")
                     }
-                    
+
                     NavigationLink {
                         UsersView()
                             .environmentObject(self.appService)
                     } label: {
                         Text("USERS")
                     }
-                    
+
                     NavigationLink {
                         InvitationsView()
                             .environmentObject(self.appService)
                     } label: {
                         Text("INVITATIONS")
                     }
-                }//section
+
+                    NavigationLink {
+                        ClientsView()
+                    } label: {
+                        Text("CLIENTS")
+                    }
+
+                    NavigationLink {
+                        IdentityProvidersView()
+                    } label: {
+                        Text("IDENTITY_PROVIDERS")
+                    }
+
+                    NavigationLink {
+                        DeviceApprovalsView()
+                    } label: {
+                        Text("DEVICE_APPROVALS")
+                    }
+                }
                 .textCase(nil)
-                
+
+                Section(header: Text("SECURITY")) {
+                    NavigationLink {
+                        OrgSecuritySettingsView()
+                    } label: {
+                        Text("SECURITY_SETTINGS")
+                    }
+
+                    NavigationLink {
+                        GeoBlockingView()
+                    } label: {
+                        Text("GEO_BLOCKING")
+                    }
+
+                    NavigationLink {
+                        ASNBlockingView()
+                    } label: {
+                        Text("ASN_BLOCKING")
+                    }
+                }
+                .textCase(nil)
+
+                Section(header: Text("INFRASTRUCTURE")) {
+                    NavigationLink {
+                        NodesView()
+                    } label: {
+                        Text("NODES")
+                    }
+
+                    NavigationLink {
+                        BlueprintsView()
+                    } label: {
+                        Text("BLUEPRINTS")
+                    }
+                }
+                .textCase(nil)
+
+                Section(header: Text("APPEARANCE")) {
+                    NavigationLink {
+                        BrandingView()
+                    } label: {
+                        Text("BRANDING")
+                    }
+                }
+                .textCase(nil)
+
                 Section(header: Text("SETTINGS")) {
                     Picker("DEFAULT_TAB", selection: $selectedTab) {
                         ForEach(DefaultTab.allCases, id: \.self) { tab in
@@ -82,18 +145,18 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                }//section
+                }
                 .textCase(nil)
-                
+
                 Section(header: Text("SUPPORT"), footer: SettingsFooterView()) {
                     HStack {
                         Text("API Compatibility")
                         Spacer()
-                        Text("Pangolin API **v1.10.3**")
+                        Text("Pangolin API **v2**")
                             .font(.callout)
                             .foregroundColor(.secondary)
                     }
-                    
+
                     Button(action: {
                         let email = "support@masys.mx"
                         let subject = "Support / Feedback"
@@ -105,11 +168,11 @@ struct SettingsView: View {
                     }) {
                         Text("SUPPORT_FEEDBACK")
                     }
-                }//section
+                }
                 .textCase(nil)
-            }//List
+            }
             .navigationTitle(Text("SETTINGS"))
-        }//NavStack
+        }
     }
 }
 
@@ -122,7 +185,7 @@ struct SettingsFooterView: View {
     @State private var appName = Bundle.main.infoDictionary!["CFBundleDisplayName"]!
     @State private var version = "v\((Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String)!)"
     @State private var buildNumber = (Bundle.main.infoDictionary?["CFBundleVersion"] as? String)!
-    
+
     var appDetails: String {
         return """
     \(appName) \(version) (\(buildNumber))
@@ -137,11 +200,11 @@ struct SettingsFooterView: View {
                     .font(.custom("Splash", size: 13))
                     .foregroundColor(.gray)
                 Spacer()
-            }//HStack
+            }
             Text(appDetails)
                 .font(.system(size: 13))
                 .foregroundColor(.gray)
-        }//VStack
+        }
         .padding(.top, 20)
     }
 }
