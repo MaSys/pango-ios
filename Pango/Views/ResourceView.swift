@@ -31,17 +31,21 @@ struct ResourceView: View {
                 authenticationSection
             }
 
-            if resource.resourceType != .privateResource {
-                monitoringSection
-            }
-
             rulesSection
 
-            HStack {
-                Spacer()
-                Button("DELETE") {
+            Section {
+                NavigationLink {
+                    AnalyticsView(resourceId: resource.resourceId, resourceName: resource.name)
+                } label: {
+                    Label("ANALYTICS", systemImage: "chart.bar.xaxis")
+                }
+            }
+
+            Section {
+                Button("DELETE_RESOURCE", role: .destructive) {
                     self.showDeleteConfirmation = true
                 }
+                .frame(maxWidth: .infinity)
                 .confirmationDialog(
                     "DELETE_RESOURCE_CONFIRMATION_MESSAGE",
                     isPresented: $showDeleteConfirmation
@@ -52,7 +56,6 @@ struct ResourceView: View {
                     Button("CANCEL", role: .cancel) {
                     }
                 }
-                Spacer()
             }
         }
         .navigationTitle(self.resource.name)
@@ -70,6 +73,7 @@ struct ResourceView: View {
                             .frame(width: 25, height: 25)
                             .tint(.accentColor)
                     }
+                    .accessibilityLabel("Edit name")
 
                     Button {
                         self.toggleStatus()
@@ -79,6 +83,7 @@ struct ResourceView: View {
                             .frame(width: 25, height: 25)
                             .tint(.accentColor)
                     }
+                    .accessibilityLabel(self.resource.enabled ? "Disable resource" : "Enable resource")
                 }
             }
         }
@@ -87,8 +92,9 @@ struct ResourceView: View {
     private func toggleStatus() {
         ResourcesRequest.toggleStatus(id: self.resource.resourceId, enabled: !self.resource.enabled) { success, response in
             if let res = response {
-                print(res.message)
+                print(res.message ?? "")
             }
+            hapticLight()
             self.appService.fetchResources()
         }
     }
@@ -104,6 +110,7 @@ struct ResourceView: View {
     private func delete() {
         ResourcesRequest.delete(id: self.resource.resourceId) { success, response in
             if let res = response, res.success {
+                hapticSuccess()
                 self.appService.fetchResources()
                 self.dismiss()
             }
@@ -119,16 +126,16 @@ extension ResourceView {
                     if resource.resourceType == .privateResource {
                         VStack(alignment: .leading) {
                             Text("TYPE")
-                                .font(.system(size: 14))
+                                .font(.subheadline)
                                 .fontWeight(.semibold)
                             Text("PRIVATE")
-                                .font(.system(size: 14))
-                                .foregroundStyle(.purple)
+                                .font(.subheadline)
+                                .foregroundStyle(.indigo)
                         }
                     } else if self.resource.http {
                         VStack(alignment: .leading) {
                             Text("AUTHENTICATION")
-                                .font(.system(size: 14))
+                                .font(.subheadline)
                                 .fontWeight(.semibold)
                             HStack {
                                 ShieldView(resource: resource, showText: true)
@@ -137,20 +144,20 @@ extension ResourceView {
                     } else {
                         VStack(alignment: .leading) {
                             Text("PORT")
-                                .font(.system(size: 14))
+                                .font(.subheadline)
                                 .fontWeight(.semibold)
                             Text(String(self.resource.proxyPort ?? 0))
-                                .font(.system(size: 14))
+                                .font(.subheadline)
                         }
                     }
                     Spacer()
                     VStack(alignment: .leading) {
                         Text("VISIBILITY")
-                            .font(.system(size: 14))
+                            .font(.subheadline)
                             .fontWeight(.semibold)
                         Text(self.resource.enabled ? "ENABLED" : "DISABLED")
-                            .font(.system(size: 14))
-                            .foregroundStyle(self.resource.enabled ? .green : .red)
+                            .font(.subheadline)
+                            .foregroundStyle(self.resource.enabled ? Color(.systemGreen) : Color(.systemRed))
                     }
                 }
 
@@ -158,7 +165,7 @@ extension ResourceView {
                     HStack {
                         Text("URL")
                             .fontWeight(.semibold)
-                            .font(.system(size: 14))
+                            .font(.subheadline)
                         Spacer()
                         Link(
                             destination: URL(
@@ -166,8 +173,8 @@ extension ResourceView {
                             )!
                         ) {
                             Text(fullURL(from: resource.fullDomain ?? "", ssl: resource.ssl))
-                                .font(.system(size: 14))
-                                .foregroundColor(.blue)
+                                .font(.subheadline)
+                                .foregroundStyle(.tint)
                         }
                         .buttonStyle(.plain)
                     }
@@ -180,10 +187,10 @@ extension ResourceView {
                         HStack {
                             Text("HOST")
                                 .fontWeight(.semibold)
-                                .font(.system(size: 14))
+                                .font(.subheadline)
                             Spacer()
                             Text(host)
-                                .font(.system(size: 14, design: .monospaced))
+                                .font(.caption.monospaced())
                                 .foregroundStyle(.secondary)
                         }
                         .padding(.top, 4)
@@ -192,10 +199,10 @@ extension ResourceView {
                         HStack {
                             Text("CIDR")
                                 .fontWeight(.semibold)
-                                .font(.system(size: 14))
+                                .font(.subheadline)
                             Spacer()
                             Text(cidr)
-                                .font(.system(size: 14, design: .monospaced))
+                                .font(.caption.monospaced())
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -256,9 +263,9 @@ extension ResourceView {
                     Text("USERS_AND_ROLES")
                     Spacer()
                     if self.resource.sso == false {
-                        Text("DISABLED").foregroundStyle(.gray)
+                        Text("DISABLED").foregroundStyle(.secondary)
                     } else {
-                        Text("ENABLED").foregroundStyle(.green)
+                        Text("ENABLED").foregroundStyle(Color(.systemGreen))
                     }
                 }
             }
@@ -271,9 +278,9 @@ extension ResourceView {
                     Text("PASSWORD_PROTECTION")
                     Spacer()
                     if self.resource.passwordId == nil {
-                        Text("DISABLED").foregroundStyle(.gray)
+                        Text("DISABLED").foregroundStyle(.secondary)
                     } else {
-                        Text("ENABLED").foregroundStyle(.green)
+                        Text("ENABLED").foregroundStyle(Color(.systemGreen))
                     }
                 }
             }
@@ -285,40 +292,13 @@ extension ResourceView {
                     Text("PIN_CODE_PROTECTION")
                     Spacer()
                     if self.resource.pincodeId == nil {
-                        Text("DISABLED").foregroundStyle(.gray)
+                        Text("DISABLED").foregroundStyle(.secondary)
                     } else {
-                        Text("ENABLED").foregroundStyle(.green)
+                        Text("ENABLED").foregroundStyle(Color(.systemGreen))
                     }
                 }
             }
 
-            NavigationLink {
-                ResourceSecurityKeysView(resource: self.resource)
-            } label: {
-                HStack {
-                    Text("SECURITY_KEYS")
-                    Spacer()
-                    if self.resource.securityKeyId == nil {
-                        Text("DISABLED").foregroundStyle(.gray)
-                    } else {
-                        Text("ENABLED").foregroundStyle(.green)
-                    }
-                }
-            }
-
-            NavigationLink {
-                ResourceShareableLinksView(resource: self.resource)
-                    .environmentObject(self.appService)
-            } label: {
-                HStack {
-                    Text("SHAREABLE_LINKS")
-                    Spacer()
-                    if let count = self.resource.shareableLinkCount, count > 0 {
-                        Text("\(count)")
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
         }
     }
 
@@ -332,21 +312,6 @@ extension ResourceView {
         }
     }
 
-    var monitoringSection: some View {
-        Section(header: Text("MONITORING")) {
-            NavigationLink {
-                ResourceHealthCheckView(resource: self.resource)
-            } label: {
-                Text("HEALTH_CHECK")
-            }
-            NavigationLink {
-                ResourceMaintenanceView(resource: self.resource)
-            } label: {
-                Text("MAINTENANCE")
-            }
-        }
-        .textCase(nil)
-    }
 }
 
 #Preview {

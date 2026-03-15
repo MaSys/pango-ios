@@ -11,12 +11,14 @@ enum DefaultTab: String, CaseIterable {
     case sites
     case resources
     case domains
-    case logs
+    case analytics
+    case settings
 }
 
 struct ContentView: View {
 
-    @AppStorage("selectedTab") private var selectedTab: DefaultTab = .sites
+    @AppStorage("defaultTab") private var defaultTab: DefaultTab = .sites
+    @State private var selectedTab: DefaultTab = .sites
 
     @EnvironmentObject var appService: AppService
 
@@ -25,38 +27,41 @@ struct ContentView: View {
             SitesView()
                 .environmentObject(appService)
                 .tabItem {
-                    Label("SITES", systemImage: "server.rack")
+                    Label("Sites", systemImage: "server.rack")
                 }
                 .tag(DefaultTab.sites)
 
             ResourcesView()
                 .environmentObject(appService)
                 .tabItem {
-                    Label("RESOURCES", systemImage: "point.bottomleft.forward.to.point.topright.filled.scurvepath")
+                    Label("Resources", systemImage: "point.bottomleft.forward.to.point.topright.filled.scurvepath")
                 }
                 .tag(DefaultTab.resources)
 
             DomainsView()
                 .environmentObject(appService)
                 .tabItem {
-                    Label("DOMAINS", systemImage: "globe")
+                    Label("Domains", systemImage: "globe")
                 }
                 .tag(DefaultTab.domains)
 
-            LogsView()
+            NavigationStack {
+                AnalyticsView(sites: appService.sites)
+            }
                 .tabItem {
-                    Label("LOGS", systemImage: "chart.bar.doc.horizontal")
+                    Label("Analytics", systemImage: "chart.bar.xaxis")
                 }
-                .tag(DefaultTab.logs)
+                .tag(DefaultTab.analytics)
 
             SettingsView()
                 .environmentObject(appService)
                 .tabItem {
-                    Label("SETTINGS", systemImage: "gear")
+                    Label("Settings", systemImage: "gear")
                 }
-                .tag("settings")
+                .tag(DefaultTab.settings)
         }
         .onAppear {
+            selectedTab = defaultTab
             self.appService.fetchOrgs { _, _ in }
             self.appService.fetchDomains()
             self.appService.fetchSites { _, _ in }
