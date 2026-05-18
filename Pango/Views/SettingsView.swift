@@ -72,6 +72,12 @@ struct SettingsView: View {
                     } label: {
                         Text("INVITATIONS")
                     }
+
+                    NavigationLink {
+                        IdentityProvidersView()
+                    } label: {
+                        Text("IDENTITY_PROVIDERS")
+                    }
                 }//section
                 .textCase(nil)
                 
