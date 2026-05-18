@@ -37,6 +37,11 @@ struct ResourceRowView: View {
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
+                    if let uptime = resource.uptimePercent {
+                        Text(String(format: "%.1f%%", uptime))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }//HStack
             }//VStack
             .padding()

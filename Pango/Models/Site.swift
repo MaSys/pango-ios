@@ -20,6 +20,7 @@ struct Site: Decodable {
     var newtVersion: String?
     var newtUpdateAvailable: Bool?
     var uptimePercent: Float?
+    var pending: Bool?
 }
 
 extension Site {
