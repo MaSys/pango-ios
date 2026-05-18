@@ -28,9 +28,9 @@ struct UsersView: View {
                                     .foregroundStyle(Color.accentColor)
                                 Text("OWNER")
                             } else {
-                                Text(user.roleName ?? "")
+                                Text(user.roleNames.isEmpty ? user.type.capitalized : user.roleNames)
                             }
-                            
+
                             Spacer()
                             Text(user.type.capitalized)
                         }

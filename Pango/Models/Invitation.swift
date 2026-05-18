@@ -11,8 +11,9 @@ struct Invitation: Decodable {
     var inviteId: String
     var email: String
     var expiresAt: Int
-    var roleId: Int
-    var roleName: String
+    
+    var roles: [AssociationRole]
+    var roleNames: String { roles.compactMap(\.roleName).joined(separator: ", ") }
 }
 
 extension Invitation {

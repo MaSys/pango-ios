@@ -13,3 +13,8 @@ struct Role: Decodable {
     var description: String?
     var orgName: String?
 }
+
+struct AssociationRole: Decodable {
+    var roleId: Int
+    var roleName: String
+}
