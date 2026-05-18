@@ -71,5 +71,9 @@ struct AlertRulesResponse: Decodable {
     var alerts: [AlertRule]
 }
 
+struct IdentityProvidersResponse: Decodable {
+    var idps: [IdentityProvider]
+}
+
 struct EmptyResponse: Decodable {
 }

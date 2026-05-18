@@ -209,6 +209,54 @@
         }
       }
     },
+    "AUTH_URL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auth URL"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL de Autenticación"
+          }
+        }
+      }
+    },
+    "AUTO_PROVISION" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto Provision"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto Aprovisionamiento"
+          }
+        }
+      }
+    },
+    "AZURE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azure"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azure"
+          }
+        }
+      }
+    },
     "BLOCK_ALL" : {
       "localizations" : {
         "en" : {
@@ -253,6 +301,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CIDR"
+          }
+        }
+      }
+    },
+    "CLIENT_ID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client ID"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID de Cliente"
+          }
+        }
+      }
+    },
+    "CLIENT_SECRET" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client Secret"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Secreto de Cliente"
           }
         }
       }
@@ -402,6 +482,16 @@
         }
       }
     },
+    "EDIT_IDENTITY_PROVIDER" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Identity Provider"
+          }
+        }
+      }
+    },
     "EMAIL" : {
       "localizations" : {
         "en" : {
@@ -414,6 +504,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Correo Electrónico"
+          }
+        }
+      }
+    },
+    "EMAIL_PATH" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email Path"
           }
         }
       }
@@ -478,6 +578,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No se puede conectar al servidor, ¡verifica la URL del Servidor!"
+          }
+        }
+      }
+    },
+    "GOOGLE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google"
           }
         }
       }
@@ -603,6 +719,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ping ICMP"
+          }
+        }
+      }
+    },
+    "IDENTIFIER_PATH" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identifier Path"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruta del Identificador"
+          }
+        }
+      }
+    },
+    "IDENTITY_PROVIDER" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identity Provider"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proveedor de Identidad"
+          }
+        }
+      }
+    },
+    "IDENTITY_PROVIDERS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identity Providers"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proveedores de Identidad"
           }
         }
       }
@@ -748,6 +912,32 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nombre"
+          }
+        }
+      }
+    },
+    "NAME_PATH" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name Path"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruta del Nombre"
+          }
+        }
+      }
+    },
+    "NEW_IDENTITY_PROVIDER" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Identity Provider"
           }
         }
       }
@@ -908,6 +1098,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Déjalo vacío si tu Clave API tiene acceso root."
+          }
+        }
+      }
+    },
+    "OIDC" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OIDC"
           }
         }
       }
@@ -1189,6 +1389,16 @@
         }
       }
     },
+    "REDIRECT_URL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redirect URL"
+          }
+        }
+      }
+    },
     "REJECT" : {
       "localizations" : {
         "en" : {
@@ -1330,6 +1540,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Guardar"
+          }
+        }
+      }
+    },
+    "SCOPES" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scopes"
           }
         }
       }
@@ -1544,6 +1764,22 @@
         }
       }
     },
+    "TOKEN_URL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token URL"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL del Token"
+          }
+        }
+      }
+    },
     "TCP" : {
 
     },
@@ -1680,6 +1916,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Válido Por"
+          }
+        }
+      }
+    },
+    "VARIANT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Variant"
           }
         }
       }
