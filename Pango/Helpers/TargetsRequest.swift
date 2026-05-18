@@ -61,13 +61,13 @@ class TargetsRequest {
             "ip": ip,
             "port": Int(port) as Any,
             "enabled": enabled,
-            "siteId": siteId,
-            "healthCheck": healthCheck
+            "siteId": siteId
         ]
         if let rewriting = pathRewriting, !rewriting.isEmpty {
             params["pathRewriting"] = rewriting
         }
         AF.request(url, method: .put, parameters: params, encoding: encoder, headers: ["Authorization": token])
+            .printError()
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value {
                     completionHandler(val.success, val)
@@ -103,8 +103,7 @@ class TargetsRequest {
             "ip": ip,
             "port": Int(port)!,
             "enabled": enabled,
-            "siteId": siteId,
-            "healthCheck": healthCheck
+            "siteId": siteId
         ]
         if let m = method {
             params["method"] = m

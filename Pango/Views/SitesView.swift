@@ -108,7 +108,7 @@ extension SitesView {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                StatusIconView(online: site.online)
+                StatusIconView(online: site.online ?? false)
             }//HStack
             HStack {
                 SiteUsageView(site: site)
