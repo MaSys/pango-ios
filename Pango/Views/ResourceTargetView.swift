@@ -20,6 +20,8 @@ struct ResourceTargetView: View {
     @State private var port: String = ""
     @State private var enabled: Bool = true
     @State private var siteId: Int = 0
+    @State private var healthCheck: Bool = false
+    @State private var pathRewriting: String = ""
     
     var validForm: Bool {
         if self.siteId == 0 { return false }
@@ -64,6 +66,12 @@ struct ResourceTargetView: View {
             HStack {
                 Toggle("ENABLED", isOn: $enabled)
             }
+
+            Toggle("HEALTH_CHECK", isOn: $healthCheck)
+
+            TextField("PATH_REWRITING", text: $pathRewriting)
+                .autocapitalization(.none)
+                .autocorrectionDisabled(true)
         }
         .onAppear {
             if let target = self.target {
@@ -72,6 +80,8 @@ struct ResourceTargetView: View {
                 self.port = String(target.port)
                 self.enabled = target.enabled
                 self.siteId = target.siteId
+                self.healthCheck = target.healthCheck ?? false
+                self.pathRewriting = target.pathRewriting ?? ""
             } else {
                 if let site = self.appService.sites.first {
                     self.siteId = site.siteId
@@ -107,14 +117,16 @@ struct ResourceTargetView: View {
             ip: self.ipHostname,
             port: self.port,
             enabled: self.enabled,
-            siteId: self.siteId
+            siteId: self.siteId,
+            healthCheck: self.healthCheck,
+            pathRewriting: self.pathRewriting.isEmpty ? nil : self.pathRewriting
         ) { success, response in
             if success {
                 self.dismiss()
             }
         }
     }
-    
+
     private func update() {
         TargetsRequest.update(
             id: self.target!.targetId,
@@ -122,7 +134,9 @@ struct ResourceTargetView: View {
             ip: self.ipHostname,
             port: self.port,
             enabled: self.enabled,
-            siteId: self.siteId
+            siteId: self.siteId,
+            healthCheck: self.healthCheck,
+            pathRewriting: self.pathRewriting.isEmpty ? nil : self.pathRewriting
         ) { success, response in
             if success {
                 self.dismiss()

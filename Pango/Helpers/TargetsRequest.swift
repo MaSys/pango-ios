@@ -41,6 +41,8 @@ class TargetsRequest {
         port: String,
         enabled: Bool,
         siteId: Int,
+        healthCheck: Bool = false,
+        pathRewriting: String? = nil,
         completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
     ) {
         let userDefaults = UserDefaults.standard
@@ -50,17 +52,22 @@ class TargetsRequest {
             completionHandler(false, nil)
             return
         }
-        
+
         let url = URL(string: "\(baseUrl)/v1/resource/\(resourceId)/target")!
         let token = "Bearer \(apiKey)"
         let encoder = JSONEncoding.default
-        AF.request(url, method: .put, parameters: [
+        var params: [String: Any] = [
             "method": method,
             "ip": ip,
-            "port": Int(port),
+            "port": Int(port) as Any,
             "enabled": enabled,
-            "siteId": siteId
-        ], encoding: encoder, headers: ["Authorization": token])
+            "siteId": siteId,
+            "healthCheck": healthCheck
+        ]
+        if let rewriting = pathRewriting, !rewriting.isEmpty {
+            params["pathRewriting"] = rewriting
+        }
+        AF.request(url, method: .put, parameters: params, encoding: encoder, headers: ["Authorization": token])
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value {
                     completionHandler(val.success, val)
@@ -69,7 +76,7 @@ class TargetsRequest {
                 }
             }
     }
-    
+
     public static func update(
         id: Int,
         method: String?,
@@ -77,6 +84,8 @@ class TargetsRequest {
         port: String,
         enabled: Bool,
         siteId: Int,
+        healthCheck: Bool = false,
+        pathRewriting: String? = nil,
         completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
     ) {
         let userDefaults = UserDefaults.standard
@@ -86,7 +95,7 @@ class TargetsRequest {
             completionHandler(false, nil)
             return
         }
-        
+
         let url = URL(string: "\(baseUrl)/v1/target/\(id)")!
         let token = "Bearer \(apiKey)"
         let encoder = JSONEncoding.default
@@ -94,10 +103,14 @@ class TargetsRequest {
             "ip": ip,
             "port": Int(port)!,
             "enabled": enabled,
-            "siteId": siteId
+            "siteId": siteId,
+            "healthCheck": healthCheck
         ]
-        if method != nil {
-            params["method"] = method!
+        if let m = method {
+            params["method"] = m
+        }
+        if let rewriting = pathRewriting, !rewriting.isEmpty {
+            params["pathRewriting"] = rewriting
         }
         AF.request(url, method: .post, parameters: params, encoding: encoder, headers: ["Authorization": token])
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in

@@ -13,4 +13,7 @@ struct Target: Decodable {
     var enabled: Bool
     var siteType: String
     var siteId: Int
+    var healthCheck: Bool?
+    var healthStatus: String?
+    var pathRewriting: String?
 }
