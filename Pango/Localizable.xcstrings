@@ -24,6 +24,9 @@
         }
       }
     },
+    "%lld min" : {
+
+    },
     "%lld_DAY" : {
       "localizations" : {
         "en" : {
@@ -59,12 +62,42 @@
         }
       }
     },
+    "ALERT_RULES" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alert Rules"
+          }
+        }
+      }
+    },
+    "ALIAS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alias"
+          }
+        }
+      }
+    },
     "ALL" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "All"
+          }
+        }
+      }
+    },
+    "ALLOW_ALL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow All"
           }
         }
       }
@@ -83,6 +116,16 @@
         }
       }
     },
+    "APPROVE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Approve"
+          }
+        }
+      }
+    },
     "AUTHENTICATION" : {
       "localizations" : {
         "en" : {
@@ -93,12 +136,42 @@
         }
       }
     },
+    "BLOCK_ALL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Block All"
+          }
+        }
+      }
+    },
     "CANCEL" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "CIDR" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CIDR"
+          }
+        }
+      }
+    },
+    "CUSTOM_PORTS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
           }
         }
       }
@@ -149,6 +222,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Disabled"
+          }
+        }
+      }
+    },
+    "DNS_RECORDS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS Records"
           }
         }
       }
@@ -227,7 +310,61 @@
     "h2c" : {
 
     },
+    "HEALTH_CHECK" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health Check"
+          }
+        }
+      }
+    },
+    "HEALTH_CHECK_FAIL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health Check Fail"
+          }
+        }
+      }
+    },
+    "HEALTH_CHECKS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health Checks"
+          }
+        }
+      }
+    },
+    "HEALTH_STATUS" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health Status"
+          }
+        }
+      }
+    },
+    "HOST" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Host"
+          }
+        }
+      }
+    },
     "http" : {
+
+    },
+    "HTTP" : {
 
     },
     "https" : {
@@ -243,12 +380,32 @@
         }
       }
     },
+    "ICMP" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ICMP Ping"
+          }
+        }
+      }
+    },
     "INSTANCE" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Instance"
+          }
+        }
+      }
+    },
+    "INTERVAL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interval"
           }
         }
       }
@@ -304,6 +461,16 @@
         }
       }
     },
+    "MONITORING" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitoring"
+          }
+        }
+      }
+    },
     "NAME" : {
       "localizations" : {
         "en" : {
@@ -314,12 +481,72 @@
         }
       }
     },
+    "NEW_ALERT_RULE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Alert Rule"
+          }
+        }
+      }
+    },
+    "NEW_HEALTH_CHECK" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Health Check"
+          }
+        }
+      }
+    },
+    "NEW_PRIVATE_RESOURCE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Private Resource"
+          }
+        }
+      }
+    },
+    "NO_DNS_RECORDS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No DNS records found"
+          }
+        }
+      }
+    },
+    "NO_PENDING_SITES" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Pending Sites"
+          }
+        }
+      }
+    },
     "NOT_PROTECTED" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not Protected"
+          }
+        }
+      }
+    },
+    "NOTIFICATION_METHOD" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification"
           }
         }
       }
@@ -387,6 +614,26 @@
         }
       }
     },
+    "PATH_REWRITING" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Path Rewriting"
+          }
+        }
+      }
+    },
+    "PENDING" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pending"
+          }
+        }
+      }
+    },
     "PIN_CODE" : {
       "localizations" : {
         "en" : {
@@ -427,6 +674,37 @@
         }
       }
     },
+    "PORTS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ports"
+          }
+        }
+      }
+    },
+    "PORTS_PLACEHOLDER" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. 80,443,8080-8090"
+          }
+        }
+      }
+    },
+    "PRIVATE_RESOURCES" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Resources"
+          }
+        }
+      }
+    },
     "PROTECTED" : {
       "localizations" : {
         "en" : {
@@ -457,12 +735,54 @@
         }
       }
     },
+    "PUBLIC_RESOURCES" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Public Resources"
+          }
+        }
+      }
+    },
+    "RESOURCES" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resources"
+          }
+        }
+      }
+    },
     "RAW_TCP_UDP_RESOURCE" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Raw TCP/UDP Resource"
+          }
+        }
+      }
+    },
+    "REJECT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reject"
+          }
+        }
+      }
+    },
+    "RESOURCE_DOWN" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resource Down"
           }
         }
       }
@@ -493,17 +813,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resource Type"
-          }
-        }
-      }
-    },
-    "RESOURCES" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resources"
           }
         }
       }
@@ -589,6 +898,16 @@
         }
       }
     },
+    "SITE_DOWN" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Site Down"
+          }
+        }
+      }
+    },
     "SITES" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -616,6 +935,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Subdomain"
+          }
+        }
+      }
+    },
+    "SUBNET" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subnet"
           }
         }
       }
@@ -662,6 +991,19 @@
           }
         }
       }
+    },
+    "TRIGGER_TYPE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trigger"
+          }
+        }
+      }
+    },
+    "TYPE" : {
+
     },
     "UDP" : {
 
@@ -738,6 +1080,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Visibility"
+          }
+        }
+      }
+    },
+    "WEBHOOK" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webhook"
           }
         }
       }

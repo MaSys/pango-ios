@@ -75,6 +75,21 @@ struct SettingsView: View {
                 }//section
                 .textCase(nil)
                 
+                Section(header: Text("MONITORING")) {
+                    NavigationLink {
+                        HealthChecksView()
+                    } label: {
+                        Text("HEALTH_CHECKS")
+                    }
+
+                    NavigationLink {
+                        AlertRulesView()
+                    } label: {
+                        Text("ALERT_RULES")
+                    }
+                }//section
+                .textCase(nil)
+
                 Section(header: Text("SETTINGS")) {
                     Picker("DEFAULT_TAB", selection: $selectedTab) {
                         ForEach(DefaultTab.allCases, id: \.self) { tab in
