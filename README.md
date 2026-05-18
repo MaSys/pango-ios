@@ -17,6 +17,9 @@ Manage Pangolin from your iPhone.
 | ![](https://github.com/MaSys/pango-ios/blob/main/screenshots/sites.png?raw=true) | ![](https://github.com/MaSys/pango-ios/blob/main/screenshots/resources.png?raw=true) | ![](https://github.com/MaSys/pango-ios/blob/main/screenshots/domains.png?raw=true) | ![](https://github.com/MaSys/pango-ios/blob/main/screenshots/settings.png?raw=true) |
 |:--:|:--:|:--:|:--:|
 
+## AI Usage
+NOTE: This iOS app uses AI for development, the usage of AI is for assistant and development speed, every piece of code is getting reviewed by the developer to prevent any issue.
+
 ## Features ✨
 - List Sites.
 - Manage Resources (Create, Update, Enable/Disable).
