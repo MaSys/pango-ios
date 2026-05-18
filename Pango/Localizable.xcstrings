@@ -489,6 +489,12 @@
             "state" : "translated",
             "value" : "Edit Identity Provider"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar Proveedor de Identidad"
+          }
         }
       }
     },
@@ -514,6 +520,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Email Path"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruta del Correo"
           }
         }
       }
@@ -972,6 +984,12 @@
             "state" : "translated",
             "value" : "New Identity Provider"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuevo Proveedor de Identidad"
+          }
         }
       }
     },
@@ -1058,6 +1076,12 @@
     "OIDC" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OIDC"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "OIDC"
@@ -1397,6 +1421,12 @@
             "state" : "translated",
             "value" : "Redirect URL"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL de Redirección"
+          }
         }
       }
     },
@@ -1551,6 +1581,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Scopes"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permisos"
           }
         }
       }
@@ -1927,6 +1963,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Variant"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Variante"
           }
         }
       }
