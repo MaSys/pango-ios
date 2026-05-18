@@ -15,7 +15,7 @@ struct Site: Decodable {
     var megabytesOut: Float?
     var orgName: String?
     var type: String
-    var online: Bool
+    var online: Bool?
     var address: String?
     var newtVersion: String?
     var newtUpdateAvailable: Bool?
