@@ -24,6 +24,9 @@
         }
       }
     },
+    "%lld min" : {
+
+    },
     "%lld_DAY" : {
       "localizations" : {
         "en" : {
@@ -43,6 +46,24 @@
               }
             }
           }
+        },
+        "es-419" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld día"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld días"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -56,6 +77,44 @@
             "state" : "translated",
             "value" : "Access Control"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control de Acceso"
+          }
+        }
+      }
+    },
+    "ALERT_RULES" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alert Rules"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reglas de Alerta"
+          }
+        }
+      }
+    },
+    "ALIAS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alias"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alias"
+          }
         }
       }
     },
@@ -66,11 +125,40 @@
             "state" : "translated",
             "value" : "All"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todo"
+          }
+        }
+      }
+    },
+    "ALLOW_ALL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow All"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permitir Todo"
+          }
         }
       }
     },
     "API Compatibility" : {
-
+      "localizations" : {
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compatibilidad de la API"
+          }
+        }
+      }
     },
     "API_KEY" : {
       "extractionState" : "manual",
@@ -79,6 +167,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "API Key"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clave API"
+          }
+        }
+      }
+    },
+    "APPROVE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Approve"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprobar"
           }
         }
       }
@@ -90,6 +200,28 @@
             "state" : "translated",
             "value" : "Authentication"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autenticación"
+          }
+        }
+      }
+    },
+    "BLOCK_ALL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Block All"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bloquear Todo"
+          }
         }
       }
     },
@@ -99,6 +231,44 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        }
+      }
+    },
+    "CIDR" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CIDR"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CIDR"
+          }
+        }
+      }
+    },
+    "CUSTOM_PORTS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personalizado"
           }
         }
       }
@@ -110,6 +280,12 @@
             "state" : "translated",
             "value" : "Default Tab"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pestaña Predeterminada"
+          }
         }
       }
     },
@@ -119,6 +295,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
           }
         }
       }
@@ -130,6 +312,12 @@
             "state" : "translated",
             "value" : "Are you sure you want to delete this resource?"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas eliminar este recurso?"
+          }
         }
       }
     },
@@ -139,6 +327,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Description"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descripción"
           }
         }
       }
@@ -150,6 +344,28 @@
             "state" : "translated",
             "value" : "Disabled"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivado"
+          }
+        }
+      }
+    },
+    "DNS_RECORDS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS Records"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registros DNS"
+          }
         }
       }
     },
@@ -159,6 +375,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Domain"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dominio"
           }
         }
       }
@@ -171,6 +393,12 @@
             "state" : "translated",
             "value" : "Domains"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dominios"
+          }
         }
       }
     },
@@ -180,6 +408,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Email"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correo Electrónico"
           }
         }
       }
@@ -191,6 +425,12 @@
             "state" : "translated",
             "value" : "Enable SSL (https)"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilitar SSL (https)"
+          }
         }
       }
     },
@@ -200,6 +440,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enabled"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activado"
           }
         }
       }
@@ -211,6 +457,12 @@
             "state" : "translated",
             "value" : "Cannot authenticate to server, please check your API Key / Organization ID!"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede autenticar en el servidor, ¡verifica tu Clave API / ID de Organización!"
+          }
         }
       }
     },
@@ -221,13 +473,103 @@
             "state" : "translated",
             "value" : "Cannot connect to server, please check your Server URL!"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede conectar al servidor, ¡verifica la URL del Servidor!"
+          }
         }
       }
     },
     "h2c" : {
 
     },
+    "HEALTH_CHECK" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health Check"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verificación de Salud"
+          }
+        }
+      }
+    },
+    "HEALTH_CHECK_FAIL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health Check Fail"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fallo en Verificación de Salud"
+          }
+        }
+      }
+    },
+    "HEALTH_CHECKS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health Checks"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verificaciones de Salud"
+          }
+        }
+      }
+    },
+    "HEALTH_STATUS" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health Status"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estado de Salud"
+          }
+        }
+      }
+    },
+    "HOST" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Host"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Host"
+          }
+        }
+      }
+    },
     "http" : {
+
+    },
+    "HTTP" : {
 
     },
     "https" : {
@@ -240,6 +582,28 @@
             "state" : "translated",
             "value" : "HTTPS Resource"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurso HTTPS"
+          }
+        }
+      }
+    },
+    "ICMP" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ICMP Ping"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ping ICMP"
+          }
         }
       }
     },
@@ -249,6 +613,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Instance"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instancia"
+          }
+        }
+      }
+    },
+    "INTERVAL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interval"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervalo"
           }
         }
       }
@@ -260,6 +646,12 @@
             "state" : "translated",
             "value" : "Invitations"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invitaciones"
+          }
         }
       }
     },
@@ -270,6 +662,12 @@
             "state" : "translated",
             "value" : "Invite User"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invitar Usuario"
+          }
         }
       }
     },
@@ -279,6 +677,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "IP / Hostname"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IP / Nombre de Host"
           }
         }
       }
@@ -291,6 +695,12 @@
             "state" : "translated",
             "value" : "Login"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar Sesión"
+          }
         }
       }
     },
@@ -300,6 +710,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Method"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Método"
+          }
+        }
+      }
+    },
+    "MONITORING" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitoring"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitoreo"
           }
         }
       }
@@ -311,6 +743,92 @@
             "state" : "translated",
             "value" : "Name"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre"
+          }
+        }
+      }
+    },
+    "NEW_ALERT_RULE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Alert Rule"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva Regla de Alerta"
+          }
+        }
+      }
+    },
+    "NEW_HEALTH_CHECK" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Health Check"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva Verificación de Salud"
+          }
+        }
+      }
+    },
+    "NEW_PRIVATE_RESOURCE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Private Resource"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuevo Recurso Privado"
+          }
+        }
+      }
+    },
+    "NO_DNS_RECORDS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No DNS records found"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron registros DNS"
+          }
+        }
+      }
+    },
+    "NO_PENDING_SITES" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Pending Sites"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin Sitios Pendientes"
+          }
         }
       }
     },
@@ -320,6 +838,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not Protected"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin Protección"
+          }
+        }
+      }
+    },
+    "NOTIFICATION_METHOD" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notificación"
           }
         }
       }
@@ -331,6 +871,12 @@
             "state" : "translated",
             "value" : "Organization"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Organización"
+          }
         }
       }
     },
@@ -340,6 +886,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Organization ID"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID de Organización"
           }
         }
       }
@@ -351,6 +903,12 @@
             "state" : "translated",
             "value" : "Leave it empty if your API Key has root access."
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déjalo vacío si tu Clave API tiene acceso root."
+          }
         }
       }
     },
@@ -361,10 +919,16 @@
             "state" : "translated",
             "value" : "Owner"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Propietario"
+          }
         }
       }
     },
-    "Pangolin API **v1.10.3**" : {
+    "Pangolin API **v1.18.4**" : {
 
     },
     "PASSWORD" : {
@@ -373,6 +937,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Password"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contraseña"
           }
         }
       }
@@ -384,6 +954,44 @@
             "state" : "translated",
             "value" : "Password Protection"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protección con Contraseña"
+          }
+        }
+      }
+    },
+    "PATH_REWRITING" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Path Rewriting"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reescritura de Ruta"
+          }
+        }
+      }
+    },
+    "PENDING" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pending"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pendiente"
+          }
         }
       }
     },
@@ -393,6 +1001,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "PIN Code"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Código PIN"
           }
         }
       }
@@ -404,6 +1018,12 @@
             "state" : "translated",
             "value" : "PIN Code Protection"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protección con Código PIN"
+          }
         }
       }
     },
@@ -413,6 +1033,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Port"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puerto"
           }
         }
       }
@@ -424,6 +1050,61 @@
             "state" : "translated",
             "value" : "Port Number"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Número de Puerto"
+          }
+        }
+      }
+    },
+    "PORTS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ports"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puertos"
+          }
+        }
+      }
+    },
+    "PORTS_PLACEHOLDER" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. 80,443,8080-8090"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ej. 80,443,8080-8090"
+          }
+        }
+      }
+    },
+    "PRIVATE_RESOURCES" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Resources"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recursos Privados"
+          }
         }
       }
     },
@@ -433,6 +1114,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Protected"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protegido"
           }
         }
       }
@@ -444,6 +1131,12 @@
             "state" : "translated",
             "value" : "Protection"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protección"
+          }
         }
       }
     },
@@ -453,6 +1146,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Protocol"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protocolo"
+          }
+        }
+      }
+    },
+    "PUBLIC_RESOURCES" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Public Resources"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recursos Públicos"
           }
         }
       }
@@ -464,6 +1180,44 @@
             "state" : "translated",
             "value" : "Raw TCP/UDP Resource"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurso TCP/UDP Raw"
+          }
+        }
+      }
+    },
+    "REJECT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reject"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechazar"
+          }
+        }
+      }
+    },
+    "RESOURCE_DOWN" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resource Down"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurso Caído"
+          }
         }
       }
     },
@@ -473,6 +1227,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leave it empty to remove password!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Déjalo vacío para eliminar la contraseña!"
           }
         }
       }
@@ -484,6 +1244,12 @@
             "state" : "translated",
             "value" : "Leave it empty to remove PIN Code!"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Déjalo vacío para eliminar el Código PIN!"
+          }
         }
       }
     },
@@ -493,6 +1259,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resource Type"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipo de Recurso"
           }
         }
       }
@@ -505,6 +1277,12 @@
             "state" : "translated",
             "value" : "Resources"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recursos"
+          }
         }
       }
     },
@@ -515,12 +1293,24 @@
             "state" : "translated",
             "value" : "Role"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rol"
+          }
         }
       }
     },
     "ROLES" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roles"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Roles"
@@ -535,6 +1325,12 @@
             "state" : "translated",
             "value" : "Save"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar"
+          }
         }
       }
     },
@@ -545,6 +1341,12 @@
             "state" : "translated",
             "value" : "Select a role to transfer users from **%@**:"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona un rol para transferir usuarios de **%@**:"
+          }
         }
       }
     },
@@ -554,6 +1356,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Make sure you have enabled Integration API in your Pangolin instance, this will generate a different URL than the main one. For more info, [Click here](https://docs.digpangolin.com/self-host/advanced/integration-api)."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asegúrate de haber habilitado la API de Integración en tu instancia de Pangolin, esto generará una URL diferente a la principal. Para más información, [Haz clic aquí](https://docs.digpangolin.com/self-host/advanced/integration-api)."
           }
         }
       }
@@ -566,6 +1374,12 @@
             "state" : "translated",
             "value" : "Server URL"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL del Servidor"
+          }
         }
       }
     },
@@ -576,6 +1390,12 @@
             "state" : "translated",
             "value" : "Settings"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configuración"
+          }
         }
       }
     },
@@ -585,6 +1405,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Site"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sitio"
+          }
+        }
+      }
+    },
+    "SITE_DOWN" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Site Down"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sitio Caído"
           }
         }
       }
@@ -597,6 +1439,12 @@
             "state" : "translated",
             "value" : "Sites"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sitios"
+          }
         }
       }
     },
@@ -606,6 +1454,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Status"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estado"
           }
         }
       }
@@ -617,6 +1471,28 @@
             "state" : "translated",
             "value" : "Subdomain"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subdominio"
+          }
+        }
+      }
+    },
+    "SUBNET" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subnet"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subred"
+          }
         }
       }
     },
@@ -626,6 +1502,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Support"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soporte"
           }
         }
       }
@@ -637,6 +1519,12 @@
             "state" : "translated",
             "value" : "Support / Feedback"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soporte / Comentarios"
+          }
         }
       }
     },
@@ -646,6 +1534,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Targets"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destinos"
           }
         }
       }
@@ -660,6 +1554,44 @@
             "state" : "translated",
             "value" : "Transfer Users"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transferir Usuarios"
+          }
+        }
+      }
+    },
+    "TRIGGER_TYPE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trigger"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disparador"
+          }
+        }
+      }
+    },
+    "TYPE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipo"
+          }
         }
       }
     },
@@ -672,6 +1604,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unverified"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Verificado"
           }
         }
       }
@@ -686,6 +1624,12 @@
             "state" : "translated",
             "value" : "Use Platform SSO"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar SSO de Plataforma"
+          }
         }
       }
     },
@@ -696,6 +1640,12 @@
             "state" : "translated",
             "value" : "Users"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuarios"
+          }
         }
       }
     },
@@ -705,6 +1655,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Users & Roles"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuarios y Roles"
           }
         }
       }
@@ -719,6 +1675,12 @@
             "state" : "translated",
             "value" : "Valid For"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Válido Por"
+          }
         }
       }
     },
@@ -728,6 +1690,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verified"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verificado"
           }
         }
       }
@@ -739,6 +1707,28 @@
             "state" : "translated",
             "value" : "Visibility"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visibilidad"
+          }
+        }
+      }
+    },
+    "WEBHOOK" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webhook"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webhook"
+          }
         }
       }
     },
@@ -748,6 +1738,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You cannot delete Admin Role!!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡No puedes eliminar el Rol de Administrador!!"
           }
         }
       }

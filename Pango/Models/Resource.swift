@@ -20,6 +20,8 @@ struct Resource: Decodable {
         case proxyPort
         case enabled
         case domainId
+        case uptimePercent
+        case certStatus
     }
     
     var resourceId: Int
@@ -35,6 +37,8 @@ struct Resource: Decodable {
     var proxyPort: Int?
     var enabled: Bool
     var domainId: String?
+    var uptimePercent: Float?
+    var certStatus: String?
     
     var protected: Bool {
         if passwordId != nil { return true }

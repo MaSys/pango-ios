@@ -75,6 +75,21 @@ struct SettingsView: View {
                 }//section
                 .textCase(nil)
                 
+                Section(header: Text("MONITORING")) {
+                    NavigationLink {
+                        HealthChecksView()
+                    } label: {
+                        Text("HEALTH_CHECKS")
+                    }
+
+                    NavigationLink {
+                        AlertRulesView()
+                    } label: {
+                        Text("ALERT_RULES")
+                    }
+                }//section
+                .textCase(nil)
+
                 Section(header: Text("SETTINGS")) {
                     Picker("DEFAULT_TAB", selection: $selectedTab) {
                         ForEach(DefaultTab.allCases, id: \.self) { tab in
@@ -89,7 +104,7 @@ struct SettingsView: View {
                     HStack {
                         Text("API Compatibility")
                         Spacer()
-                        Text("Pangolin API **v1.10.3**")
+                        Text("Pangolin API **v1.18.4**")
                             .font(.callout)
                             .foregroundColor(.secondary)
                     }

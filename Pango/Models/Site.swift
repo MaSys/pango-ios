@@ -19,6 +19,8 @@ struct Site: Decodable {
     var address: String?
     var newtVersion: String?
     var newtUpdateAvailable: Bool?
+    var uptimePercent: Float?
+    var pending: Bool?
 }
 
 extension Site {
@@ -36,7 +38,8 @@ extension Site {
             online: true,
             address: "",
             newtVersion: "1.4.0",
-            newtUpdateAvailable: false
+            newtUpdateAvailable: false,
+            uptimePercent: nil
         )
     }
 }

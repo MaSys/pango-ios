@@ -19,7 +19,7 @@ struct InvitationsView: View {
                 VStack(alignment: .leading) {
                     Text(inv.email)
                     HStack {
-                        Text(inv.roleName)
+                        Text(inv.roleNames)
                             .foregroundStyle(.secondary)
                             .font(.subheadline)
                         Spacer()

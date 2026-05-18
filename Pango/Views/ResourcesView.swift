@@ -19,87 +19,154 @@ enum ResourceFilter: String {
     case protected
     case notProtected
 }
+enum ResourceSection {
+    case `public`
+    case `private`
+}
+
 struct ResourcesView: View {
-    
+
     @EnvironmentObject var appService: AppService
-    
+
+    @State private var section: ResourceSection = .public
     @State private var sort: ResourceSort = .name
     @State private var sortDesc: Bool = false
     @State private var filteredBy: ResourceFilter = .none
-    
+    @State private var privateResources: [PrivateResource] = []
+
     var sortedResources: [Resource] {
         switch sort {
         case .name:
-            if self.sortDesc {
-                return self.appService.resources.sorted(by: { $0.name > $1.name })
-            } else {
-                return self.appService.resources.sorted(by: { $0.name < $1.name })
-            }
+            return appService.resources.sorted(by: sortDesc ? { $0.name > $1.name } : { $0.name < $1.name })
         case .status:
-            if self.sortDesc {
-                return self.appService.resources.sorted(by: { $1.enabled && !$0.enabled })
-            } else {
-                return self.appService.resources.sorted(by: { $0.enabled && !$1.enabled })
-            }
+            return appService.resources.sorted(by: sortDesc ? { $1.enabled && !$0.enabled } : { $0.enabled && !$1.enabled })
         case .protection:
-            if self.sortDesc {
-                return self.appService.resources.sorted(by: { $1.protected && !$0.protected })
-            } else {
-                return self.appService.resources.sorted(by: { $0.protected && !$1.protected })
-            }
+            return appService.resources.sorted(by: sortDesc ? { $1.protected && !$0.protected } : { $0.protected && !$1.protected })
         }
     }
-    
+
     var filteredResources: [Resource] {
         switch filteredBy {
-        case .none:
-            return self.sortedResources
-        case .enabled:
-            return self.sortedResources.filter({ $0.enabled })
-        case .disabled:
-            return self.sortedResources.filter({ !$0.enabled })
-        case .protected:
-            return self.sortedResources.filter({ $0.protected })
-        case .notProtected:
-            return self.sortedResources.filter({ !$0.protected })
+        case .none: return sortedResources
+        case .enabled: return sortedResources.filter { $0.enabled }
+        case .disabled: return sortedResources.filter { !$0.enabled }
+        case .protected: return sortedResources.filter { $0.protected }
+        case .notProtected: return sortedResources.filter { !$0.protected }
         }
     }
-    
+
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVStack(spacing: 8) {
-                    ForEach(self.filteredResources, id: \.resourceId) { resource in
-                        ResourceRowView(resource: resource)
-                    }
-                }//lazystack
+            VStack(spacing: 0) {
+                Picker("", selection: $section) {
+                    Text("PUBLIC_RESOURCES").tag(ResourceSection.public)
+                    Text("PRIVATE_RESOURCES").tag(ResourceSection.private)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
                 .padding(.vertical, 8)
-            }//scrollview
-            .navigationTitle(Text("RESOURCES"))
-            .onAppear {
-                self.fetch()
+
+                if section == .public {
+                    publicContent
+                } else {
+                    privateContent
+                }
             }
+            .navigationTitle(Text("RESOURCES"))
+            .onAppear { self.fetchAll() }
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    HStack {
-                        filterMenu
-                        
-                        sortMenu
+                if section == .public {
+                    ToolbarItem(placement: .topBarLeading) {
+                        HStack {
+                            filterMenu
+                            sortMenu
+                        }
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        ResourcesCreateView()
-                    } label: {
-                        Image(systemName: "plus")
+                    if section == .public {
+                        NavigationLink {
+                            ResourcesCreateView()
+                        } label: {
+                            Image(systemName: "plus")
+                        }
+                    } else {
+                        NavigationLink {
+                            PrivateResourceCreateView()
+                                .environmentObject(appService)
+                        } label: {
+                            Image(systemName: "plus")
+                        }
                     }
                 }
             }
         }
     }
-    
-    private func fetch() {
-        self.appService.fetchResources()
+
+    private func fetchAll() {
+        appService.fetchResources()
+        PrivateResourcesRequest.fetch { _, resources in
+            self.privateResources = resources
+        }
+    }
+}
+
+extension ResourcesView {
+    var publicContent: some View {
+        ScrollView {
+            LazyVStack(spacing: 8) {
+                ForEach(filteredResources, id: \.resourceId) { resource in
+                    ResourceRowView(resource: resource)
+                }
+            }
+            .padding(.vertical, 8)
+        }
+    }
+
+    var privateContent: some View {
+        ScrollView {
+            LazyVStack(spacing: 8) {
+                ForEach(privateResources, id: \.resourceId) { resource in
+                    NavigationLink {
+                        PrivateResourceView(resource: resource)
+                            .environmentObject(appService)
+                    } label: {
+                        HStack {
+                            StatusIconView(online: resource.enabled)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(resource.name)
+                                    .fontWeight(.semibold)
+                                    .foregroundStyle(.primary)
+                                if let alias = resource.alias {
+                                    Text(alias)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            Spacer()
+                            Text(resource.type.uppercased())
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.accentColor.opacity(0.2))
+                                .foregroundStyle(.accent)
+                                .clipShape(Capsule())
+                        }
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(uiColor: UIColor.secondarySystemBackground))
+                                .shadow(color: .gray.opacity(0.2), radius: 2, y: 1)
+                        )
+                        .padding(.horizontal)
+                        .padding(.vertical, 4)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.vertical, 8)
+        }
     }
 }
 

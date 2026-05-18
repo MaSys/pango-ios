@@ -55,5 +55,21 @@ struct InvitationsResponse: Decodable {
     var invitations: [Invitation]
 }
 
+struct DomainDetailResponse: Decodable {
+    var records: [DnsRecord]
+}
+
+struct PrivateResourcesResponse: Decodable {
+    var resources: [PrivateResource]
+}
+
+struct HealthChecksResponse: Decodable {
+    var healthChecks: [HealthCheck]
+}
+
+struct AlertRulesResponse: Decodable {
+    var alerts: [AlertRule]
+}
+
 struct EmptyResponse: Decodable {
 }

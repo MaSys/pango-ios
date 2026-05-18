@@ -32,6 +32,15 @@ struct ResourceTargetsView: View {
                             Text("\(target.method!)://\(target.ip):\(String(target.port))")
                         }
                         Spacer()
+                        if let status = target.healthStatus {
+                            Text(status)
+                                .font(.caption)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(status == "healthy" ? Color.green.opacity(0.2) : Color.red.opacity(0.2))
+                                .foregroundStyle(status == "healthy" ? .green : .red)
+                                .clipShape(Capsule())
+                        }
                     }
                 }
                 .swipeActions {

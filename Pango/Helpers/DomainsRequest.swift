@@ -9,6 +9,31 @@ import SwiftUI
 import Alamofire
 
 class DomainsRequest {
+    public static func fetchDetail(
+        domainId: String,
+        completionHandler: @escaping (_ success: Bool, _ records: [DnsRecord]) -> Void
+    ) {
+        let userDefaults = UserDefaults.standard
+        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
+              let apiKey = userDefaults.string(forKey: "pangolin_api_key"),
+              let org = userDefaults.string(forKey: "pangolin_organization_id") else
+        {
+            completionHandler(false, [])
+            return
+        }
+
+        let url = URL(string: "\(baseUrl)/v1/org/\(org)/domain/\(domainId)")!
+        let token = "Bearer \(apiKey)"
+        AF.request(url, headers: ["Authorization": token])
+            .responseDecodable(of: MainResponse<DomainDetailResponse>.self) { response in
+                if let val = response.value, val.success {
+                    completionHandler(true, val.data?.records ?? [])
+                } else {
+                    completionHandler(false, [])
+                }
+            }
+    }
+
     public static func fetch(
         completionHandler: @escaping (_ success: Bool, _ sites: [Domain]) -> Void
     ) {

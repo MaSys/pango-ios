@@ -14,12 +14,13 @@ struct User: Decodable {
     var username: String?
     var name: String?
     var type: String
-    var roleId: Int
-    var roleName: String?
     var isOwner: Bool?
     var idpName: String?
     var idpId: Int?
     var twoFactorEnabled: Bool?
+    
+    var roles: [AssociationRole]
+    var roleNames: String { roles.compactMap(\.roleName).joined(separator: ", ") }
 }
 
 struct ResourceUser: Decodable {
