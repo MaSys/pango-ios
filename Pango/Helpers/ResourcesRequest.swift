@@ -15,24 +15,61 @@ class ResourcesRequest {
         let userDefaults = UserDefaults.standard
         guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
               let apiKey = userDefaults.string(forKey: "pangolin_api_key"),
-                let org = userDefaults.string(forKey: "pangolin_organization_id") else
+              let org = userDefaults.string(forKey: "pangolin_organization_id") else
         {
             completionHandler(false, [])
             return
         }
-        
-        let url = URL(string: "\(baseUrl)/v1/org/\(org)/resources")!
+
         let token = "Bearer \(apiKey)"
+
+        fetchPage(
+            baseUrl: baseUrl,
+            org: org,
+            token: token,
+            page: 1,
+            resources: [],
+            completionHandler: completionHandler
+        )
+    }
+
+    private static func fetchPage(
+        baseUrl: String,
+        org: String,
+        token: String,
+        page: Int,
+        resources: [Resource],
+        completionHandler: @escaping (_ success: Bool, _ resources: [Resource]) -> Void
+    ) {
+        guard let url = ResourcePagination.url(baseUrl: baseUrl, orgId: org, page: page) else {
+            completionHandler(false, [])
+            return
+        }
+
         AF.request(url, headers: ["Authorization": token])
             .responseDecodable(of: MainResponse<ResourcesResponse>.self) { response in
-                if let val = response.value {
-                    if val.success {
-                        completionHandler(true, val.data!.resources)
-                    } else {
-                        completionHandler(false, [])
-                    }
-                } else {
+                guard let val = response.value, val.success, let data = val.data else {
                     completionHandler(false, [])
+                    return
+                }
+
+                let combinedResources = resources + data.resources
+                if let pagination = data.pagination,
+                   ResourcePagination.hasNextPage(
+                       total: pagination.total,
+                       page: pagination.page,
+                       pageSize: pagination.pageSize
+                   ) {
+                    fetchPage(
+                        baseUrl: baseUrl,
+                        org: org,
+                        token: token,
+                        page: pagination.page + 1,
+                        resources: combinedResources,
+                        completionHandler: completionHandler
+                    )
+                } else {
+                    completionHandler(true, combinedResources)
                 }
             }
     }

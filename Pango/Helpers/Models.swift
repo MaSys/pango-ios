@@ -29,6 +29,13 @@ struct SitesResponse: Decodable {
 
 struct ResourcesResponse: Decodable {
     var resources: [Resource]
+    var pagination: Pagination?
+}
+
+struct Pagination: Decodable {
+    var total: Int
+    var pageSize: Int
+    var page: Int
 }
 
 struct DomainsResponse: Decodable {
