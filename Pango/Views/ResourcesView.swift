@@ -37,7 +37,7 @@ struct ResourcesView: View {
     var sortedResources: [Resource] {
         switch sort {
         case .name:
-            return appService.resources.sorted(by: sortDesc ? { $0.name > $1.name } : { $0.name < $1.name })
+            return appService.resources.sorted(by: sortDesc ? { $0.name.lowercased() > $1.name.lowercased() } : { $0.name.lowercased() < $1.name.lowercased() })
         case .status:
             return appService.resources.sorted(by: sortDesc ? { $1.enabled && !$0.enabled } : { $0.enabled && !$1.enabled })
         case .protection:
