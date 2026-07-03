@@ -126,7 +126,7 @@ extension ResourcesView {
     var privateContent: some View {
         ScrollView {
             LazyVStack(spacing: 8) {
-                ForEach(privateResources, id: \.resourceId) { resource in
+                ForEach(privateResources, id: \.siteResourceId) { resource in
                     NavigationLink {
                         PrivateResourceView(resource: resource)
                             .environmentObject(appService)
@@ -137,14 +137,17 @@ extension ResourcesView {
                                 Text(resource.name)
                                     .fontWeight(.semibold)
                                     .foregroundStyle(.primary)
-                                if let alias = resource.alias {
-                                    Text(alias)
+                                Text(resource.fullDomain ?? resource.aliasAddress ?? resource.destination)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                if !resource.siteNames.isEmpty {
+                                    Text(resource.siteNames.joined(separator: ", "))
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
                             }
                             Spacer()
-                            Text(resource.type.uppercased())
+                            Text(resource.mode.uppercased())
                                 .font(.caption)
                                 .fontWeight(.semibold)
                                 .padding(.horizontal, 6)

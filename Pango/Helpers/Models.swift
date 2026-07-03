@@ -67,7 +67,8 @@ struct DomainDetailResponse: Decodable {
 }
 
 struct PrivateResourcesResponse: Decodable {
-    var resources: [PrivateResource]
+    var siteResources: [PrivateResource]
+    var pagination: Pagination?
 }
 
 struct HealthChecksResponse: Decodable {

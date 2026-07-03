@@ -16,7 +16,7 @@ struct PrivateResourcesView: View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 8) {
-                    ForEach(resources, id: \.resourceId) { resource in
+                    ForEach(resources, id: \.siteResourceId) { resource in
                         NavigationLink {
                             PrivateResourceView(resource: resource)
                                 .environmentObject(appService)
@@ -27,14 +27,17 @@ struct PrivateResourcesView: View {
                                     Text(resource.name)
                                         .fontWeight(.semibold)
                                         .foregroundStyle(.primary)
-                                    if let alias = resource.alias {
-                                        Text(alias)
+                                    Text(resource.fullDomain ?? resource.aliasAddress ?? resource.destination)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    if !resource.siteNames.isEmpty {
+                                        Text(resource.siteNames.joined(separator: ", "))
                                             .font(.caption)
                                             .foregroundStyle(.secondary)
                                     }
                                 }
                                 Spacer()
-                                Text(resource.type.uppercased())
+                                Text(resource.mode.uppercased())
                                     .font(.caption)
                                     .fontWeight(.semibold)
                                     .padding(.horizontal, 6)

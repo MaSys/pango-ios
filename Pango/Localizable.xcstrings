@@ -135,6 +135,7 @@
       }
     },
     "ALLOW_ALL" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -257,7 +258,24 @@
         }
       }
     },
+    "BASE_DOMAIN" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Base Domain"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dominio Base"
+          }
+        }
+      }
+    },
     "BLOCK_ALL" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -338,6 +356,7 @@
       }
     },
     "CUSTOM_PORTS" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -413,6 +432,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Descripción"
+          }
+        }
+      }
+    },
+    "DESTINATION" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destination"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destino"
           }
         }
       }
@@ -542,6 +577,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Habilitar SSL (https)"
+          }
+        }
+      }
+    },
+    "ENABLE_TLS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable TLS"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilitar TLS"
           }
         }
       }
@@ -701,6 +752,9 @@
 
     },
     "https" : {
+
+    },
+    "HTTPS" : {
 
     },
     "HTTPS_RESOURCE" : {
@@ -893,6 +947,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Método"
+          }
+        }
+      }
+    },
+    "MODE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo"
           }
         }
       }
@@ -1301,6 +1371,7 @@
       }
     },
     "PORTS_PLACEHOLDER" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1575,6 +1646,22 @@
         }
       }
     },
+    "SCHEME" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scheme"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esquema"
+          }
+        }
+      }
+    },
     "SCOPES" : {
       "localizations" : {
         "en" : {
@@ -1587,6 +1674,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Permisos"
+          }
+        }
+      }
+    },
+    "SELECT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar"
           }
         }
       }
@@ -1738,6 +1841,7 @@
       }
     },
     "SUBNET" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

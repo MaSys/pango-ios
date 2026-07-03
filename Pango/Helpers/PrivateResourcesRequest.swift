@@ -21,12 +21,13 @@ class PrivateResourcesRequest {
             return
         }
 
-        let url = URL(string: "\(baseUrl)/v1/org/\(org)/resources?type=private")!
+        let url = URL(string: "\(baseUrl)/v1/org/\(org)/site-resources")!
         let token = "Bearer \(apiKey)"
         AF.request(url, headers: ["Authorization": token])
+            .printError()
             .responseDecodable(of: MainResponse<PrivateResourcesResponse>.self) { response in
                 if let val = response.value, val.success {
-                    completionHandler(true, val.data?.resources ?? [])
+                    completionHandler(true, val.data?.siteResources ?? [])
                 } else {
                     completionHandler(false, [])
                 }
@@ -36,10 +37,17 @@ class PrivateResourcesRequest {
     public static func create(
         name: String,
         siteId: Int,
-        type: String,
-        ip: String?,
-        subnet: String?,
+        mode: String,
+        ssl: Bool,
+        scheme: String?,
+        destinationPort: Int?,
+        destination: String,
         alias: String?,
+        tcpPortRangeString: String?,
+        udpPortRangeString: String?,
+        disableIcmp: Bool?,
+        domainId: String?,
+        subdomain: String?,
         completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
     ) {
         let userDefaults = UserDefaults.standard
@@ -51,18 +59,28 @@ class PrivateResourcesRequest {
             return
         }
 
-        let url = URL(string: "\(baseUrl)/v1/org/\(org)/resource")!
+        let url = URL(string: "\(baseUrl)/v1/org/\(org)/site-resource")!
         let token = "Bearer \(apiKey)"
         let encoder = JSONEncoding.default
         var params: [String: Any] = [
             "name": name,
             "siteId": siteId,
-            "type": type,
-            "resourceType": "private"
+            "mode": mode,
+            "ssl": ssl,
+            "destination": destination,
+            "enabled": true,
+            "userIds": [],
+            "roleIds": [],
+            "clientIds": []
         ]
-        if let ip = ip, !ip.isEmpty { params["ip"] = ip }
-        if let subnet = subnet, !subnet.isEmpty { params["subnet"] = subnet }
+        if let scheme = scheme { params["scheme"] = scheme }
+        if let destinationPort = destinationPort { params["destinationPort"] = destinationPort }
         if let alias = alias, !alias.isEmpty { params["alias"] = alias }
+        if let tcpPortRangeString = tcpPortRangeString, !tcpPortRangeString.isEmpty { params["tcpPortRangeString"] = tcpPortRangeString }
+        if let udpPortRangeString = udpPortRangeString, !udpPortRangeString.isEmpty { params["udpPortRangeString"] = udpPortRangeString }
+        if let disableIcmp = disableIcmp { params["disableIcmp"] = disableIcmp }
+        if let domainId = domainId, !domainId.isEmpty { params["domainId"] = domainId }
+        if let subdomain = subdomain, !subdomain.isEmpty { params["subdomain"] = subdomain }
 
         AF.request(url, method: .put, parameters: params, encoding: encoder, headers: ["Authorization": token])
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
@@ -77,9 +95,18 @@ class PrivateResourcesRequest {
     public static func update(
         id: Int,
         name: String,
-        icmp: Bool,
-        ports: String,
+        siteIds: [Int],
+        mode: String,
+        ssl: Bool,
+        scheme: String?,
+        destinationPort: Int?,
+        destination: String,
         alias: String?,
+        tcpPortRangeString: String?,
+        udpPortRangeString: String?,
+        disableIcmp: Bool?,
+        domainId: String?,
+        subdomain: String?,
         completionHandler: @escaping (_ success: Bool, _ response: MainResponse<EmptyResponse>?) -> Void
     ) {
         let userDefaults = UserDefaults.standard
@@ -90,15 +117,27 @@ class PrivateResourcesRequest {
             return
         }
 
-        let url = URL(string: "\(baseUrl)/v1/resource/\(id)")!
+        let url = URL(string: "\(baseUrl)/v1/site-resource/\(id)")!
         let token = "Bearer \(apiKey)"
         let encoder = JSONEncoding.default
         var params: [String: Any] = [
             "name": name,
-            "icmp": icmp,
-            "ports": ports
+            "siteIds": siteIds,
+            "mode": mode,
+            "ssl": ssl,
+            "destination": destination,
+            "userIds": [],
+            "roleIds": [],
+            "clientIds": []
         ]
-        if let alias = alias { params["alias"] = alias }
+        if let scheme = scheme { params["scheme"] = scheme }
+        if let destinationPort = destinationPort { params["destinationPort"] = destinationPort }
+        if let alias = alias, !alias.isEmpty { params["alias"] = alias }
+        if let tcpPortRangeString = tcpPortRangeString, !tcpPortRangeString.isEmpty { params["tcpPortRangeString"] = tcpPortRangeString }
+        if let udpPortRangeString = udpPortRangeString, !udpPortRangeString.isEmpty { params["udpPortRangeString"] = udpPortRangeString }
+        if let disableIcmp = disableIcmp { params["disableIcmp"] = disableIcmp }
+        if let domainId = domainId, !domainId.isEmpty { params["domainId"] = domainId }
+        if let subdomain = subdomain, !subdomain.isEmpty { params["subdomain"] = subdomain }
 
         AF.request(url, method: .post, parameters: params, encoding: encoder, headers: ["Authorization": token])
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
@@ -122,7 +161,7 @@ class PrivateResourcesRequest {
             return
         }
 
-        let url = URL(string: "\(baseUrl)/v1/resource/\(id)")!
+        let url = URL(string: "\(baseUrl)/v1/site-resource/\(id)")!
         let token = "Bearer \(apiKey)"
         let encoder = JSONEncoding.default
         AF.request(url, method: .delete, encoding: encoder, headers: ["Authorization": token])
