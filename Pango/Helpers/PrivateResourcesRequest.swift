@@ -24,7 +24,6 @@ class PrivateResourcesRequest {
         let url = URL(string: "\(baseUrl)/v1/org/\(org)/site-resources")!
         let token = "Bearer \(apiKey)"
         AF.request(url, headers: ["Authorization": token])
-            .printError()
             .responseDecodable(of: MainResponse<PrivateResourcesResponse>.self) { response in
                 if let val = response.value, val.success {
                     completionHandler(true, val.data?.siteResources ?? [])

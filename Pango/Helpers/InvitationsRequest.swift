@@ -24,9 +24,7 @@ class InvitationsRequest {
         let url = URL(string: "\(baseUrl)/v1/org/\(org)/invitations")!
         let token = "Bearer \(apiKey)"
         AF.request(url, headers: ["Authorization": token])
-            .printError()
             .responseDecodable(of: MainResponse<InvitationsResponse>.self) { response in
-                print(response)
                 if let val = response.value {
                     if val.success {
                         completionHandler(true, val.data!.invitations)

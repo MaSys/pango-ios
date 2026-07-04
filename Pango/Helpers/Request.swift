@@ -19,7 +19,6 @@ class Request {
         let url = URL(string: "\(baseUrl)/v1")!
         AF.request(url)
             .responseDecodable(of: HealthCheckResponse.self) { response in
-                print(response)
                 if let res = response.value {
                     completionHandler(res.message == "Healthy")
                 } else {

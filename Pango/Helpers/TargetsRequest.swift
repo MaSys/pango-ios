@@ -67,7 +67,6 @@ class TargetsRequest {
             params["pathRewriting"] = rewriting
         }
         AF.request(url, method: .put, parameters: params, encoding: encoder, headers: ["Authorization": token])
-            .printError()
             .responseDecodable(of: MainResponse<EmptyResponse>.self) { response in
                 if let val = response.value {
                     completionHandler(val.success, val)

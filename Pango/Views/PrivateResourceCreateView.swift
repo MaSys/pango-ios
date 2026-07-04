@@ -105,7 +105,7 @@ struct PrivateResourceCreateView: View {
                     .autocorrectionDisabled(true)
             }
 
-            if mode == "host" {
+            if mode == "host" || mode == "cidr" {
                 Section("ALIAS") {
                     TextField("ALIAS", text: $alias)
                         .autocapitalization(.none)

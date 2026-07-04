@@ -24,7 +24,6 @@ class SitesRequest {
         let url = URL(string: "\(baseUrl)/v1/org/\(org)/sites")!
         let token = "Bearer \(apiKey)"
         AF.request(url, headers: ["Authorization": token])
-            .printError()
             .responseDecodable(of: MainResponse<SitesResponse>.self) { response in
                 if let val = response.value {
                     if val.success {
