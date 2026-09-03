@@ -44,7 +44,7 @@ struct ResourceSSOView: View {
             }
         }
         .onAppear {
-            self.ssoEnabled = self.resource.sso
+            self.ssoEnabled = self.resource.sso == 1
             self.appService.fetchUsers()
             self.appService.fetchRoles()
         }

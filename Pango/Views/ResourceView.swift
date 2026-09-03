@@ -194,7 +194,7 @@ extension ResourceView {
                 HStack {
                     Text("USERS_AND_ROLES")
                     Spacer()
-                    if self.resource.sso == false {
+                    if self.resource.sso == 0 {
                         Text("DISABLED").foregroundStyle(.gray)
                     } else {
                         Text("ENABLED").foregroundStyle(.green)
