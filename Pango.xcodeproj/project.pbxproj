@@ -10,11 +10,6 @@
 		4346E5DE2E4150C700CD1A93 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4346E5DD2E4150C700CD1A93 /* Alamofire */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXFileReference section */
-		4346E59E2E40713F00CD1A93 /* Pango.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pango.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A10000012E50000000C0D001 /* PangoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PangoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-/* End PBXFileReference section */
-
 /* Begin PBXContainerItemProxy section */
 		A10000022E50000000C0D001 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +19,11 @@
 			remoteInfo = Pango;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4346E59E2E40713F00CD1A93 /* Pango.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pango.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000012E50000000C0D001 /* PangoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PangoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		43EDD7482E4B8B3C00CD23B3 /* Exceptions for "Pango" folder in "Pango" target */ = {
@@ -373,7 +373,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = mx.masys.Pango;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -405,7 +405,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = mx.masys.Pango;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
