@@ -12,7 +12,18 @@
 
 /* Begin PBXFileReference section */
 		4346E59E2E40713F00CD1A93 /* Pango.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pango.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000012E50000000C0D001 /* PangoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PangoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXContainerItemProxy section */
+		A10000022E50000000C0D001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4346E5962E40713F00CD1A93 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4346E59D2E40713F00CD1A93;
+			remoteInfo = Pango;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		43EDD7482E4B8B3C00CD23B3 /* Exceptions for "Pango" folder in "Pango" target */ = {
@@ -33,6 +44,11 @@
 			path = Pango;
 			sourceTree = "<group>";
 		};
+		A10000032E50000000C0D001 /* PangoTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PangoTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +60,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A10000042E50000000C0D001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -51,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				4346E5A02E40713F00CD1A93 /* Pango */,
+				A10000032E50000000C0D001 /* PangoTests */,
 				4346E59F2E40713F00CD1A93 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				4346E59E2E40713F00CD1A93 /* Pango.app */,
+				A10000012E50000000C0D001 /* PangoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -89,6 +114,29 @@
 			productReference = 4346E59E2E40713F00CD1A93 /* Pango.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A10000052E50000000C0D001 /* PangoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A10000062E50000000C0D001 /* Build configuration list for PBXNativeTarget "PangoTests" */;
+			buildPhases = (
+				A10000072E50000000C0D001 /* Sources */,
+				A10000042E50000000C0D001 /* Frameworks */,
+				A10000082E50000000C0D001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A10000092E50000000C0D001 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A10000032E50000000C0D001 /* PangoTests */,
+			);
+			name = PangoTests;
+			packageProductDependencies = (
+			);
+			productName = PangoTests;
+			productReference = A10000012E50000000C0D001 /* PangoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -101,6 +149,10 @@
 				TargetAttributes = {
 					4346E59D2E40713F00CD1A93 = {
 						CreatedOnToolsVersion = 16.4;
+					};
+					A10000052E50000000C0D001 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 4346E59D2E40713F00CD1A93;
 					};
 				};
 			};
@@ -123,12 +175,20 @@
 			projectRoot = "";
 			targets = (
 				4346E59D2E40713F00CD1A93 /* Pango */,
+				A10000052E50000000C0D001 /* PangoTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4346E59C2E40713F00CD1A93 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000082E50000000C0D001 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -145,7 +205,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A10000072E50000000C0D001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A10000092E50000000C0D001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4346E59D2E40713F00CD1A93 /* Pango */;
+			targetProxy = A10000022E50000000C0D001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4346E5A72E40714000CD1A93 /* Debug */ = {
@@ -339,6 +414,38 @@
 			};
 			name = Release;
 		};
+		A100000A2E50000000C0D001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = B72LWYT2SZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				PRODUCT_BUNDLE_IDENTIFIER = mx.masys.PangoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pango.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Pango";
+			};
+			name = Debug;
+		};
+		A100000B2E50000000C0D001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = B72LWYT2SZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				PRODUCT_BUNDLE_IDENTIFIER = mx.masys.PangoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pango.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Pango";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -356,6 +463,15 @@
 			buildConfigurations = (
 				4346E5AA2E40714000CD1A93 /* Debug */,
 				4346E5AB2E40714000CD1A93 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A10000062E50000000C0D001 /* Build configuration list for PBXNativeTarget "PangoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A100000A2E50000000C0D001 /* Debug */,
+				A100000B2E50000000C0D001 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

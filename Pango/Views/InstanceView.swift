@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Alamofire
 
 struct InstanceView: View {
     
@@ -20,8 +19,7 @@ struct InstanceView: View {
     @State private var serverUrl = ""
     @State private var apiKey = ""
     @State private var organizationId = ""
-    @State private var connectionError: Bool = false
-    @State private var authError: Bool = false
+    @State private var errorKey: String?
     @State private var isLoading: Bool = false
         
     var body: some View {
@@ -46,13 +44,8 @@ struct InstanceView: View {
                         .multilineTextAlignment(.trailing)
                 }
                 
-                if connectionError == true {
-                    Text("ERROR_CONNECTING_TO_SERVER")
-                        .foregroundStyle(.red)
-                        .font(.system(size: 14))
-                }
-                if authError == true {
-                    Text("ERROR_API_KEY")
+                if let errorKey {
+                    Text(LocalizedStringKey(errorKey))
                         .foregroundStyle(.red)
                         .font(.system(size: 14))
                 }
@@ -87,51 +80,57 @@ struct InstanceView: View {
     }
     
     private func save() {
-        if self.serverUrl.isEmpty || self.apiKey.isEmpty {
-            print("empty")
-            return
-        }
-        self.serverUrl = baseDomain(from: self.serverUrl)
-        
-        self.connectionError = false
-        self.authError = false
-        self.isLoading = true
-        
-        self.pangolinServerUrl = self.serverUrl
-        self.pangolinApiKey = self.apiKey
-        self.pangolinOrganizationId = self.organizationId
+        errorKey = nil
+        do {
+            let configuration = try PangolinAPIConfiguration(
+                baseURLString: serverUrl,
+                apiKey: apiKey
+            )
+            isLoading = true
+            Task {
+                do {
+                    let service = PangolinConnectionService(
+                        client: PangolinAPIClient(configuration: configuration)
+                    )
+                    let organizations = try await service.validate(organizationId: organizationId)
+                    guard let selectedOrganization = selectedOrganization(from: organizations) else {
+                        throw PangolinAPIError.forbidden
+                    }
 
-        Request.healthCheck { healthSuccess in
-            if healthSuccess {
-                self.authenticate()
-            } else {
-                self.isLoading = false
-                self.connectionError = true
+                    serverUrl = configuration.baseURL.absoluteString
+                    organizationId = selectedOrganization.orgId
+                    pangolinServerUrl = serverUrl
+                    pangolinApiKey = apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
+                    pangolinOrganizationId = organizationId
+                    appService.organizations = organizations
+                    isLoading = false
+                    dismiss()
+                } catch let error as PangolinAPIError {
+                    isLoading = false
+                    errorKey = error.localizationKey
+                } catch {
+                    isLoading = false
+                    errorKey = PangolinAPIError.transport.localizationKey
+                }
             }
+        } catch let error as PangolinAPIConfiguration.Error {
+            switch error {
+            case .invalidBaseURL:
+                errorKey = PangolinAPIError.invalidBaseURL.localizationKey
+            case .missingAPIKey:
+                errorKey = PangolinAPIError.missingAPIKey.localizationKey
+            }
+        } catch {
+            errorKey = PangolinAPIError.invalidBaseURL.localizationKey
         }
     }
-    
-    private func authenticate() {
-        if self.pangolinOrganizationId.isEmpty {
-            self.appService.fetchOrgs { success, orgs in
-                self.isLoading = false
-                if success {
-                    self.dismiss()
-                } else {
-                    self.authError = true
-                }
-            }
-        } else {
-            self.appService.fetchOrgs { _, _ in }
-            self.appService.fetchSites { success, sites in
-                self.isLoading = false
-                if success {
-                    self.dismiss()
-                } else {
-                    self.authError = true
-                }
-            }
+
+    private func selectedOrganization(from organizations: [Organization]) -> Organization? {
+        let requestedOrganizationId = organizationId.trimmingCharacters(in: .whitespacesAndNewlines)
+        if requestedOrganizationId.isEmpty {
+            return organizations.first
         }
+        return organizations.first { $0.orgId == requestedOrganizationId }
     }
 }
 

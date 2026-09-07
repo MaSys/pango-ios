@@ -110,7 +110,7 @@ struct SettingsView: View {
                     HStack {
                         Text("API Compatibility")
                         Spacer()
-                        Text("Pangolin API **v1.18.4**")
+                        Text("Pangolin API **v1.22.x**")
                             .font(.callout)
                             .foregroundColor(.secondary)
                     }

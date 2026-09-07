@@ -629,6 +629,86 @@
         }
       }
     },
+    "ERROR_API_HTTP" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Pangolin server returned an unexpected error."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El servidor Pangolin devolvió un error inesperado."
+          }
+        }
+      }
+    },
+    "ERROR_API_PERMISSION" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The API key does not have permission for this organization."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La clave API no tiene permiso para esta organización."
+          }
+        }
+      }
+    },
+    "ERROR_API_REJECTED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pangolin rejected the request."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pangolin rechazó la solicitud."
+          }
+        }
+      }
+    },
+    "ERROR_API_RESPONSE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Pangolin server returned an invalid response."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El servidor Pangolin devolvió una respuesta no válida."
+          }
+        }
+      }
+    },
+    "ERROR_API_UNSUPPORTED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This server does not support the required Pangolin API."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este servidor no admite la API de Pangolin requerida."
+          }
+        }
+      }
+    },
     "ERROR_CONNECTING_TO_SERVER" : {
       "localizations" : {
         "en" : {
@@ -641,6 +721,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No se puede conectar al servidor, ¡verifica la URL del Servidor!"
+          }
+        }
+      }
+    },
+    "ERROR_INVALID_SERVER_URL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a valid HTTPS Pangolin API URL."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa una URL HTTPS válida para la API de Pangolin."
+          }
+        }
+      }
+    },
+    "ERROR_ORGANIZATION_REQUIRED" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter the organization ID for this organization API key."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa el ID de la organización para esta clave API de organización."
           }
         }
       }
