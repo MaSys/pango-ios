@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import UniformTypeIdentifiers
 
 struct SiteCreateView: View {
     @Environment(\.dismiss) private var dismiss
@@ -55,7 +56,15 @@ struct SiteCreateView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title).font(.caption).foregroundStyle(.secondary)
             Text(value).font(.system(.body, design: .monospaced)).textSelection(.enabled)
-            Button("COPY") { UIPasteboard.general.string = value }
+            Button("COPY") {
+                UIPasteboard.general.setItems(
+                    [[UTType.plainText.identifier: value]],
+                    options: [
+                        .localOnly: true,
+                        .expirationDate: Date().addingTimeInterval(300)
+                    ]
+                )
+            }
         }
     }
 

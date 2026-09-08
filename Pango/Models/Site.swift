@@ -5,7 +5,7 @@
 //  Created by Yaser Almasri on 24/08/25.
 //
 
-struct Site: Codable, Equatable {
+struct Site: Decodable, Equatable {
     var siteId: Int
     var niceId: String?
     var name: String
