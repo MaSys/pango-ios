@@ -33,10 +33,66 @@ class AppService: ObservableObject {
     }
     
     public func fetchSites(completionHandler: @escaping (_ success: Bool, _ sites: [Site]) -> Void) {
-        SitesRequest.fetch { success, sites in
-            self.sites = sites
-            completionHandler(success, sites)
+        Task {
+            do {
+                let sites = try await fetchSites()
+                completionHandler(true, sites)
+            } catch {
+                completionHandler(false, [])
+            }
         }
+    }
+
+    public func fetchSites() async throws -> [Site] {
+        let page = try await siteService().listSites()
+        sites = page.sites
+        return page.sites
+    }
+
+    public func createNewtSite(name: String) async throws -> CreatedSite {
+        let created = try await siteService().createNewtSite(name: name)
+        var site = created.site
+        site.secret = nil
+        sites.append(site)
+        return created
+    }
+
+    public func getSite(siteId: Int) async throws -> Site {
+        try await siteService().getSite(siteId: siteId)
+    }
+
+    public func renameSite(siteId: Int, name: String) async throws -> Site {
+        let site = try await siteService().renameSite(siteId: siteId, name: name)
+        if let index = sites.firstIndex(where: { $0.siteId == siteId }) {
+            sites[index] = site
+        }
+        return site
+    }
+
+    public func deleteSite(siteId: Int) async throws {
+        try await siteService().deleteSite(siteId: siteId)
+        sites.removeAll { $0.siteId == siteId }
+    }
+
+    private func siteService() throws -> PangolinSiteService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: pangolinServerUrl,
+                apiKey: pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinSiteService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: pangolinOrganizationId
+        )
     }
     
     public func fetchResources() {

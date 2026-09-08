@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Alamofire
 
 enum SiteSegment {
     case all
@@ -17,9 +16,11 @@ struct SitesView: View {
 
     @EnvironmentObject var appService: AppService
     @State private var selectedSegment: SiteSegment = .all
+    @State private var isCreatingSite = false
+    @State private var errorKey: String?
 
-    var pendingSites: [Site] { appService.sites.filter { $0.pending == true } }
-    var activeSites: [Site] { appService.sites.filter { $0.pending != true } }
+    var pendingSites: [Site] { appService.sites.filter { $0.status == "pending" || $0.pending == true } }
+    var activeSites: [Site] { appService.sites.filter { $0.status != "pending" && $0.pending != true } }
 
     var body: some View {
         NavigationStack {
@@ -39,14 +40,40 @@ struct SitesView: View {
                 }
             }
             .navigationTitle(Text("SITES"))
-            .onAppear {
-                self.fetch()
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        isCreatingSite = true
+                    } label: {
+                        Label("CREATE_SITE", systemImage: "plus")
+                    }
+                }
             }
+            .sheet(isPresented: $isCreatingSite) {
+                SiteCreateView()
+                    .environmentObject(appService)
+            }
+            .alert("ERROR", isPresented: Binding(
+                get: { errorKey != nil },
+                set: { if !$0 { errorKey = nil } }
+            )) {
+                Button("OK", role: .cancel) { errorKey = nil }
+            } message: {
+                if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            }
+            .task { await fetch() }
+            .refreshable { await fetch() }
         }
     }
 
-    private func fetch() {
-        self.appService.fetchSites { _, _ in }
+    private func fetch() async {
+        do {
+            _ = try await appService.fetchSites()
+        } catch let error as PangolinAPIError {
+            errorKey = error.localizationKey
+        } catch {
+            errorKey = "ERROR_CONNECTING_TO_SERVER"
+        }
     }
 }
 
@@ -55,7 +82,13 @@ extension SitesView {
         ScrollView {
             LazyVStack(spacing: 8) {
                 ForEach(activeSites, id: \.siteId) { site in
-                    siteCard(site)
+                    NavigationLink {
+                        SiteDetailView(site: site)
+                            .environmentObject(appService)
+                    } label: {
+                        siteCard(site)
+                    }
+                    .buttonStyle(.plain)
                 }//loop
             }//lazystack
             .padding(.vertical, 8)
@@ -128,13 +161,13 @@ extension SitesView {
 
     private func approve(_ site: Site) {
         SitesRequest.approve(siteId: site.siteId) { success in
-            if success { self.fetch() }
+            if success { Task { await self.fetch() } }
         }
     }
 
     private func reject(_ site: Site) {
         SitesRequest.reject(siteId: site.siteId) { success in
-            if success { self.fetch() }
+            if success { Task { await self.fetch() } }
         }
     }
 }
