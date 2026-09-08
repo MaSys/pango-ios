@@ -32,7 +32,7 @@ struct ResourcesResponse: Decodable {
     var pagination: Pagination?
 }
 
-struct Pagination: Decodable {
+struct Pagination: Decodable, Equatable {
     var total: Int
     var pageSize: Int
     var page: Int

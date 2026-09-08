@@ -70,6 +70,90 @@
     "abc123" : {
 
     },
+    "COPY" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Copy" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Copiar" } }
+      }
+    },
+    "CREATE" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Create" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Crear" } }
+      }
+    },
+    "CREATE_SITE" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Create Site" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Crear Sitio" } }
+      }
+    },
+    "CREDENTIALS_ONE_TIME_WARNING" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Copy these credentials now. The secret is shown only once." } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Copia estas credenciales ahora. El secreto se muestra solo una vez." } }
+      }
+    },
+    "DELETE_SITE" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete Site" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Eliminar Sitio" } }
+      }
+    },
+    "DELETE_SITE_CONFIRMATION" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Are you sure you want to delete this site?" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "¿Estás seguro de que deseas eliminar este sitio?" } }
+      }
+    },
+    "DELETE_SITE_RESOURCE_WARNING" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Associated resources will not be deleted." } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Los recursos asociados no se eliminarán." } }
+      }
+    },
+    "DONE" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Listo" } }
+      }
+    },
+    "ERROR" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Error" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Error" } }
+      }
+    },
+    "NEWT_ID" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Newt ID" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "ID de Newt" } }
+      }
+    },
+    "SECRET" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Secret" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Secreto" } }
+      }
+    },
+    "SITE_CREATED" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Site Created" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Sitio Creado" } }
+      }
+    },
+    "SITE_CREDENTIALS" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Site Credentials" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Credenciales del Sitio" } }
+      }
+    },
+    "SITE_ID" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Site ID" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "ID del Sitio" } }
+      }
+    },
     "ACCESS_CONTROL" : {
       "localizations" : {
         "en" : {
