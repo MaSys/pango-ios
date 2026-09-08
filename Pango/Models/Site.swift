@@ -5,7 +5,7 @@
 //  Created by Yaser Almasri on 24/08/25.
 //
 
-struct Site: Decodable {
+struct Site: Codable, Equatable {
     var siteId: Int
     var niceId: String?
     var name: String
@@ -21,6 +21,14 @@ struct Site: Decodable {
     var newtUpdateAvailable: Bool?
     var uptimePercent: Float?
     var pending: Bool?
+    var exitNodeId: Int?
+    var exitNodeName: String?
+    var exitNodeEndpoint: String?
+    var remoteExitNodeId: Int?
+    var resourceCount: Int?
+    var status: String?
+    var newtId: String?
+    var secret: String?
 }
 
 extension Site {
@@ -39,7 +47,16 @@ extension Site {
             address: "",
             newtVersion: "1.4.0",
             newtUpdateAvailable: false,
-            uptimePercent: nil
+            uptimePercent: nil,
+            pending: false,
+            exitNodeId: nil,
+            exitNodeName: nil,
+            exitNodeEndpoint: nil,
+            remoteExitNodeId: nil,
+            resourceCount: 0,
+            status: "approved",
+            newtId: nil,
+            secret: nil
         )
     }
 }
