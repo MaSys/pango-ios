@@ -613,23 +613,8 @@
         }
       }
     },
-    "ERROR_API_KEY" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cannot authenticate to server, please check your API Key / Organization ID!"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se puede autenticar en el servidor, ¡verifica tu Clave API / ID de Organización!"
-          }
-        }
-      }
-    },
     "ERROR_API_HTTP" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -645,7 +630,25 @@
         }
       }
     },
+    "ERROR_API_KEY" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannot authenticate to server, please check your API Key / Organization ID!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede autenticar en el servidor, ¡verifica tu Clave API / ID de Organización!"
+          }
+        }
+      }
+    },
     "ERROR_API_PERMISSION" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -662,6 +665,7 @@
       }
     },
     "ERROR_API_REJECTED" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -678,6 +682,7 @@
       }
     },
     "ERROR_API_RESPONSE" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -694,6 +699,7 @@
       }
     },
     "ERROR_API_UNSUPPORTED" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -710,6 +716,7 @@
       }
     },
     "ERROR_CONNECTING_TO_SERVER" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -726,6 +733,7 @@
       }
     },
     "ERROR_INVALID_SERVER_URL" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -742,6 +750,7 @@
       }
     },
     "ERROR_ORGANIZATION_REQUIRED" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1335,7 +1344,7 @@
         }
       }
     },
-    "Pangolin API **v1.18.4**" : {
+    "Pangolin API **v1.22.x**" : {
 
     },
     "PASSWORD" : {
