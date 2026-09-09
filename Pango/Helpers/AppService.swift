@@ -97,14 +97,18 @@ class AppService: ObservableObject {
     
     public func fetchResources() {
         Task {
-            _ = try? await fetchResources()
+            do {
+                _ = try await fetchResources()
+            } catch {
+                resources = []
+            }
         }
     }
 
     public func fetchResources() async throws -> [Resource] {
-        let page = try await publicResourceService().listResources()
-        resources = page.resources
-        return page.resources
+        let fetchedResources = try await publicResourceService().listAllResources()
+        resources = fetchedResources
+        return fetchedResources
     }
 
     public func createHTTPResource(name: String, subdomain: String, domainId: String) async throws {

@@ -27,6 +27,30 @@ struct PangolinPublicResourceServiceTests {
         #expect(page.pagination.total == 1)
     }
 
+    @Test("lists all public resource pages")
+    func listsAllResources() async throws {
+        URLProtocolStub.handler = { request in
+            let url = try #require(request.url)
+            let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: false))
+            let page = try #require(components.queryItems?.first(where: { $0.name == "page" })?.value)
+
+            if page == "1" {
+                return .init(
+                    statusCode: 200,
+                    data: Self.resourcesResponse(names: ["First", "Second"], total: 3, pageSize: 2, page: 1)
+                )
+            }
+            return .init(
+                statusCode: 200,
+                data: Self.resourcesResponse(names: ["Third"], total: 3, pageSize: 2, page: 2)
+            )
+        }
+
+        let resources = try await makeService().listAllResources(pageSize: 2)
+
+        #expect(resources.map(\.name) == ["First", "Second", "Third"])
+    }
+
     @Test("creates an HTTP resource using the current mode field")
     func createsHTTPResource() async throws {
         URLProtocolStub.handler = { request in
@@ -83,6 +107,13 @@ struct PangolinPublicResourceServiceTests {
 
     private static func resourceResponse(name: String, mode: String = "http", http: Bool = true, enabled: Bool = true) -> Data {
         Data("{\"data\":{\"resourceId\":4,\"name\":\"\(name)\",\"ssl\":false,\"sso\":false,\"http\":\(http),\"protocol\":\"tcp\",\"enabled\":\(enabled),\"wildcard\":false,\"mode\":\"\(mode)\",\"health\":\"unknown\"},\"success\":true,\"error\":false,\"message\":\"\",\"status\":200}".utf8)
+    }
+
+    private static func resourcesResponse(names: [String], total: Int, pageSize: Int, page: Int) -> Data {
+        let resources = names.enumerated().map { index, name in
+            "{\"resourceId\":\(page * 10 + index),\"name\":\"\(name)\",\"ssl\":false,\"sso\":false,\"http\":true,\"protocol\":\"tcp\",\"enabled\":true,\"wildcard\":false,\"mode\":\"http\",\"health\":\"unknown\"}"
+        }.joined(separator: ",")
+        return Data("{\"data\":{\"resources\":[\(resources)],\"pagination\":{\"total\":\(total),\"pageSize\":\(pageSize),\"page\":\(page)}},\"success\":true,\"error\":false,\"message\":\"\",\"status\":200}".utf8)
     }
 }
 

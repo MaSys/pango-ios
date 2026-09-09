@@ -47,6 +47,29 @@ struct PangolinPublicResourceService: Sendable {
         return try response.requiredData()
     }
 
+    func listAllResources(pageSize: Int = ResourcePagination.pageSize) async throws -> [Resource] {
+        var resources: [Resource] = []
+        var requestedPage = 1
+
+        while true {
+            let result = try await listResources(page: requestedPage, pageSize: pageSize)
+            resources.append(contentsOf: result.resources)
+
+            guard result.pagination.pageSize > 0,
+                  ResourcePagination.hasNextPage(
+                    total: result.pagination.total,
+                    page: result.pagination.page,
+                    pageSize: result.pagination.pageSize
+                  ) else {
+                return resources
+            }
+
+            let nextPage = result.pagination.page + 1
+            guard nextPage > requestedPage else { throw PangolinAPIError.decoding }
+            requestedPage = nextPage
+        }
+    }
+
     func createHTTP(name: String, subdomain: String, domainId: String) async throws -> Resource {
         let response: PangolinResponse<Resource> = try await client.send(
             .put,
