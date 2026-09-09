@@ -12,10 +12,11 @@ struct ResourceView: View {
     @EnvironmentObject var appService: AppService
     @Environment(\.dismiss) var dismiss
     
-    var resource: Resource
+    @State var resource: Resource
     
     @State private var ssl: Bool = false
     @State private var showDeleteConfirmation: Bool = false
+    @State private var errorKey: String?
     
     var body: some View {
         List {
@@ -72,30 +73,42 @@ struct ResourceView: View {
                 }
             }
         }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+        }
     }
     
     private func toggleStatus() {
-        ResourcesRequest.toggleStatus(id: self.resource.resourceId, enabled: !self.resource.enabled) { success, response in
-            if let res = response {
-                print(res.message)
+        Task {
+            do {
+                let updated = try await appService.updateResource(resourceId: resource.resourceId, enabled: !resource.enabled)
+                resource = updated
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
             }
-            self.appService.fetchResources()
         }
     }
     
     private func toggleSSL() {
-        ResourcesRequest.toggleSSL(id: self.resource.resourceId, ssl: self.ssl) { success, response in
-            if let res = response, res.success {
-                self.appService.fetchResources()
+        Task {
+            do {
+                resource = try await appService.updateResource(resourceId: resource.resourceId, ssl: ssl)
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
+                ssl = resource.ssl
             }
         }
     }
     
     private func delete() {
-        ResourcesRequest.delete(id: self.resource.resourceId) { success, response in
-            if let res = response, res.success {
-                self.appService.fetchResources()
+        Task {
+            do {
+                try await appService.deleteResource(resourceId: resource.resourceId)
                 self.dismiss()
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
             }
         }
     }

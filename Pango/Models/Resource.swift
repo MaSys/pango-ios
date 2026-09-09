@@ -84,11 +84,11 @@ extension Resource {
 
 private extension KeyedDecodingContainer where Key == Resource.CodingKeys {
     func decodeIntOrBoolIfPresent(forKey key: Key) throws -> Int? {
-        if let value = try decodeIfPresent(Int.self, forKey: key) {
+        if let value = try? decodeIfPresent(Int.self, forKey: key) {
             return value
         }
 
-        if let value = try decodeIfPresent(Bool.self, forKey: key) {
+        if let value = try? decodeIfPresent(Bool.self, forKey: key) {
             return value ? 1 : 0
         }
 

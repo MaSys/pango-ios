@@ -15,6 +15,7 @@ struct ResourceNameView: View {
     var resource: Resource
     
     @State private var name: String = ""
+    @State private var errorKey: String?
     
     var body: some View {
         Form {
@@ -36,15 +37,24 @@ struct ResourceNameView: View {
 
             }
         }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+        }
     }
     
     private func save() {
         if self.name.isEmpty { return }
         
-        ResourcesRequest.updateName(id: self.resource.resourceId, name: self.name) { success, response in
-            if let res = response, res.success {
-                self.appService.fetchResources()
+        Task {
+            do {
+                _ = try await appService.updateResource(resourceId: resource.resourceId, name: name)
                 self.dismiss()
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
+            } catch {
+                errorKey = "ERROR_CONNECTING_TO_SERVER"
             }
         }
     }

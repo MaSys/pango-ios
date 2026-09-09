@@ -96,9 +96,44 @@ class AppService: ObservableObject {
     }
     
     public func fetchResources() {
-        ResourcesRequest.fetch { success, resources in
-            self.resources = resources
+        Task {
+            _ = try? await fetchResources()
         }
+    }
+
+    public func fetchResources() async throws -> [Resource] {
+        let page = try await publicResourceService().listResources()
+        resources = page.resources
+        return page.resources
+    }
+
+    public func createHTTPResource(name: String, subdomain: String, domainId: String) async throws {
+        resources.append(try await publicResourceService().createHTTP(name: name, subdomain: subdomain, domainId: domainId))
+    }
+
+    public func createRawResource(name: String, protocol rawProtocol: PublicResourceRawProtocol, proxyPort: Int) async throws {
+        resources.append(try await publicResourceService().createRaw(name: name, protocol: rawProtocol, proxyPort: proxyPort))
+    }
+
+    public func updateResource(resourceId: Int, name: String? = nil, enabled: Bool? = nil, ssl: Bool? = nil) async throws -> Resource {
+        let resource = try await publicResourceService().update(resourceId: resourceId, name: name, enabled: enabled, ssl: ssl)
+        if let index = resources.firstIndex(where: { $0.resourceId == resourceId }) { resources[index] = resource }
+        return resource
+    }
+
+    public func deleteResource(resourceId: Int) async throws {
+        try await publicResourceService().delete(resourceId: resourceId)
+        resources.removeAll { $0.resourceId == resourceId }
+    }
+
+    private func publicResourceService() throws -> PangolinPublicResourceService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: pangolinServerUrl, apiKey: pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL { throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey { throw PangolinAPIError.missingAPIKey }
+        guard !pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw PangolinAPIError.organizationRequired }
+        return PangolinPublicResourceService(client: PangolinAPIClient(configuration: configuration), organizationId: pangolinOrganizationId)
     }
     
     public func fetchDomains() {
