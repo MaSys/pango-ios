@@ -12,47 +12,44 @@ struct SiteCreateView: View {
     @State private var errorKey: String?
 
     var body: some View {
-        NavigationStack {
-            Form {
-                if let credentials {
-                    Section("SITE_CREDENTIALS") {
-                        credentialRow(title: "NEWT_ID", value: credentials.id)
-                        credentialRow(title: "SECRET", value: credentials.secret)
-                    }
-                    Section {
-                        Text("CREDENTIALS_ONE_TIME_WARNING")
-                            .foregroundStyle(.secondary)
-                    }
-                } else {
-                    Section("SITE") {
-                        TextField("NAME", text: $name)
-                        Picker("TYPE", selection: $siteType) {
-                            Text("Newt").tag(SiteType.newt)
-                            Text("LOCAL").tag(SiteType.local)
-                        }
+        Form {
+            if let credentials {
+                Section("SITE_CREDENTIALS") {
+                    credentialRow(title: "NEWT_ID", value: credentials.id)
+                    credentialRow(title: "SECRET", value: credentials.secret)
+                }
+                Section {
+                    Text("CREDENTIALS_ONE_TIME_WARNING")
+                        .foregroundStyle(.secondary)
+                }
+            } else {
+                Section("SITE") {
+                    TextField("NAME", text: $name)
+                    Picker("TYPE", selection: $siteType) {
+                        Text("Newt").tag(SiteType.newt)
+                        Text("LOCAL").tag(SiteType.local)
                     }
                 }
             }
-            .navigationTitle(credentials == nil ? "CREATE_SITE" : "SITE_CREATED")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(credentials == nil ? "CANCEL" : "DONE") { dismiss() }
-                }
+        }
+        .navigationTitle(credentials == nil ? "CREATE_SITE" : "SITE_CREATED")
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
                 if credentials == nil {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("CREATE") { create() }
-                            .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isSaving)
-                    }
+                    Button("CREATE") { create() }
+                        .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isSaving)
+                } else {
+                    Button("DONE") { dismiss() }
                 }
             }
-            .alert("ERROR", isPresented: Binding(
-                get: { errorKey != nil },
-                set: { if !$0 { errorKey = nil } }
-            )) {
-                Button("OK", role: .cancel) { errorKey = nil }
-            } message: {
-                if let errorKey { Text(LocalizedStringKey(errorKey)) }
-            }
+        }
+        .alert("ERROR", isPresented: Binding(
+            get: { errorKey != nil },
+            set: { if !$0 { errorKey = nil } }
+        )) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
         }
     }
 
