@@ -50,7 +50,11 @@ class AppService: ObservableObject {
     }
 
     public func createNewtSite(name: String) async throws -> CreatedSite {
-        let created = try await siteService().createNewtSite(name: name)
+        try await createSite(name: name, type: .newt)
+    }
+
+    public func createSite(name: String, type: SiteType) async throws -> CreatedSite {
+        let created = try await siteService().createSite(name: name, type: type)
         var site = created.site
         site.secret = nil
         sites.append(site)

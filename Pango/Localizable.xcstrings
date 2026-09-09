@@ -1183,6 +1183,22 @@
         }
       }
     },
+    "LOCAL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Local"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Local"
+          }
+        }
+      }
+    },
     "LOGIN" : {
       "extractionState" : "manual",
       "localizations" : {

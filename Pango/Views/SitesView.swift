@@ -16,7 +16,6 @@ struct SitesView: View {
 
     @EnvironmentObject var appService: AppService
     @State private var selectedSegment: SiteSegment = .all
-    @State private var isCreatingSite = false
     @State private var errorKey: String?
 
     var pendingSites: [Site] { appService.sites.filter { $0.status == "pending" || $0.pending == true } }
@@ -42,16 +41,13 @@ struct SitesView: View {
             .navigationTitle(Text("SITES"))
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        isCreatingSite = true
+                    NavigationLink {
+                        SiteCreateView()
+                            .environmentObject(appService)
                     } label: {
                         Label("CREATE_SITE", systemImage: "plus")
                     }
                 }
-            }
-            .sheet(isPresented: $isCreatingSite) {
-                SiteCreateView()
-                    .environmentObject(appService)
             }
             .alert("ERROR", isPresented: Binding(
                 get: { errorKey != nil },

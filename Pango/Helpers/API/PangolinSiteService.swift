@@ -12,13 +12,20 @@ struct SiteCredentials: Equatable {
 
 struct CreatedSite: Equatable {
     let site: Site
-    let credentials: SiteCredentials
+    let credentials: SiteCredentials?
+}
+
+enum SiteType: String, Encodable, CaseIterable, Identifiable {
+    case newt
+    case local
+
+    var id: String { rawValue }
 }
 
 struct PangolinSiteService: Sendable {
     private struct CreateSiteBody: Encodable {
         let name: String
-        let type = "newt"
+        let type: SiteType
     }
 
     private struct RenameSiteBody: Encodable {
@@ -46,16 +53,26 @@ struct PangolinSiteService: Sendable {
     }
 
     func createNewtSite(name: String) async throws -> CreatedSite {
+        let created = try await createSite(name: name, type: .newt)
+        guard created.credentials != nil else { throw PangolinAPIError.decoding }
+        return created
+    }
+
+    func createSite(name: String, type: SiteType) async throws -> CreatedSite {
         let response: PangolinResponse<Site> = try await client.send(
             .put,
             path: "/org/\(organizationId)/site",
-            body: CreateSiteBody(name: name)
+            body: CreateSiteBody(name: name, type: type)
         )
         let site = try response.requireData()
-        guard let id = site.newtId, let secret = site.secret else {
-            throw PangolinAPIError.decoding
+        let credentials: SiteCredentials?
+        if type == .newt {
+            guard let id = site.newtId, let secret = site.secret else { throw PangolinAPIError.decoding }
+            credentials = SiteCredentials(id: id, secret: secret)
+        } else {
+            credentials = nil
         }
-        return CreatedSite(site: site, credentials: SiteCredentials(id: id, secret: secret))
+        return CreatedSite(site: site, credentials: credentials)
     }
 
     func getSite(siteId: Int) async throws -> Site {
