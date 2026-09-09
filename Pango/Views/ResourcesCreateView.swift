@@ -70,20 +70,18 @@ struct ResourcesCreateView: View {
     }
     
     private func save() {
-        ResourcesRequest.create(
-            name: self.name,
-            http: self.resourceHttp,
-            subdomain: self.subdomain,
-            domainId: self.selectedDomain.isEmpty ? nil : self.selectedDomain,
-            protocolString: self.protocolString,
-            proxyPort: self.proxyPort.isEmpty ? nil : Int(self.proxyPort)
-        ) { success, response in
-            if success {
-                self.dismiss()
-            } else {
-                if let msg = response?.message {
-                    self.errorMessage = msg
+        Task {
+            do {
+                if resourceHttp {
+                    try await appService.createHTTPResource(name: name, subdomain: subdomain, domainId: selectedDomain)
+                } else if let port = Int(proxyPort), let rawProtocol = PublicResourceRawProtocol(rawValue: protocolString) {
+                    try await appService.createRawResource(name: name, protocol: rawProtocol, proxyPort: port)
+                } else {
+                    throw PangolinAPIError.serverRejected(status: 400, message: "INVALID_PORT")
                 }
+                dismiss()
+            } catch let error as PangolinAPIError {
+                errorMessage = String(localized: String.LocalizationValue(error.localizationKey))
             }
         }
     }
