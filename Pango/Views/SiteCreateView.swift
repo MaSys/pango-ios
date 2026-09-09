@@ -7,6 +7,7 @@ struct SiteCreateView: View {
     @EnvironmentObject private var appService: AppService
     @State private var name = ""
     @State private var isSaving = false
+    @State private var siteType: SiteType = .newt
     @State private var credentials: SiteCredentials?
     @State private var errorKey: String?
 
@@ -25,7 +26,10 @@ struct SiteCreateView: View {
                 } else {
                     Section("SITE") {
                         TextField("NAME", text: $name)
-                        LabeledContent("TYPE", value: "Newt")
+                        Picker("TYPE", selection: $siteType) {
+                            Text("Newt").tag(SiteType.newt)
+                            Text("LOCAL").tag(SiteType.local)
+                        }
                     }
                 }
             }
@@ -74,7 +78,12 @@ struct SiteCreateView: View {
         Task {
             defer { isSaving = false }
             do {
-                credentials = try await appService.createNewtSite(name: trimmedName).credentials
+                let created = try await appService.createSite(name: trimmedName, type: siteType)
+                if let siteCredentials = created.credentials {
+                    credentials = siteCredentials
+                } else {
+                    dismiss()
+                }
             } catch let error as PangolinAPIError {
                 errorKey = error.localizationKey
             } catch {

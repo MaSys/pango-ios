@@ -55,6 +55,28 @@ struct PangolinSiteServiceTests {
         #expect(created.credentials == SiteCredentials(id: "newt-id", secret: "one-time-secret"))
     }
 
+    @Test("creates a local site using only its name and type")
+    func createsLocalSite() async throws {
+        URLProtocolStub.handler = { request in
+            #expect(request.url?.path == "/v1/org/synthetic-org/site")
+            #expect(request.httpMethod == "PUT")
+            let body = try #require(request.bodyData)
+            let json = try #require(JSONSerialization.jsonObject(with: body) as? [String: Any])
+            #expect(json["name"] as? String == "On Server")
+            #expect(json["type"] as? String == "local")
+            #expect(json.count == 2)
+            return .init(
+                statusCode: 201,
+                data: Data(#"{"data":{"siteId":9,"niceId":"on-server","name":"On Server","orgId":"synthetic-org","type":"local","status":"approved","online":true},"success":true,"error":false,"message":"Site created successfully","status":201}"#.utf8)
+            )
+        }
+
+        let created = try await makeService().createSite(name: "On Server", type: .local)
+
+        #expect(created.site.type == "local")
+        #expect(created.credentials == nil)
+    }
+
     @Test("gets complete site details by numeric identifier")
     func getsSiteDetails() async throws {
         URLProtocolStub.handler = { request in
