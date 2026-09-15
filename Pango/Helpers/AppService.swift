@@ -134,6 +134,25 @@ class AppService: ObservableObject {
         resources.removeAll { $0.resourceId == resourceId }
     }
 
+    public func setResourcePassword(resourceId: Int, password: String?) async throws {
+        let service = try publicResourceAuthService()
+        let policy = try await service.getDefaultPolicy(resourceId: resourceId)
+        try await service.setPassword(policyId: policy.resourcePolicyId, password: password)
+        Task { try? await fetchResources() }
+    }
+
+    public func setResourcePinCode(resourceId: Int, pinCode: String?) async throws {
+        let service = try publicResourceAuthService()
+        let policy = try await service.getDefaultPolicy(resourceId: resourceId)
+        try await service.setPinCode(policyId: policy.resourcePolicyId, pinCode: pinCode)
+        Task { try? await fetchResources() }
+    }
+
+    public func setResourceSSO(resourceId: Int, enabled: Bool) async throws {
+        try await publicResourceAuthService().setSSO(resourceId: resourceId, enabled: enabled)
+        Task { try? await fetchResources() }
+    }
+
     private func publicResourceService() throws -> PangolinPublicResourceService {
         let configuration: PangolinAPIConfiguration
         do {
@@ -142,6 +161,18 @@ class AppService: ObservableObject {
         } catch PangolinAPIConfiguration.Error.missingAPIKey { throw PangolinAPIError.missingAPIKey }
         guard !pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw PangolinAPIError.organizationRequired }
         return PangolinPublicResourceService(client: PangolinAPIClient(configuration: configuration), organizationId: pangolinOrganizationId)
+    }
+
+    private func publicResourceAuthService() throws -> PangolinPublicResourceAuthService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: pangolinServerUrl, apiKey: pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinPublicResourceAuthService(client: PangolinAPIClient(configuration: configuration))
     }
 
     public func fetchTargets(resourceId: Int) async throws -> [Target] {
