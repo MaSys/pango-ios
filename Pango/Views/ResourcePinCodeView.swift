@@ -15,6 +15,8 @@ struct ResourcePinCodeView: View {
     var resource: Resource
     
     @State private var pinCode: String = ""
+    @State private var isSaving = false
+    @State private var errorKey: String?
     
     var body: some View {
         Form {
@@ -30,16 +32,29 @@ struct ResourcePinCodeView: View {
                 } label: {
                     Text("SAVE")
                 }
+                .disabled(isSaving)
 
             }
+        }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
         }
     }
     
     private func save() {
-        ResourcesRequest.setPinCode(id: self.resource.resourceId, pinCode: self.pinCode) { success, response in
-            if let res = response, res.success {
-                self.appService.fetchResources()
-                self.dismiss()
+        Task {
+            isSaving = true
+            defer { isSaving = false }
+            do {
+                try await appService.setResourcePinCode(
+                    resourceId: resource.resourceId,
+                    pinCode: pinCode.isEmpty ? nil : pinCode
+                )
+                dismiss()
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
             }
         }
     }

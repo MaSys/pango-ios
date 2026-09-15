@@ -15,14 +15,21 @@ struct ResourceSSOView: View {
     var resource: Resource
     
     @State private var ssoEnabled: Bool = false
+    @State private var isUpdating = false
+    @State private var errorKey: String?
     
     var body: some View {
         Form {
             Section {
-                Toggle("USE_PLATFORM_SSO", isOn: $ssoEnabled)
-                    .onChange(of: ssoEnabled) { oldValue, newValue in
-                        self.updateSSO()
+                Toggle("USE_PLATFORM_SSO", isOn: Binding(
+                    get: { ssoEnabled },
+                    set: { newValue in
+                        let oldValue = ssoEnabled
+                        ssoEnabled = newValue
+                        updateSSO(enabled: newValue, rollbackValue: oldValue)
                     }
+                ))
+                .disabled(isUpdating)
             }
             
             Section {
@@ -48,12 +55,22 @@ struct ResourceSSOView: View {
             self.appService.fetchUsers()
             self.appService.fetchRoles()
         }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+        }
     }
     
-    private func updateSSO() {
-        ResourcesRequest.toggleSSO(id: self.resource.resourceId, sso: self.ssoEnabled) { success, response in
-            if success {
-                self.appService.fetchResources()
+    private func updateSSO(enabled: Bool, rollbackValue: Bool) {
+        Task {
+            isUpdating = true
+            defer { isUpdating = false }
+            do {
+                try await appService.setResourceSSO(resourceId: resource.resourceId, enabled: enabled)
+            } catch let error as PangolinAPIError {
+                ssoEnabled = rollbackValue
+                errorKey = error.localizationKey
             }
         }
     }

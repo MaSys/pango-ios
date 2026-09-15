@@ -15,6 +15,8 @@ struct ResourcePasswordView: View {
     var resource: Resource
     
     @State private var password: String = ""
+    @State private var isSaving = false
+    @State private var errorKey: String?
     
     var body: some View {
         Form {
@@ -29,16 +31,29 @@ struct ResourcePasswordView: View {
                 } label: {
                     Text("SAVE")
                 }
+                .disabled(isSaving)
 
             }
+        }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
         }
     }
     
     private func save() {
-        ResourcesRequest.setPassword(id: self.resource.resourceId, password: self.password) { success, response in
-            if let res = response, res.success {
-                self.appService.fetchResources()
-                self.dismiss()
+        Task {
+            isSaving = true
+            defer { isSaving = false }
+            do {
+                try await appService.setResourcePassword(
+                    resourceId: resource.resourceId,
+                    password: password.isEmpty ? nil : password
+                )
+                dismiss()
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
             }
         }
     }
