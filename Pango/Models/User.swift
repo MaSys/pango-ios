@@ -22,7 +22,3 @@ struct User: Decodable {
     var roles: [AssociationRole]
     var roleNames: String { roles.compactMap(\.roleName).joined(separator: ", ") }
 }
-
-struct ResourceUser: Decodable {
-    var userId: String?
-}

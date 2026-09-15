@@ -54,10 +54,6 @@ struct UsersResponse: Decodable {
     var users: [User]
 }
 
-struct ResourceUsersResponse: Decodable {
-    var users: [ResourceUser]
-}
-
 struct InvitationsResponse: Decodable {
     var invitations: [Invitation]
 }

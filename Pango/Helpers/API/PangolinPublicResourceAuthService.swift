@@ -99,13 +99,47 @@ struct PangolinPublicResourceAuthService: Sendable {
 
     func setSSO(resourceId: Int, enabled: Bool) async throws {
         let policy = try await getDefaultPolicy(resourceId: resourceId)
+        try await setAccessControl(
+            policy: policy,
+            sso: enabled,
+            userIds: policy.userIds,
+            roleIds: policy.roleIds
+        )
+    }
+
+    func setUsers(resourceId: Int, userIds: [String]) async throws {
+        let policy = try await getDefaultPolicy(resourceId: resourceId)
+        try await setAccessControl(
+            policy: policy,
+            sso: policy.sso,
+            userIds: userIds,
+            roleIds: policy.roleIds
+        )
+    }
+
+    func setRoles(resourceId: Int, roleIds: [Int]) async throws {
+        let policy = try await getDefaultPolicy(resourceId: resourceId)
+        try await setAccessControl(
+            policy: policy,
+            sso: policy.sso,
+            userIds: policy.userIds,
+            roleIds: roleIds
+        )
+    }
+
+    private func setAccessControl(
+        policy: PublicResourcePolicy,
+        sso: Bool,
+        userIds: [String],
+        roleIds: [Int]
+    ) async throws {
         let response: PangolinResponse<PangolinEmptyResponse> = try await client.send(
             .post,
             path: "/public-resource-policy/\(policy.resourcePolicyId)/access-control",
             body: AccessControlBody(
-                sso: enabled,
-                userIds: policy.userIds,
-                roleIds: policy.roleIds,
+                sso: sso,
+                userIds: userIds,
+                roleIds: roleIds,
                 skipToIdpId: policy.idpId
             )
         )

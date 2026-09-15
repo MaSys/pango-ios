@@ -115,6 +115,46 @@ struct PangolinPublicResourceAuthServiceTests {
         try await makeService().setSSO(resourceId: 4, enabled: false)
     }
 
+    @Test("sets users without clearing roles or SSO settings")
+    func setsUsers() async throws {
+        URLProtocolStub.handler = { request in
+            if request.url?.path == "/v1/public-resource/4/policies" {
+                return .init(statusCode: 200, data: Self.policyResponse)
+            }
+
+            #expect(request.url?.path == "/v1/public-resource-policy/8/access-control")
+            #expect(request.httpMethod == "POST")
+            let body = try #require(request.bodyData)
+            let json = try #require(JSONSerialization.jsonObject(with: body) as? [String: Any])
+            #expect(json["sso"] as? Bool == true)
+            #expect(json["userIds"] as? [String] == ["user-2"])
+            #expect(json["roleIds"] as? [Int] == [6])
+            #expect(json["skipToIdpId"] as? Int == 2)
+            return .init(statusCode: 200, data: Self.emptyResponse)
+        }
+
+        try await makeService().setUsers(resourceId: 4, userIds: ["user-2"])
+    }
+
+    @Test("sets roles without clearing users or SSO settings")
+    func setsRoles() async throws {
+        URLProtocolStub.handler = { request in
+            if request.url?.path == "/v1/public-resource/4/policies" {
+                return .init(statusCode: 200, data: Self.policyResponse)
+            }
+
+            let body = try #require(request.bodyData)
+            let json = try #require(JSONSerialization.jsonObject(with: body) as? [String: Any])
+            #expect(json["sso"] as? Bool == true)
+            #expect(json["userIds"] as? [String] == ["user-1"])
+            #expect(json["roleIds"] as? [Int] == [6, 7])
+            #expect(json["skipToIdpId"] as? Int == 2)
+            return .init(statusCode: 200, data: Self.emptyResponse)
+        }
+
+        try await makeService().setRoles(resourceId: 4, roleIds: [6, 7])
+    }
+
     private static let emptyResponse = Data(
         #"{"data":{},"success":true,"error":false,"message":"","status":200}"#.utf8
     )

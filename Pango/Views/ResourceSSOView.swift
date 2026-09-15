@@ -90,9 +90,9 @@ struct ResourceUsersView: View {
     var resource: Resource
     
     @State private var isLoading: Bool = false
+    @State private var hasLoadedAssignments = false
     @State private var selectedUsers: [String] = []
-    
-    @State private var errorMessage: String = ""
+    @State private var errorKey: String?
     
     var body: some View {
         List {
@@ -120,44 +120,48 @@ struct ResourceUsersView: View {
                 }//loop
             }//section
             
-            if !self.errorMessage.isEmpty {
-                Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
-            }
         }
         .navigationTitle("USERS")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            self.fetch()
+        .task {
+            await self.fetch()
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("SAVE") {
                     self.save()
                 }
-                .disabled(self.isLoading)
+                .disabled(self.isLoading || !self.hasLoadedAssignments)
             }
+        }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
         }
     }
     
-    private func fetch() {
-        ResourcesRequest.users(id: self.resource.resourceId) { success, users in
-            self.selectedUsers = users.map({ user in
-                return user.userId!
-            })
+    private func fetch() async {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            selectedUsers = try await appService.getResourcePolicy(resourceId: resource.resourceId).userIds
+            hasLoadedAssignments = true
+        } catch {
+            errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
         }
     }
     
     private func save() {
-        self.errorMessage = ""
-        
-        ResourcesRequest.setUser(id: self.resource.resourceId, userIds: self.selectedUsers) { success, response in
-            if success && response?.success == true {
-                self.appService.fetchResources()
-                self.dismiss()
-            } else {
-                self.errorMessage = response?.message ?? ""
+        guard hasLoadedAssignments else { return }
+        Task {
+            isLoading = true
+            defer { isLoading = false }
+            do {
+                try await appService.setResourceUsers(resourceId: resource.resourceId, userIds: selectedUsers)
+                dismiss()
+            } catch {
+                errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
             }
         }
     }
@@ -171,9 +175,9 @@ struct ResourceRolesView: View {
     var resource: Resource
     
     @State private var isLoading: Bool = false
+    @State private var hasLoadedAssignments = false
     @State private var selectedRoles: [Int] = []
-    
-    @State private var errorMessage: String = ""
+    @State private var errorKey: String?
     
     var body: some View {
         List {
@@ -199,48 +203,48 @@ struct ResourceRolesView: View {
                 }
             }//loop
             
-            if !self.errorMessage.isEmpty {
-                Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
-            }
         }
         .navigationTitle("ROLES")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            self.fetch()
+        .task {
+            await self.fetch()
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("SAVE") {
                     self.save()
                 }
-                .disabled(self.isLoading)
+                .disabled(self.isLoading || !self.hasLoadedAssignments)
             }
+        }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
         }
     }
     
-    private func fetch() {
-        ResourcesRequest.roles(id: self.resource.resourceId) { success, roles in
-            self.selectedRoles = roles.map({ role in
-                return role.roleId
-            })
-            let admins = self.appService.roles.filter { $0.isAdmin == true }.map { $0.roleId }
-            self.selectedRoles.removeAll { id in
-                return admins.contains(id)
-            }
+    private func fetch() async {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            selectedRoles = try await appService.getResourcePolicy(resourceId: resource.resourceId).roleIds
+            hasLoadedAssignments = true
+        } catch {
+            errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
         }
     }
     
     private func save() {
-        self.errorMessage = ""
-        
-        ResourcesRequest.setRoles(id: self.resource.resourceId, roleIds: self.selectedRoles) { success, response in
-            if success && response?.success == true {
-                self.appService.fetchResources()
-                self.dismiss()
-            } else {
-                self.errorMessage = response?.message ?? ""
+        guard hasLoadedAssignments else { return }
+        Task {
+            isLoading = true
+            defer { isLoading = false }
+            do {
+                try await appService.setResourceRoles(resourceId: resource.resourceId, roleIds: selectedRoles)
+                dismiss()
+            } catch {
+                errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
             }
         }
     }

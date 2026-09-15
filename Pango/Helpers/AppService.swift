@@ -179,6 +179,18 @@ class AppService: ObservableObject {
         Task { try? await fetchResources() }
     }
 
+    public func getResourcePolicy(resourceId: Int) async throws -> PublicResourcePolicy {
+        try await publicResourceAuthService().getDefaultPolicy(resourceId: resourceId)
+    }
+
+    public func setResourceUsers(resourceId: Int, userIds: [String]) async throws {
+        try await publicResourceAuthService().setUsers(resourceId: resourceId, userIds: userIds)
+    }
+
+    public func setResourceRoles(resourceId: Int, roleIds: [Int]) async throws {
+        try await publicResourceAuthService().setRoles(resourceId: resourceId, roleIds: roleIds)
+    }
+
     private func publicResourceService() throws -> PangolinPublicResourceService {
         let configuration: PangolinAPIConfiguration
         do {
