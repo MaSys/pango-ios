@@ -14,9 +14,8 @@ struct ResourceTargetsView: View {
     var resource: Resource
     
     @State private var targets: [Target] = []
-    @State private var schema: String = ""
-    @State private var ipAddress: String = ""
-    @State private var port: String = ""
+    @State private var targetToDelete: Target?
+    @State private var errorKey: String?
     
     var body: some View {
         List {
@@ -26,10 +25,10 @@ struct ResourceTargetsView: View {
                 } label: {
                     HStack {
                         StatusIconView(online: target.enabled)
-                        if target.method == nil {
-                            Text("\(target.ip):\(String(target.port))")
+                        if let method = target.method {
+                            Text("\(method)://\(target.ip):\(String(target.port))")
                         } else {
-                            Text("\(target.method!)://\(target.ip):\(String(target.port))")
+                            Text("\(target.ip):\(String(target.port))")
                         }
                         Spacer()
                         if let status = target.healthStatus {
@@ -45,7 +44,7 @@ struct ResourceTargetsView: View {
                 }
                 .swipeActions {
                     Button(role: .destructive) {
-                        self.delete(target)
+                        targetToDelete = target
                     } label: {
                         Label("DELETE", systemImage: "trash")
                     }
@@ -53,9 +52,8 @@ struct ResourceTargetsView: View {
             }
         }
         .navigationTitle("TARGETS")
-        .onAppear {
-            self.fetch()
-        }
+        .onAppear { Task { await fetch() } }
+        .refreshable { await fetch() }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
@@ -63,20 +61,50 @@ struct ResourceTargetsView: View {
                 } label: {
                     Image(systemName: "plus")
                 }
-
             }
         }
-    }
-    
-    private func fetch() {
-        TargetsRequest.fetch(id: self.resource.resourceId) { success, targets in
-            self.targets = targets
+        .confirmationDialog(
+            "DELETE_TARGET_CONFIRMATION_MESSAGE",
+            isPresented: Binding(
+                get: { targetToDelete != nil },
+                set: { if !$0 { targetToDelete = nil } }
+            )
+        ) {
+            Button("DELETE", role: .destructive) {
+                guard let targetToDelete else { return }
+                Task { await delete(targetToDelete) }
+            }
+            Button("CANCEL", role: .cancel) { targetToDelete = nil }
+        }
+        .alert("ERROR", isPresented: Binding(
+            get: { errorKey != nil },
+            set: { if !$0 { errorKey = nil } }
+        )) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
         }
     }
     
-    private func delete(_ target: Target) {
-        TargetsRequest.delete(id: target.targetId) { success, response in
-            self.fetch()
+    private func fetch() async {
+        do {
+            targets = try await appService.fetchTargets(resourceId: resource.resourceId)
+        } catch let error as PangolinAPIError {
+            errorKey = error.localizationKey
+        } catch {
+            errorKey = "ERROR_CONNECTING_TO_SERVER"
+        }
+    }
+    
+    private func delete(_ target: Target) async {
+        do {
+            try await appService.deleteTarget(targetId: target.targetId)
+            targetToDelete = nil
+            await fetch()
+        } catch let error as PangolinAPIError {
+            errorKey = error.localizationKey
+        } catch {
+            errorKey = "ERROR_CONNECTING_TO_SERVER"
         }
     }
 }

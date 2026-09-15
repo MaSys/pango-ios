@@ -143,6 +143,34 @@ class AppService: ObservableObject {
         guard !pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw PangolinAPIError.organizationRequired }
         return PangolinPublicResourceService(client: PangolinAPIClient(configuration: configuration), organizationId: pangolinOrganizationId)
     }
+
+    public func fetchTargets(resourceId: Int) async throws -> [Target] {
+        try await publicTargetService().listAllTargets(resourceId: resourceId)
+    }
+
+    public func createTarget(resourceId: Int, configuration: PublicTargetConfiguration) async throws -> Target {
+        try await publicTargetService().createTarget(resourceId: resourceId, configuration: configuration)
+    }
+
+    public func updateTarget(targetId: Int, configuration: PublicTargetConfiguration) async throws -> Target {
+        try await publicTargetService().updateTarget(targetId: targetId, configuration: configuration)
+    }
+
+    public func deleteTarget(targetId: Int) async throws {
+        try await publicTargetService().deleteTarget(targetId: targetId)
+    }
+
+    private func publicTargetService() throws -> PangolinPublicTargetService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: pangolinServerUrl, apiKey: pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinPublicTargetService(client: PangolinAPIClient(configuration: configuration))
+    }
     
     public func fetchDomains() {
         DomainsRequest.fetch { success, domains in
