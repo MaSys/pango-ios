@@ -49,6 +49,7 @@ struct PangolinPublicTargetServiceTests {
         #expect(targets.map(\.targetId) == [1, 2, 3])
         #expect(targets.first?.healthCheck == true)
         #expect(targets.first?.healthStatus == "healthy")
+        #expect(targets.first?.healthCheckHostname == "health.internal")
         #expect(targets.first?.path == "/api")
         #expect(targets.first?.pathMatchType == "prefix")
         #expect(targets.first?.pathRewriting == "/v2")
@@ -149,6 +150,7 @@ struct PangolinPublicTargetServiceTests {
             #expect(json["siteId"] as? Int == 7)
             #expect(json["enabled"] as? Bool == false)
             #expect(json["hcEnabled"] as? Bool == false)
+            #expect(json["hcHostname"] as? String == "health.internal")
             return .init(statusCode: 200, data: Self.targetResponse(id: 8, ip: "app.internal"))
         }
 
@@ -164,7 +166,8 @@ struct PangolinPublicTargetServiceTests {
                 path: nil,
                 pathMatchType: nil,
                 rewritePath: nil,
-                rewritePathType: nil
+                rewritePathType: nil,
+                healthCheckHostname: "health.internal"
             )
         )
 
@@ -191,7 +194,7 @@ struct PangolinPublicTargetServiceTests {
 
     private static func targetJSON(id: Int, ip: String, includeSiteType: Bool = true) -> String {
         let siteType = includeSiteType ? "\"siteType\":\"newt\"," : ""
-        return "{\"targetId\":\(id),\"method\":\"https\",\"ip\":\"\(ip)\",\"port\":443,\"enabled\":true,\(siteType)\"siteId\":7,\"hcEnabled\":true,\"hcHealth\":\"healthy\",\"path\":\"/api\",\"pathMatchType\":\"prefix\",\"rewritePath\":\"/v2\",\"rewritePathType\":\"prefix\"}"
+        return "{\"targetId\":\(id),\"method\":\"https\",\"ip\":\"\(ip)\",\"port\":443,\"enabled\":true,\(siteType)\"siteId\":7,\"hcEnabled\":true,\"hcHealth\":\"healthy\",\"hcHostname\":\"health.internal\",\"path\":\"/api\",\"pathMatchType\":\"prefix\",\"rewritePath\":\"/v2\",\"rewritePathType\":\"prefix\"}"
     }
 
     private static func targetResponse(id: Int, ip: String) -> Data {

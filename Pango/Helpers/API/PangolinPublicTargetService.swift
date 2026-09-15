@@ -41,6 +41,33 @@ struct PublicTargetConfiguration {
     let pathMatchType: TargetPathMatchType?
     let rewritePath: String?
     let rewritePathType: TargetRewritePathType?
+    let healthCheckHostname: String?
+
+    init(
+        siteId: Int,
+        ip: String,
+        port: Int,
+        method: PublicTargetMethod?,
+        enabled: Bool,
+        healthCheck: Bool,
+        path: String?,
+        pathMatchType: TargetPathMatchType?,
+        rewritePath: String?,
+        rewritePathType: TargetRewritePathType?,
+        healthCheckHostname: String? = nil
+    ) {
+        self.siteId = siteId
+        self.ip = ip
+        self.port = port
+        self.method = method
+        self.enabled = enabled
+        self.healthCheck = healthCheck
+        self.path = path
+        self.pathMatchType = pathMatchType
+        self.rewritePath = rewritePath
+        self.rewritePathType = rewritePathType
+        self.healthCheckHostname = healthCheckHostname
+    }
 }
 
 struct PangolinPublicTargetService: Sendable {
@@ -147,7 +174,7 @@ struct PangolinPublicTargetService: Sendable {
             method: configuration.method,
             enabled: configuration.enabled,
             hcEnabled: configuration.healthCheck,
-            hcHostname: configuration.healthCheck ? configuration.ip : nil,
+            hcHostname: configuration.healthCheckHostname ?? (configuration.healthCheck ? configuration.ip : nil),
             path: configuration.path,
             pathMatchType: configuration.pathMatchType,
             rewritePath: configuration.rewritePath,

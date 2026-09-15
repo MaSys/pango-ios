@@ -15,6 +15,7 @@ struct Target: Decodable {
     var siteId: Int
     var healthCheck: Bool?
     var healthStatus: String?
+    var healthCheckHostname: String?
     var path: String?
     var pathMatchType: String?
     var pathRewriting: String?
@@ -23,7 +24,7 @@ struct Target: Decodable {
     private enum CodingKeys: String, CodingKey {
         case targetId, method, ip, port, enabled, siteType, siteId
         case healthCheck, healthStatus, path, pathMatchType, pathRewriting, rewritePathType
-        case hcEnabled, hcHealth, rewritePath
+        case hcEnabled, hcHealth, hcHostname, rewritePath
     }
 
     init(from decoder: Decoder) throws {
@@ -39,6 +40,7 @@ struct Target: Decodable {
             ?? container.decodeIfPresent(Bool.self, forKey: .healthCheck)
         healthStatus = try container.decodeIfPresent(String.self, forKey: .hcHealth)
             ?? container.decodeIfPresent(String.self, forKey: .healthStatus)
+        healthCheckHostname = try container.decodeIfPresent(String.self, forKey: .hcHostname)
         path = try container.decodeIfPresent(String.self, forKey: .path)
         pathMatchType = try container.decodeIfPresent(String.self, forKey: .pathMatchType)
         pathRewriting = try container.decodeIfPresent(String.self, forKey: .rewritePath)
