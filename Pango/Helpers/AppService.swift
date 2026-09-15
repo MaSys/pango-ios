@@ -7,13 +7,32 @@
 
 import SwiftUI
 
+@MainActor
 class AppService: ObservableObject {
     
     public static var shared = AppService()
     
     @AppStorage("pangolin_server_url") var pangolinServerUrl: String = ""
     @AppStorage("pangolin_api_key") var pangolinApiKey: String = ""
-    @AppStorage("pangolin_organization_id") var pangolinOrganizationId: String = ""
+    @Published var pangolinOrganizationId = UserDefaults.standard.string(forKey: "pangolin_organization_id") ?? "" {
+        didSet {
+            guard oldValue != pangolinOrganizationId else { return }
+            UserDefaults.standard.set(pangolinOrganizationId, forKey: "pangolin_organization_id")
+            organizationRevision = UUID()
+            sites = []
+            resources = []
+            domains = []
+            roles = []
+            users = []
+            guard !pangolinOrganizationId.isEmpty else { return }
+            fetchSites { _, _ in }
+            fetchResources()
+            fetchDomains()
+        }
+    }
+
+    // Distinguishes requests even when switching A → B → A.
+    private var organizationRevision = UUID()
     
     @Published var organizations: [Organization] = []
     @Published var sites: [Site] = []
@@ -25,7 +44,8 @@ class AppService: ObservableObject {
     public func fetchOrgs(completionHandler: @escaping (_ success: Bool, _ orgs: [Organization]) -> Void) {
         OrgsRequest.fetch { success, orgs in
             self.organizations = orgs
-            if let org = orgs.first {
+            if success, !orgs.contains(where: { $0.orgId == self.pangolinOrganizationId }),
+               let org = orgs.first {
                 self.pangolinOrganizationId = org.orgId
             }
             completionHandler(success, orgs)
@@ -44,7 +64,9 @@ class AppService: ObservableObject {
     }
 
     public func fetchSites() async throws -> [Site] {
+        let revision = organizationRevision
         let page = try await siteService().listSites()
+        guard revision == organizationRevision else { throw CancellationError() }
         sites = page.sites
         return page.sites
     }
@@ -100,17 +122,21 @@ class AppService: ObservableObject {
     }
     
     public func fetchResources() {
+        let revision = organizationRevision
         Task {
             do {
                 _ = try await fetchResources()
             } catch {
+                guard revision == organizationRevision else { return }
                 resources = []
             }
         }
     }
 
     public func fetchResources() async throws -> [Resource] {
+        let revision = organizationRevision
         let fetchedResources = try await publicResourceService().listAllResources()
+        guard revision == organizationRevision else { throw CancellationError() }
         resources = fetchedResources
         return fetchedResources
     }
@@ -204,19 +230,25 @@ class AppService: ObservableObject {
     }
     
     public func fetchDomains() {
+        let revision = organizationRevision
         DomainsRequest.fetch { success, domains in
+            guard revision == self.organizationRevision else { return }
             self.domains = domains
         }
     }
     
     public func fetchRoles() {
+        let revision = organizationRevision
         RolesRequest.fetch { success, roles in
+            guard revision == self.organizationRevision else { return }
             self.roles = roles
         }
     }
     
     public func fetchUsers() {
+        let revision = organizationRevision
         UsersRequest.fetch { success, users in
+            guard revision == self.organizationRevision else { return }
             self.users = users
         }
     }

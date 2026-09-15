@@ -25,6 +25,7 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             SitesView()
                 .environmentObject(appService)
+                .id(appService.pangolinOrganizationId)
                 .tabItem {
                     Label("SITES", systemImage: "server.rack")
                 }
@@ -32,6 +33,7 @@ struct ContentView: View {
             
             ResourcesView()
                 .environmentObject(appService)
+                .id(appService.pangolinOrganizationId)
                 .tabItem {
                     Label("RESOURCES", systemImage: "point.bottomleft.forward.to.point.topright.filled.scurvepath")
                 }
@@ -39,6 +41,7 @@ struct ContentView: View {
             
             DomainsView()
                 .environmentObject(appService)
+                .id(appService.pangolinOrganizationId)
                 .tabItem {
                     Label("DOMAINS", systemImage: "globe")
                 }
@@ -46,6 +49,7 @@ struct ContentView: View {
             
             SettingsView()
                 .environmentObject(appService)
+                .id(appService.pangolinOrganizationId)
                 .tabItem {
                     Label("SETTINGS", systemImage: "gear")
                 }

@@ -101,7 +101,9 @@ struct InstanceView: View {
                     organizationId = selectedOrganization.orgId
                     pangolinServerUrl = serverUrl
                     pangolinApiKey = apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
-                    pangolinOrganizationId = organizationId
+                    appService.pangolinServerUrl = serverUrl
+                    appService.pangolinApiKey = pangolinApiKey
+                    appService.pangolinOrganizationId = organizationId
                     appService.organizations = organizations
                     isLoading = false
                     dismiss()

@@ -11,7 +11,6 @@ struct SettingsView: View {
     
     @AppStorage("pangolin_server_url") var pangolinServerUrl: String = ""
     @AppStorage("pangolin_api_key") var pangolinApiKey: String = ""
-    @AppStorage("pangolin_organization_id") var pangolinOrganizationId: String = ""
     @AppStorage("selectedTab") private var selectedTab: DefaultTab = .sites
     
     @EnvironmentObject var appService: AppService
@@ -35,18 +34,13 @@ struct SettingsView: View {
                     }//Link
                     
                     if self.appService.organizations.count > 0 {
-                        Picker("ORGANIZATION", selection: $pangolinOrganizationId) {
+                        Picker("ORGANIZATION", selection: $appService.pangolinOrganizationId) {
                             ForEach(self.appService.organizations, id: \.orgId) { org in
                                 Text(org.name)
                                     .tag(org.orgId)
                             }
                         }
                         .pickerStyle(.menu)
-                        .onChange(of: pangolinOrganizationId) { oldValue, newValue in
-                            self.appService.fetchResources()
-                            self.appService.fetchDomains()
-                            self.appService.fetchSites { _, _ in }
-                        }
                     }
                 }//Section
                 .textCase(nil)
