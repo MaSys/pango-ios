@@ -50,6 +50,11 @@ struct ResourceView: View {
         .onAppear {
             self.ssl = self.resource.ssl
         }
+        .onReceive(appService.$resources) { resources in
+            if let updated = resources.first(where: { $0.resourceId == resource.resourceId }) {
+                resource = updated
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 HStack {
