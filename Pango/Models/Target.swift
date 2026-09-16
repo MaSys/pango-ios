@@ -15,7 +15,8 @@ struct Target: Decodable {
     var siteId: Int
     var healthCheck: Bool?
     var healthStatus: String?
-    var healthCheckHostname: String?
+    var healthCheckConfiguration: TargetHealthCheckConfiguration
+    var healthCheckHostname: String? { healthCheckConfiguration.hostname }
     var path: String?
     var pathMatchType: String?
     var pathRewriting: String?
@@ -40,7 +41,7 @@ struct Target: Decodable {
             ?? container.decodeIfPresent(Bool.self, forKey: .healthCheck)
         healthStatus = try container.decodeIfPresent(String.self, forKey: .hcHealth)
             ?? container.decodeIfPresent(String.self, forKey: .healthStatus)
-        healthCheckHostname = try container.decodeIfPresent(String.self, forKey: .hcHostname)
+        healthCheckConfiguration = try TargetHealthCheckConfiguration(from: decoder)
         path = try container.decodeIfPresent(String.self, forKey: .path)
         pathMatchType = try container.decodeIfPresent(String.self, forKey: .pathMatchType)
         pathRewriting = try container.decodeIfPresent(String.self, forKey: .rewritePath)
