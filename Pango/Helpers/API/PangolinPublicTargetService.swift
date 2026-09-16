@@ -42,6 +42,7 @@ struct PublicTargetConfiguration {
     let rewritePath: String?
     let rewritePathType: TargetRewritePathType?
     let healthCheckHostname: String?
+    let healthCheckConfiguration: TargetHealthCheckConfiguration
 
     init(
         siteId: Int,
@@ -54,7 +55,8 @@ struct PublicTargetConfiguration {
         pathMatchType: TargetPathMatchType?,
         rewritePath: String?,
         rewritePathType: TargetRewritePathType?,
-        healthCheckHostname: String? = nil
+        healthCheckHostname: String? = nil,
+        healthCheckConfiguration: TargetHealthCheckConfiguration = .init()
     ) {
         self.siteId = siteId
         self.ip = ip
@@ -67,6 +69,7 @@ struct PublicTargetConfiguration {
         self.rewritePath = rewritePath
         self.rewritePathType = rewritePathType
         self.healthCheckHostname = healthCheckHostname
+        self.healthCheckConfiguration = healthCheckConfiguration
     }
 }
 
@@ -78,11 +81,31 @@ struct PangolinPublicTargetService: Sendable {
         let method: PublicTargetMethod?
         let enabled: Bool
         let hcEnabled: Bool
-        let hcHostname: String?
+        let healthCheckConfiguration: TargetHealthCheckConfiguration
         let path: String?
         let pathMatchType: TargetPathMatchType?
         let rewritePath: String?
         let rewritePathType: TargetRewritePathType?
+
+        private enum CodingKeys: String, CodingKey {
+            case siteId, ip, port, method, enabled, hcEnabled
+            case path, pathMatchType, rewritePath, rewritePathType
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(siteId, forKey: .siteId)
+            try container.encode(ip, forKey: .ip)
+            try container.encode(port, forKey: .port)
+            try container.encodeIfPresent(method, forKey: .method)
+            try container.encode(enabled, forKey: .enabled)
+            try container.encode(hcEnabled, forKey: .hcEnabled)
+            try container.encodeIfPresent(path, forKey: .path)
+            try container.encodeIfPresent(pathMatchType, forKey: .pathMatchType)
+            try container.encodeIfPresent(rewritePath, forKey: .rewritePath)
+            try container.encodeIfPresent(rewritePathType, forKey: .rewritePathType)
+            try healthCheckConfiguration.encode(to: encoder)
+        }
     }
 
     private let client: PangolinAPIClient
@@ -167,6 +190,15 @@ struct PangolinPublicTargetService: Sendable {
         guard configuration.rewritePath == nil || configuration.path != nil else {
             throw PangolinAPIError.serverRejected(status: 400, message: "PATH_REQUIRED")
         }
+        var healthCheckConfiguration = configuration.healthCheckConfiguration
+        if let hostname = configuration.healthCheckHostname {
+            healthCheckConfiguration.hostname = hostname
+        }
+        if configuration.healthCheck {
+            healthCheckConfiguration = healthCheckConfiguration.applyingDefaults(
+                hostname: configuration.ip, port: configuration.port, method: configuration.method
+            )
+        }
         return TargetBody(
             siteId: configuration.siteId,
             ip: configuration.ip,
@@ -174,7 +206,7 @@ struct PangolinPublicTargetService: Sendable {
             method: configuration.method,
             enabled: configuration.enabled,
             hcEnabled: configuration.healthCheck,
-            hcHostname: configuration.healthCheckHostname ?? (configuration.healthCheck ? configuration.ip : nil),
+            healthCheckConfiguration: healthCheckConfiguration,
             path: configuration.path,
             pathMatchType: configuration.pathMatchType,
             rewritePath: configuration.rewritePath,

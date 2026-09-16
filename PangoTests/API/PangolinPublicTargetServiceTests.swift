@@ -84,6 +84,11 @@ struct PangolinPublicTargetServiceTests {
             #expect(json["enabled"] as? Bool == true)
             #expect(json["hcEnabled"] as? Bool == true)
             #expect(json["hcHostname"] as? String == "app.internal")
+            #expect(json["hcPort"] as? Int == 8443)
+            #expect(json["hcScheme"] as? String == "https")
+            #expect(json["hcMode"] as? String == "http")
+            #expect(json["hcPath"] as? String == "/")
+            #expect(json["hcMethod"] as? String == "GET")
             #expect(json["path"] as? String == "/api")
             #expect(json["pathMatchType"] as? String == "prefix")
             #expect(json["rewritePath"] as? String == "/v2")
@@ -108,6 +113,38 @@ struct PangolinPublicTargetServiceTests {
         )
 
         #expect(target.targetId == 8)
+    }
+
+    @Test("enabling a health check supplies the complete probe configuration")
+    func enablesHealthCheck() async throws {
+        URLProtocolStub.handler = { request in
+            let body = try #require(request.targetBodyData)
+            let json = try #require(JSONSerialization.jsonObject(with: body) as? [String: Any])
+            #expect(json["hcEnabled"] as? Bool == true)
+            #expect(json["hcHostname"] as? String == "192.168.68.244")
+            #expect(json["hcPort"] as? Int == 5232)
+            #expect(json["hcScheme"] as? String == "http")
+            #expect(json["hcMode"] as? String == "http")
+            #expect(json["hcPath"] as? String == "/")
+            #expect(json["hcMethod"] as? String == "GET")
+            #expect(json["hcInterval"] as? Int == 30)
+            #expect(json["hcUnhealthyInterval"] as? Int == 30)
+            #expect(json["hcTimeout"] as? Int == 5)
+            #expect(json["hcFollowRedirects"] as? Bool == true)
+            #expect(json["hcHealthyThreshold"] as? Int == 1)
+            #expect(json["hcUnhealthyThreshold"] as? Int == 1)
+            #expect(json["hcStatus"] == nil || json["hcStatus"] is NSNull)
+            return .init(statusCode: 200, data: Self.targetResponse(id: 8, ip: "192.168.68.244"))
+        }
+
+        _ = try await makeService().updateTarget(
+            targetId: 8,
+            configuration: PublicTargetConfiguration(
+                siteId: 1, ip: "192.168.68.244", port: 5232, method: .http,
+                enabled: true, healthCheck: true, path: nil, pathMatchType: nil,
+                rewritePath: nil, rewritePathType: nil
+            )
+        )
     }
 
     @Test("omits HTTP-only fields when creating a raw target")
@@ -136,6 +173,66 @@ struct PangolinPublicTargetServiceTests {
                 pathMatchType: nil,
                 rewritePath: nil,
                 rewritePathType: nil
+            )
+        )
+    }
+
+    @Test("preserves custom health settings when enabling or disabling a target", arguments: [true, false], [true, false])
+    func preservesHealthSettings(enabled: Bool, storedHeaders: Bool) async throws {
+        let healthJSON = Data(#"""
+        {"hcHostname":"probe.internal","hcPort":9443,"hcMode":"http",
+         "hcScheme":"https","hcPath":"/ready","hcMethod":"HEAD",
+         "hcInterval":60,"hcUnhealthyInterval":10,"hcTimeout":8,
+         "hcHeaders":[{"name":"Host","value":"app.internal"}],
+         "hcFollowRedirects":false,"hcStatus":204,"hcTlsServerName":"tls.internal",
+         "hcHealthyThreshold":3,"hcUnhealthyThreshold":2}
+        """#.utf8)
+        let expected = try #require(JSONSerialization.jsonObject(with: healthJSON) as? [String: Any])
+        var responseJSON = try #require(JSONSerialization.jsonObject(
+            with: Data(Self.targetJSON(id: 8, ip: "app.internal").utf8)
+        ) as? [String: Any])
+        responseJSON.merge(expected) { _, new in new }
+        if storedHeaders {
+            responseJSON["hcHeaders"] = #"[{"name":"Host","value":"app.internal"}]"#
+        }
+        let target = try JSONDecoder().decode(Target.self, from: JSONSerialization.data(withJSONObject: responseJSON))
+        URLProtocolStub.handler = { request in
+            let body = try #require(request.targetBodyData)
+            let json = try #require(JSONSerialization.jsonObject(with: body) as? [String: Any])
+            #expect(json["hcEnabled"] as? Bool == enabled)
+            let actual = json.filter { $0.key.hasPrefix("hc") && $0.key != "hcEnabled" }
+            #expect(NSDictionary(dictionary: actual).isEqual(to: expected))
+            return .init(statusCode: 200, data: Self.targetResponse(id: 8, ip: "app.internal"))
+        }
+
+        _ = try await makeService().updateTarget(
+            targetId: target.targetId,
+            configuration: PublicTargetConfiguration(
+                siteId: 7, ip: "app.internal", port: 8443, method: .https,
+                enabled: true, healthCheck: enabled, path: nil, pathMatchType: nil,
+                rewritePath: nil, rewritePathType: nil,
+                healthCheckConfiguration: target.healthCheckConfiguration
+            )
+        )
+    }
+
+    @Test("raw targets use TCP health checks")
+    func enablesTCPHealthCheck() async throws {
+        URLProtocolStub.handler = { request in
+            let body = try #require(request.targetBodyData)
+            let json = try #require(JSONSerialization.jsonObject(with: body) as? [String: Any])
+            #expect(json["hcMode"] as? String == "tcp")
+            #expect(json["hcPort"] as? Int == 5432)
+            #expect(json["hcInterval"] as? Int == 30)
+            return .init(statusCode: 200, data: Self.targetResponse(id: 8, ip: "db.internal"))
+        }
+
+        _ = try await makeService().updateTarget(
+            targetId: 8,
+            configuration: PublicTargetConfiguration(
+                siteId: 7, ip: "db.internal", port: 5432, method: nil,
+                enabled: true, healthCheck: true, path: nil, pathMatchType: nil,
+                rewritePath: nil, rewritePathType: nil
             )
         )
     }

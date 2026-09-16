@@ -166,7 +166,7 @@ struct ResourceTargetView: View {
                         ? rewritePath.trimmingCharacters(in: .whitespacesAndNewlines)
                         : nil,
                     rewritePathType: usesPathRouting && usesPathRewriting ? rewritePathType : nil,
-                    healthCheckHostname: target?.healthCheckHostname
+                    healthCheckConfiguration: target?.healthCheckConfiguration ?? .init()
                 )
                 if let target {
                     _ = try await appService.updateTarget(targetId: target.targetId, configuration: configuration)
