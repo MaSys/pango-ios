@@ -25,7 +25,8 @@ struct PrivateResourceCreateView: View {
     @State private var subdomain: String = ""
     @State private var domainId: String = ""
     @State private var ssl: Bool = false
-    @State private var errorMessage: String = ""
+    @State private var isSaving = false
+    @State private var errorKey: String?
 
     var validForm: Bool {
         if name.isEmpty { return false }
@@ -66,11 +67,6 @@ struct PrivateResourceCreateView: View {
                 networkFields
             }
 
-            if !errorMessage.isEmpty {
-                Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
-            }
         }
         .onAppear {
             if let site = appService.sites.first {
@@ -91,8 +87,13 @@ struct PrivateResourceCreateView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("SAVE") { self.save() }
-                    .disabled(!validForm)
+                    .disabled(!validForm || isSaving)
             }
+        }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
         }
     }
 
@@ -164,9 +165,23 @@ struct PrivateResourceCreateView: View {
     }
 
     private func save() {
-        PrivateResourcesRequest.create(
+        guard validForm else { return }
+        Task {
+            isSaving = true
+            defer { isSaving = false }
+            do {
+                try await appService.createPrivateResource(configuration: configuration)
+                dismiss()
+            } catch {
+                errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+            }
+        }
+    }
+
+    private var configuration: PrivateResourceConfiguration {
+        PrivateResourceConfiguration(
             name: name,
-            siteId: selectedSiteId,
+            siteIds: [selectedSiteId],
             mode: mode,
             ssl: mode == "http" && ssl,
             scheme: mode == "http" ? scheme : nil,
@@ -178,12 +193,6 @@ struct PrivateResourceCreateView: View {
             disableIcmp: mode == "http" ? nil : !icmpEnabled,
             domainId: mode == "http" ? domainId : nil,
             subdomain: mode == "http" ? subdomain : nil
-        ) { success, response in
-            if success {
-                self.dismiss()
-            } else {
-                self.errorMessage = response?.message ?? ""
-            }
-        }
+        )
     }
 }

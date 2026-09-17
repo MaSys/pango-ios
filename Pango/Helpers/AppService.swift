@@ -213,6 +213,46 @@ class AppService: ObservableObject {
         return PangolinPublicResourceAuthService(client: PangolinAPIClient(configuration: configuration))
     }
 
+    public func fetchPrivateResources() async throws -> [PrivateResource] {
+        try await privateResourceService().listAllResources()
+    }
+
+    public func createPrivateResource(configuration: PrivateResourceConfiguration) async throws {
+        try await privateResourceService().create(configuration: configuration)
+    }
+
+    public func updatePrivateResource(
+        resourceId: Int,
+        configuration: PrivateResourceConfiguration
+    ) async throws {
+        try await privateResourceService().update(resourceId: resourceId, configuration: configuration)
+    }
+
+    public func deletePrivateResource(resourceId: Int) async throws {
+        try await privateResourceService().delete(resourceId: resourceId)
+    }
+
+    private func privateResourceService() throws -> PangolinPrivateResourceService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: pangolinServerUrl,
+                apiKey: pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinPrivateResourceService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: pangolinOrganizationId
+        )
+    }
+
     public func fetchTargets(resourceId: Int) async throws -> [Target] {
         try await publicTargetService().listAllTargets(resourceId: resourceId)
     }
