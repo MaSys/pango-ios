@@ -11,11 +11,18 @@ struct PrivateResourcesView: View {
 
     @EnvironmentObject var appService: AppService
     @State private var resources: [PrivateResource] = []
+    @State private var isLoading = false
+    @State private var errorKey: String?
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVStack(spacing: 8) {
+                if isLoading && resources.isEmpty {
+                    ProgressView()
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                } else {
+                    LazyVStack(spacing: 8) {
                     ForEach(resources, id: \.siteResourceId) { resource in
                         NavigationLink {
                             PrivateResourceView(resource: resource)
@@ -57,11 +64,12 @@ struct PrivateResourcesView: View {
                         }
                         .buttonStyle(.plain)
                     }
+                    }
+                    .padding(.vertical, 8)
                 }
-                .padding(.vertical, 8)
             }
             .navigationTitle(Text("PRIVATE_RESOURCES"))
-            .onAppear { self.fetch() }
+            .task { await self.fetch() }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
@@ -72,12 +80,21 @@ struct PrivateResourcesView: View {
                     }
                 }
             }
+            .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+                Button("OK", role: .cancel) { errorKey = nil }
+            } message: {
+                if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            }
         }
     }
 
-    private func fetch() {
-        PrivateResourcesRequest.fetch { success, resources in
-            self.resources = resources
+    private func fetch() async {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            resources = try await appService.fetchPrivateResources()
+        } catch {
+            errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
         }
     }
 }
