@@ -6,7 +6,13 @@
 //
 
 struct DnsRecord: Decodable {
-    var type: String
-    var name: String
-    var value: String
+    let id: Int?
+    let domainId: String?
+    let recordType: String
+    let baseDomain: String?
+    let value: String
+    let verified: Bool?
+
+    var type: String { recordType }
+    var name: String { baseDomain ?? "" }
 }

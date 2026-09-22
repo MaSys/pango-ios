@@ -38,10 +38,6 @@ struct Pagination: Decodable, Equatable {
     var page: Int
 }
 
-struct DomainsResponse: Decodable {
-    var domains: [Domain]
-}
-
 struct TargetsResponse: Decodable {
     var targets: [Target]
 }
@@ -56,10 +52,6 @@ struct UsersResponse: Decodable {
 
 struct InvitationsResponse: Decodable {
     var invitations: [Invitation]
-}
-
-struct DomainDetailResponse: Decodable {
-    var records: [DnsRecord]
 }
 
 struct HealthChecksResponse: Decodable {
