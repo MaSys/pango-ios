@@ -33,6 +33,8 @@ struct ResourcesView: View {
     @State private var sortDesc: Bool = false
     @State private var filteredBy: ResourceFilter = .none
     @State private var privateResources: [PrivateResource] = []
+    @State private var privateResourcesLoading = false
+    @State private var errorKey: String?
 
     var sortedResources: [Resource] {
         switch sort {
@@ -73,7 +75,7 @@ struct ResourcesView: View {
                 }
             }
             .navigationTitle(Text("RESOURCES"))
-            .onAppear { self.fetchAll() }
+            .task { await self.fetchAll() }
             .toolbar {
                 if section == .public {
                     ToolbarItem(placement: .topBarLeading) {
@@ -100,13 +102,22 @@ struct ResourcesView: View {
                     }
                 }
             }
+            .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+                Button("OK", role: .cancel) { errorKey = nil }
+            } message: {
+                if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            }
         }
     }
 
-    private func fetchAll() {
-        appService.fetchResources()
-        PrivateResourcesRequest.fetch { _, resources in
-            self.privateResources = resources
+    private func fetchAll() async {
+        _ = try? await appService.fetchResources()
+        privateResourcesLoading = true
+        defer { privateResourcesLoading = false }
+        do {
+            privateResources = try await appService.fetchPrivateResources()
+        } catch {
+            errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
         }
     }
 }
@@ -125,7 +136,12 @@ extension ResourcesView {
 
     var privateContent: some View {
         ScrollView {
-            LazyVStack(spacing: 8) {
+            if privateResourcesLoading && privateResources.isEmpty {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .padding()
+            } else {
+                LazyVStack(spacing: 8) {
                 ForEach(privateResources, id: \.siteResourceId) { resource in
                     NavigationLink {
                         PrivateResourceView(resource: resource)
@@ -167,8 +183,9 @@ extension ResourcesView {
                     }
                     .buttonStyle(.plain)
                 }
+                }
+                .padding(.vertical, 8)
             }
-            .padding(.vertical, 8)
         }
     }
 }

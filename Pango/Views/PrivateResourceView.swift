@@ -26,7 +26,8 @@ struct PrivateResourceView: View {
     @State private var subdomain: String = ""
     @State private var domainId: String = ""
     @State private var ssl: Bool = false
-    @State private var errorMessage: String = ""
+    @State private var isSaving = false
+    @State private var errorKey: String?
     @State private var showDeleteConfirmation: Bool = false
 
     var validForm: Bool {
@@ -59,12 +60,6 @@ struct PrivateResourceView: View {
                 httpFields
             } else {
                 networkFields
-            }
-
-            if !errorMessage.isEmpty {
-                Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .font(.system(size: 14))
             }
 
             Section {
@@ -107,8 +102,13 @@ struct PrivateResourceView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("SAVE") { self.save() }
-                    .disabled(!validForm)
+                    .disabled(!validForm || isSaving)
             }
+        }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
         }
     }
 
@@ -187,8 +187,37 @@ struct PrivateResourceView: View {
     }
 
     private func save() {
-        PrivateResourcesRequest.update(
-            id: resource.siteResourceId,
+        guard validForm else { return }
+        Task {
+            isSaving = true
+            defer { isSaving = false }
+            do {
+                try await appService.updatePrivateResource(
+                    resourceId: resource.siteResourceId,
+                    configuration: configuration
+                )
+                dismiss()
+            } catch {
+                errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+            }
+        }
+    }
+
+    private func delete() {
+        Task {
+            isSaving = true
+            defer { isSaving = false }
+            do {
+                try await appService.deletePrivateResource(resourceId: resource.siteResourceId)
+                dismiss()
+            } catch {
+                errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+            }
+        }
+    }
+
+    private var configuration: PrivateResourceConfiguration {
+        PrivateResourceConfiguration(
             name: name,
             siteIds: resource.siteIds,
             mode: mode,
@@ -202,18 +231,6 @@ struct PrivateResourceView: View {
             disableIcmp: mode == "http" ? nil : !icmpEnabled,
             domainId: mode == "http" ? domainId : nil,
             subdomain: mode == "http" ? subdomain : nil
-        ) { success, response in
-            if success {
-                self.dismiss()
-            } else {
-                self.errorMessage = response?.message ?? ""
-            }
-        }
-    }
-
-    private func delete() {
-        PrivateResourcesRequest.delete(id: resource.siteResourceId) { success in
-            if success { self.dismiss() }
-        }
+        )
     }
 }
