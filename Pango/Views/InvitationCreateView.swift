@@ -15,6 +15,9 @@ struct InvitationCreateView: View {
     @State private var email: String = ""
     @State private var validHours: Int = 24
     @State private var roleId: Int = 0
+    @State private var isSaving = false
+    @State private var errorKey: String?
+    @State private var createdInvitation: CreatedInvitation?
     
     var validForm: Bool {
         if self.email.isEmpty { return false }
@@ -26,50 +29,81 @@ struct InvitationCreateView: View {
     
     var body: some View {
         Form {
-            HStack {
-                Text("EMAIL")
-                TextField("EMAIL", text: $email)
-                    .multilineTextAlignment(.trailing)
-                    .keyboardType(.emailAddress)
-                    .autocorrectionDisabled()
-                    .autocapitalization(.none)
-            }
-            HStack {
-                Text("VALID_FOR")
-                Picker("", selection: $validHours) {
-                    ForEach(1..<8) { i in
-                        Text("\(i)_DAY").tag(24 * i)
+            if let createdInvitation {
+                Section {
+                    Text(createdInvitation.inviteLink)
+                        .textSelection(.enabled)
+                    ShareLink(item: createdInvitation.inviteLink)
+                }
+            } else {
+                HStack {
+                    Text("EMAIL")
+                    TextField("EMAIL", text: $email)
+                        .multilineTextAlignment(.trailing)
+                        .keyboardType(.emailAddress)
+                        .autocorrectionDisabled()
+                        .autocapitalization(.none)
+                }
+                HStack {
+                    Text("VALID_FOR")
+                    Picker("", selection: $validHours) {
+                        ForEach(1..<8) { i in
+                            Text("\(i)_DAY").tag(24 * i)
+                        }
                     }
                 }
-            }
-            Picker("ROLE", selection: $roleId) {
-                ForEach(self.appService.roles, id: \.roleId) { role in
-                    Text(role.name ?? "")
-                        .tag(role.roleId)
+                Picker("ROLE", selection: $roleId) {
+                    Text("ROLE").tag(0)
+                    ForEach(self.appService.roles, id: \.roleId) { role in
+                        Text(role.name ?? "")
+                            .tag(role.roleId)
+                    }
                 }
+                .pickerStyle(.navigationLink)
             }
-            .pickerStyle(.navigationLink)
         }//form
         .navigationTitle("INVITE_USER")
-        .onAppear {
-            self.appService.fetchRoles()
+        .task {
+            do {
+                _ = try await appService.fetchRoles()
+            } catch is CancellationError {
+                return
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
+            } catch {
+                errorKey = "ERROR_API_RESPONSE"
+            }
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("SAVE") {
-                    self.save()
+                if createdInvitation != nil {
+                    Button("DONE") { dismiss() }
+                } else {
+                    Button("SAVE") { save() }
+                        .disabled(!validForm || isSaving)
                 }
-                .disabled(!self.validForm)
             }
+        }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
         }
     }
     
     private func save() {
-        if !self.validForm { return }
-        
-        InvitationsRequest.create(email: self.email, validHours: self.validHours, roleId: self.roleId) { success in
-            if success {
-                self.dismiss()
+        guard validForm, !isSaving else { return }
+        isSaving = true
+        Task {
+            defer { isSaving = false }
+            do {
+                createdInvitation = try await appService.createInvitation(email: email, validHours: validHours, roleId: roleId)
+            } catch is CancellationError {
+                return
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
+            } catch {
+                errorKey = "ERROR_API_RESPONSE"
             }
         }
     }
