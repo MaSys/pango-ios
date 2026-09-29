@@ -341,6 +341,60 @@
         "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Bloqueado" } }
       }
     },
+    "CLIENT_DETAILS" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Client Details" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Detalles del Cliente" } }
+      }
+    },
+    "CONNECTION" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Connection" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Conexión" } }
+      }
+    },
+    "DEVICE_DETAILS" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Device Details" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Detalles del Dispositivo" } }
+      }
+    },
+    "DEVICE_MODEL" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Device Model" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Modelo del Dispositivo" } }
+      }
+    },
+    "NICE_ID" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Readable ID" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "ID Legible" } }
+      }
+    },
+    "OFFLINE" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Offline" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Desconectado" } }
+      }
+    },
+    "ONLINE" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Online" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Conectado" } }
+      }
+    },
+    "OS_VERSION" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "OS Version" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Versión del SO" } }
+      }
+    },
+    "PLATFORM" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Platform" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Plataforma" } }
+      }
+    },
     "CLIENTS" : {
       "localizations" : {
         "en" : {

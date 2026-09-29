@@ -59,6 +59,26 @@ struct PangolinClientServiceTests {
         }
     }
 
+    @Test func getsClientDetailFromDedicatedEndpoint() async throws {
+        URLProtocolStub.handler = { request in
+            #expect(request.httpMethod == "GET")
+            #expect(request.url?.path == "/v1/client/7")
+            let data = Data(#"{"data":{"clientId":7,"name":"Work Laptop","niceId":"work-laptop","type":"olm","online":true,"subnet":"10.0.0.2/32","userEmail":"user@example.com","approvalState":"approved","blocked":false,"archived":false,"fingerprint":{"platform":"macos","osVersion":"15.5","deviceModel":"MacBook Pro"}},"success":true,"error":false,"message":"","status":200}"#.utf8)
+            return .init(statusCode: 200, data: data)
+        }
+        let detail = try await service().getClient(clientId: 7)
+        #expect(detail.clientId == 7)
+        #expect(detail.fingerprint?.platform == "macos")
+        #expect(detail.fingerprint?.osVersion == "15.5")
+    }
+
+    @Test func preservesDetailPermissionError() async throws {
+        URLProtocolStub.handler = { _ in .init(statusCode: 403, data: Data()) }
+        await #expect(throws: PangolinAPIError.forbidden) {
+            try await service().getClient(clientId: 7)
+        }
+    }
+
     private static func response(_ key: String, id: String, page: String, total: Int = 2, userEmail: String? = nil) -> Data {
         let email = userEmail.map { "\"\($0)\"" } ?? "null"
         let sites = key == "clients" ? #""sites":[{"siteId":3,"siteName":"Home","siteNiceId":null}],"# : ""

@@ -433,6 +433,13 @@ class AppService: ObservableObject {
         return (machines, userDevices)
     }
 
+    public func fetchClient(clientId: Int) async throws -> PangolinClient {
+        let revision = organizationRevision
+        let detail = try await clientService().getClient(clientId: clientId)
+        guard revision == organizationRevision else { throw CancellationError() }
+        return detail
+    }
+
     private func clientService() throws -> PangolinClientService {
         let configuration: PangolinAPIConfiguration
         do {
