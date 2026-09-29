@@ -11,8 +11,7 @@ struct RolesView: View {
     
     @EnvironmentObject var appService: AppService
     
-    @State private var showTransferDialog = false
-    @State private var selectedRoleForTransfer: Role?
+    @State private var errorKey: String?
 
     var body: some View {
         NavigationStack {
@@ -39,8 +38,21 @@ struct RolesView: View {
                 }
             }
             .navigationTitle("ROLES")
-            .onAppear {
-                self.fetch()
+            .task {
+                do {
+                    _ = try await appService.fetchRoles()
+                } catch is CancellationError {
+                    return
+                } catch let error as PangolinAPIError {
+                    errorKey = error.localizationKey
+                } catch {
+                    errorKey = "ERROR_API_RESPONSE"
+                }
+            }
+            .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+                Button("OK", role: .cancel) { errorKey = nil }
+            } message: {
+                if let errorKey { Text(LocalizedStringKey(errorKey)) }
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -55,9 +67,6 @@ struct RolesView: View {
         }
     }
 
-    private func fetch() {
-        self.appService.fetchRoles()
-    }
 }
 
 #Preview {
@@ -72,6 +81,8 @@ struct DeleteRoleView: View {
     var roleToDelete: Role
     
     @State private var selectedRoleForTransfer: Role?
+    @State private var isSaving = false
+    @State private var errorKey: String?
 
     var body: some View {
         if self.roleToDelete.isAdmin == true {
@@ -114,21 +125,33 @@ struct DeleteRoleView: View {
                     Button("SAVE") {
                         self.save()
                     }
-                    .disabled(self.selectedRoleForTransfer == nil)
+                    .disabled(self.selectedRoleForTransfer == nil || isSaving)
                 }
+            }
+            .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+                Button("OK", role: .cancel) { errorKey = nil }
+            } message: {
+                if let errorKey { Text(LocalizedStringKey(errorKey)) }
             }
         }
     }
     
     private func save() {
-        if self.selectedRoleForTransfer == nil {
-            return
-        }
-        
-        RolesRequest.delete(id: self.roleToDelete.roleId, roleId: self.selectedRoleForTransfer!.roleId) { success in
-            if success {
-                self.appService.fetchRoles()
-                self.dismiss()
+        guard !isSaving, roleToDelete.isAdmin != true,
+              let selectedRoleForTransfer,
+              selectedRoleForTransfer.roleId != roleToDelete.roleId else { return }
+        isSaving = true
+        Task {
+            defer { isSaving = false }
+            do {
+                try await appService.deleteRole(roleId: roleToDelete.roleId, transferRoleId: selectedRoleForTransfer.roleId)
+                dismiss()
+            } catch is CancellationError {
+                return
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
+            } catch {
+                errorKey = "ERROR_API_RESPONSE"
             }
         }
     }
