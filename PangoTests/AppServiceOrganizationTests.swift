@@ -5,6 +5,85 @@ import Testing
 @Suite("Organization switching", .serialized)
 @MainActor
 struct AppServiceOrganizationTests {
+    @Test("startup preserves a valid selection and otherwise selects the first organization", arguments: ["b", "missing", ""])
+    func loadsOrganizations(selection: String) async {
+        let previous = UserDefaults.standard.object(forKey: "pangolin_organization_id")
+        defer { UserDefaults.standard.set(previous, forKey: "pangolin_organization_id") }
+        let service = OrganizationListingService()
+        service.pangolinOrganizationId = selection
+        service.result = .success([Organization(orgId: "a", name: "A"), Organization(orgId: "b", name: "B")])
+        var callbacks = 0
+        let (success, organizations) = await withCheckedContinuation { continuation in
+            service.fetchOrgs { success, organizations in
+                callbacks += 1
+                continuation.resume(returning: (success, organizations))
+            }
+        }
+        #expect(success)
+        #expect(callbacks == 1)
+        #expect(organizations.map(\.orgId) == ["a", "b"])
+        #expect(service.organizations.map(\.orgId) == ["a", "b"])
+        #expect(service.pangolinOrganizationId == (selection == "b" ? "b" : "a"))
+    }
+
+    @Test("empty startup results clear cached organizations without selecting one")
+    func loadsEmptyOrganizations() async {
+        let previous = UserDefaults.standard.object(forKey: "pangolin_organization_id")
+        defer { UserDefaults.standard.set(previous, forKey: "pangolin_organization_id") }
+        let service = OrganizationListingService()
+        service.pangolinOrganizationId = ""
+        service.organizations = [Organization(orgId: "stale", name: "Stale")]
+        let (success, organizations) = await withCheckedContinuation { continuation in
+            service.fetchOrgs { continuation.resume(returning: ($0, $1)) }
+        }
+        #expect(success)
+        #expect(organizations.isEmpty)
+        #expect(service.organizations.isEmpty)
+        #expect(service.pangolinOrganizationId.isEmpty)
+    }
+
+    @Test("startup failure calls back once and clears stale organizations")
+    func failsOrganizationLoading() async {
+        let service = OrganizationListingService()
+        let selection = service.pangolinOrganizationId
+        service.organizations = [Organization(orgId: "stale", name: "Stale")]
+        service.result = .failure(.forbidden)
+        var callbacks = 0
+        let (success, organizations) = await withCheckedContinuation { continuation in
+            service.fetchOrgs { success, organizations in
+                callbacks += 1
+                continuation.resume(returning: (success, organizations))
+            }
+        }
+        #expect(!success)
+        #expect(callbacks == 1)
+        #expect(organizations.isEmpty)
+        #expect(service.organizations.isEmpty)
+        #expect(service.pangolinOrganizationId == selection)
+    }
+
+    @Test("startup fails safely with missing API configuration", arguments: [true, false])
+    func failsMissingConfiguration(missingKey: Bool) async {
+        let defaults = UserDefaults.standard
+        let previousURL = defaults.object(forKey: "pangolin_server_url")
+        let previousKey = defaults.object(forKey: "pangolin_api_key")
+        defer {
+            defaults.set(previousURL, forKey: "pangolin_server_url")
+            defaults.set(previousKey, forKey: "pangolin_api_key")
+        }
+        let service = RefreshRecordingService()
+        service.pangolinServerUrl = missingKey ? "https://api.example.com" : ""
+        service.pangolinApiKey = missingKey ? "" : "synthetic-key"
+        await #expect(throws: missingKey ? PangolinAPIError.missingAPIKey : .invalidBaseURL) {
+            try await service.listOrganizations()
+        }
+        let (success, organizations) = await withCheckedContinuation { continuation in
+            service.fetchOrgs { continuation.resume(returning: ($0, $1)) }
+        }
+        #expect(!success)
+        #expect(organizations.isEmpty)
+    }
+
     @Test("switching clears cached organization data and refreshes the new organization")
     func switchesOrganization() {
         let previous = UserDefaults.standard.object(forKey: "pangolin_organization_id")
@@ -60,4 +139,19 @@ private final class RefreshRecordingService: AppService {
     override func fetchDomains() {
         refreshes.append("domains:\(pangolinOrganizationId)")
     }
+}
+
+private final class OrganizationListingService: AppService {
+    var result: Result<[Organization], PangolinAPIError> = .success([])
+
+    override func listOrganizations() async throws -> [Organization] {
+        try result.get()
+    }
+
+    override func fetchSites(completionHandler: @escaping (Bool, [Site]) -> Void) {
+        completionHandler(true, [])
+    }
+
+    override func fetchResources() {}
+    override func fetchDomains() {}
 }
