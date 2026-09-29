@@ -86,6 +86,12 @@
         }
       }
     },
+    "ACTIVE" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Active" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Activo" } }
+      }
+    },
     "ALERT_RULES" : {
       "localizations" : {
         "en" : {
@@ -319,6 +325,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CIDR"
+          }
+        }
+      }
+    },
+    "ARCHIVED" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Archived" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Archivado" } }
+      }
+    },
+    "BLOCKED" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Blocked" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Bloqueado" } }
+      }
+    },
+    "CLIENTS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clients"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clientes"
           }
         }
       }
@@ -1244,6 +1278,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Modo"
+          }
+        }
+      }
+    },
+    "DENIED" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Denied" } },
+        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Denegado" } }
+      }
+    },
+    "MACHINE_CLIENTS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Machine Clients"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clientes de Máquina"
           }
         }
       }
@@ -2533,6 +2589,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Usar SSO de Plataforma"
+          }
+        }
+      }
+    },
+    "USER_DEVICES" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User Devices"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dispositivos de Usuario"
           }
         }
       }

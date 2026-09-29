@@ -47,6 +47,13 @@ struct SettingsView: View {
                 
                 Section(header: Text("ACCESS_CONTROL")) {
                     NavigationLink {
+                        ClientsView()
+                            .environmentObject(self.appService)
+                    } label: {
+                        Text("CLIENTS")
+                    }
+
+                    NavigationLink {
                         RolesView()
                             .environmentObject(self.appService)
                     } label: {
