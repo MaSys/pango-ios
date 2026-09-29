@@ -42,10 +42,6 @@ struct TargetsResponse: Decodable {
     var targets: [Target]
 }
 
-struct UsersResponse: Decodable {
-    var users: [User]
-}
-
 struct InvitationsResponse: Decodable {
     var invitations: [Invitation]
 }
