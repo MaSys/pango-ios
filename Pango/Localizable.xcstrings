@@ -87,9 +87,20 @@
       }
     },
     "ACTIVE" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Active" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Activo" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Active"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activo"
+          }
+        }
       }
     },
     "ALERT_RULES" : {
@@ -200,6 +211,23 @@
         }
       }
     },
+    "ARCHIVED" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archived"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archivado"
+          }
+        }
+      }
+    },
     "AUTH_URL" : {
       "localizations" : {
         "en" : {
@@ -297,6 +325,23 @@
         }
       }
     },
+    "BLOCKED" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blocked"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bloqueado"
+          }
+        }
+      }
+    },
     "CANCEL" : {
       "localizations" : {
         "en" : {
@@ -327,18 +372,6 @@
             "value" : "CIDR"
           }
         }
-      }
-    },
-    "ARCHIVED" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Archived" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Archivado" } }
-      }
-    },
-    "BLOCKED" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Blocked" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Bloqueado" } }
       }
     },
     "CLIENT_DETAILS" : {
@@ -395,22 +428,6 @@
         "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Plataforma" } }
       }
     },
-    "CLIENTS" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clients"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clientes"
-          }
-        }
-      }
-    },
     "CLIENT_ID" : {
       "localizations" : {
         "en" : {
@@ -439,6 +456,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Secreto de Cliente"
+          }
+        }
+      }
+    },
+    "CLIENTS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clients"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clientes"
           }
         }
       }
@@ -616,6 +649,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Los recursos asociados no se eliminarán."
+          }
+        }
+      }
+    },
+    "DELETE_TARGET_CONFIRMATION_MESSAGE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete this target?"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro de que deseas eliminar este destino?"
+          }
+        }
+      }
+    },
+    "DENIED" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denied"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denegado"
           }
         }
       }
@@ -998,6 +1064,22 @@
         }
       }
     },
+    "EXACT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exact"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exacta"
+          }
+        }
+      }
+    },
     "GOOGLE" : {
       "localizations" : {
         "en" : {
@@ -1304,6 +1386,38 @@
         }
       }
     },
+    "MACHINE_CLIENTS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Machine Clients"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clientes de Máquina"
+          }
+        }
+      }
+    },
+    "MATCH_TYPE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Match Type"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipo de Coincidencia"
+          }
+        }
+      }
+    },
     "METHOD" : {
       "localizations" : {
         "en" : {
@@ -1332,28 +1446,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Modo"
-          }
-        }
-      }
-    },
-    "DENIED" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Denied" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Denegado" } }
-      }
-    },
-    "MACHINE_CLIENTS" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Machine Clients"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clientes de Máquina"
           }
         }
       }
@@ -1671,54 +1763,6 @@
         }
       }
     },
-    "DELETE_TARGET_CONFIRMATION_MESSAGE" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Are you sure you want to delete this target?"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Estás seguro de que deseas eliminar este destino?"
-          }
-        }
-      }
-    },
-    "EXACT" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exact"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exacta"
-          }
-        }
-      }
-    },
-    "MATCH_TYPE" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Match Type"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tipo de Coincidencia"
-          }
-        }
-      }
-    },
     "PATH" : {
       "localizations" : {
         "en" : {
@@ -1735,102 +1779,6 @@
         }
       }
     },
-    "PATH_ROUTING" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Path Routing"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enrutamiento por Ruta"
-          }
-        }
-      }
-    },
-    "PREFIX" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prefix"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prefijo"
-          }
-        }
-      }
-    },
-    "REGEX" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Regular Expression"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Expresión Regular"
-          }
-        }
-      }
-    },
-    "REWRITE_PATH" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rewrite Path"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ruta de Reescritura"
-          }
-        }
-      }
-    },
-    "REWRITE_TYPE" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rewrite Type"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tipo de Reescritura"
-          }
-        }
-      }
-    },
-    "STRIP_PREFIX" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Strip Prefix"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eliminar Prefijo"
-          }
-        }
-      }
-    },
     "PATH_REWRITING" : {
       "localizations" : {
         "en" : {
@@ -1843,6 +1791,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reescritura de Ruta"
+          }
+        }
+      }
+    },
+    "PATH_ROUTING" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Path Routing"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enrutamiento por Ruta"
           }
         }
       }
@@ -1956,6 +1920,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ej. 80,443,8080-8090"
+          }
+        }
+      }
+    },
+    "PREFIX" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prefix"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prefijo"
           }
         }
       }
@@ -2074,6 +2054,22 @@
         }
       }
     },
+    "REGEX" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regular Expression"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expresión Regular"
+          }
+        }
+      }
+    },
     "REJECT" : {
       "localizations" : {
         "en" : {
@@ -2167,6 +2163,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recursos"
+          }
+        }
+      }
+    },
+    "REWRITE_PATH" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rewrite Path"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruta de Reescritura"
+          }
+        }
+      }
+    },
+    "REWRITE_TYPE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rewrite Type"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipo de Reescritura"
           }
         }
       }
@@ -2457,6 +2485,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estado"
+          }
+        }
+      }
+    },
+    "STRIP_PREFIX" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strip Prefix"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar Prefijo"
           }
         }
       }
