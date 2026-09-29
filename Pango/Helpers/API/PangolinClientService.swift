@@ -5,6 +5,12 @@ struct PangolinClientSite: Decodable {
     let siteName: String?
 }
 
+struct PangolinClientFingerprint: Decodable {
+    let platform: String?
+    let osVersion: String?
+    let deviceModel: String?
+}
+
 struct PangolinClient: Decodable {
     let clientId: Int
     let name: String?
@@ -17,6 +23,7 @@ struct PangolinClient: Decodable {
     let blocked: Bool?
     let archived: Bool?
     let sites: [PangolinClientSite]?
+    let fingerprint: PangolinClientFingerprint?
 
     var statusKey: String {
         if archived == true { return "ARCHIVED" }
@@ -60,6 +67,15 @@ struct PangolinClientService: Sendable {
                           status: "active,pending,denied,blocked,archived") { (page: PangolinUserDevicesPage) in
             (page.devices, page.pagination)
         }
+    }
+
+    func getClient(clientId: Int) async throws -> PangolinClient {
+        let response: PangolinResponse<PangolinClient> = try await client.send(.get, path: "/client/\(clientId)")
+        guard response.success, !response.error else {
+            throw PangolinAPIError.serverRejected(status: response.status, message: response.message)
+        }
+        guard let detail = response.data else { throw PangolinAPIError.decoding }
+        return detail
     }
 
     private func listAll<Page: Decodable>(

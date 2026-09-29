@@ -15,12 +15,20 @@ struct ClientsView: View {
             }
             Section("MACHINE_CLIENTS") {
                 ForEach(machines, id: \.clientId) { client in
-                    clientRow(client)
+                    NavigationLink {
+                        ClientDetailView(clientId: client.clientId)
+                    } label: {
+                        clientRow(client)
+                    }
                 }
             }
             Section("USER_DEVICES") {
                 ForEach(userDevices, id: \.clientId) { client in
-                    clientRow(client)
+                    NavigationLink {
+                        ClientDetailView(clientId: client.clientId)
+                    } label: {
+                        clientRow(client)
+                    }
                 }
             }
         }
