@@ -14,6 +14,8 @@ struct RolesCreateView: View {
     
     @State private var name: String = ""
     @State private var description: String = ""
+    @State private var isSaving = false
+    @State private var errorKey: String?
     
     var body: some View {
         Form {
@@ -40,17 +42,30 @@ struct RolesCreateView: View {
                 Button("SAVE") {
                     self.save()
                 }
+                .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isSaving)
             }
+        }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
         }
     }
     
     private func save() {
-        if self.name.isEmpty { return }
-        
-        RolesRequest.create(name: self.name, description: self.description) { success, role in
-            if success {
-                self.appService.fetchRoles()
-                self.dismiss()
+        guard !isSaving, !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        isSaving = true
+        Task {
+            defer { isSaving = false }
+            do {
+                try await appService.createRole(name: name, description: description)
+                dismiss()
+            } catch is CancellationError {
+                return
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
+            } catch {
+                errorKey = "ERROR_API_RESPONSE"
             }
         }
     }

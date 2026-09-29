@@ -328,10 +328,51 @@ class AppService: ObservableObject {
     
     public func fetchRoles() {
         let revision = organizationRevision
-        RolesRequest.fetch { success, roles in
-            guard revision == self.organizationRevision else { return }
-            self.roles = roles
+        Task {
+            do {
+                _ = try await fetchRoles()
+            } catch {
+                guard revision == organizationRevision else { return }
+                roles = []
+            }
         }
+    }
+
+    public func fetchRoles() async throws -> [Role] {
+        let revision = organizationRevision
+        let fetchedRoles = try await roleService().listAllRoles()
+        guard revision == organizationRevision else { throw CancellationError() }
+        roles = fetchedRoles
+        return fetchedRoles
+    }
+
+    public func createRole(name: String, description: String) async throws {
+        let revision = organizationRevision
+        let role = try await roleService().create(name: name, description: description)
+        guard revision == organizationRevision else { throw CancellationError() }
+        roles.append(role)
+    }
+
+    public func deleteRole(roleId: Int, transferRoleId: Int) async throws {
+        let revision = organizationRevision
+        try await roleService().delete(roleId: roleId, transferRoleId: transferRoleId)
+        guard revision == organizationRevision else { throw CancellationError() }
+        roles.removeAll { $0.roleId == roleId }
+    }
+
+    private func roleService() throws -> PangolinRoleService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: pangolinServerUrl, apiKey: pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinRoleService(client: PangolinAPIClient(configuration: configuration), organizationId: pangolinOrganizationId)
     }
     
     public func fetchUsers() {
