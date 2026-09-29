@@ -283,10 +283,47 @@ class AppService: ObservableObject {
     
     public func fetchDomains() {
         let revision = organizationRevision
-        DomainsRequest.fetch { success, domains in
-            guard revision == self.organizationRevision else { return }
-            self.domains = domains
+        Task {
+            do {
+                _ = try await fetchDomains()
+            } catch {
+                guard revision == organizationRevision else { return }
+                domains = []
+            }
         }
+    }
+
+    public func fetchDomains() async throws -> [Domain] {
+        let revision = organizationRevision
+        let fetchedDomains = try await domainService().listAllDomains()
+        guard revision == organizationRevision else { throw CancellationError() }
+        domains = fetchedDomains
+        return fetchedDomains
+    }
+
+    public func fetchDNSRecords(domainId: String) async throws -> [DnsRecord] {
+        try await domainService().listDNSRecords(domainId: domainId)
+    }
+
+    private func domainService() throws -> PangolinDomainService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: pangolinServerUrl,
+                apiKey: pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinDomainService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: pangolinOrganizationId
+        )
     }
     
     public func fetchRoles() {

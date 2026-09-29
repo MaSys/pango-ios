@@ -11,8 +11,11 @@ struct DomainDetailView: View {
 
     var domain: Domain
 
+    @EnvironmentObject var appService: AppService
+
     @State private var records: [DnsRecord] = []
     @State private var loading: Bool = false
+    @State private var errorKey: String?
 
     var body: some View {
         List {
@@ -68,18 +71,32 @@ struct DomainDetailView: View {
             }
         }
         .navigationTitle(domain.baseDomain)
-        .onAppear {
-            self.fetch()
+        .task {
+            await fetch()
+        }
+        .alert("ERROR", isPresented: Binding(
+            get: { errorKey != nil },
+            set: { if !$0 { errorKey = nil } }
+        )) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            if let errorKey {
+                Text(LocalizedStringKey(errorKey))
+            }
         }
     }
 
-    private func fetch() {
-        self.loading = true
-        DomainsRequest.fetchDetail(domainId: domain.domainId) { success, records in
-            self.loading = false
-            if success {
-                self.records = records
-            }
+    private func fetch() async {
+        loading = true
+        defer { loading = false }
+        do {
+            records = try await appService.fetchDNSRecords(domainId: domain.domainId)
+        } catch is CancellationError {
+            return
+        } catch let error as PangolinAPIError {
+            errorKey = error.localizationKey
+        } catch {
+            errorKey = "ERROR_API_RESPONSE"
         }
     }
 }
