@@ -1,0 +1,69 @@
+import SwiftUI
+
+struct ClientsView: View {
+    @EnvironmentObject private var appService: AppService
+    @State private var machines: [PangolinClient] = []
+    @State private var userDevices: [PangolinClient] = []
+    @State private var isLoading = false
+    @State private var errorKey: String?
+
+    var body: some View {
+        List {
+            if isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+            }
+            Section("MACHINE_CLIENTS") {
+                ForEach(machines, id: \.clientId) { client in
+                    clientRow(client)
+                }
+            }
+            Section("USER_DEVICES") {
+                ForEach(userDevices, id: \.clientId) { client in
+                    clientRow(client)
+                }
+            }
+        }
+        .navigationTitle("CLIENTS")
+        .task(id: appService.pangolinOrganizationId) { await fetch() }
+        .refreshable { await fetch() }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+        }
+    }
+
+    private func clientRow(_ client: PangolinClient) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(client.name ?? client.niceId ?? String(client.clientId))
+                .fontWeight(.semibold)
+            if let detail = client.userEmail ?? client.subnet {
+                Text(detail)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            Text(LocalizedStringKey(client.statusKey))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private func fetch() async {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            let result = try await appService.fetchClients()
+            machines = result.machines
+            userDevices = result.userDevices
+        } catch is CancellationError {
+            return
+        } catch let error as PangolinAPIError {
+            guard !Task.isCancelled else { return }
+            errorKey = error.localizationKey
+        } catch {
+            guard !Task.isCancelled else { return }
+            errorKey = "ERROR_API_RESPONSE"
+        }
+    }
+}

@@ -424,6 +424,30 @@ class AppService: ObservableObject {
         return fetchedUsers
     }
 
+    public func fetchClients() async throws -> (machines: [PangolinClient], userDevices: [PangolinClient]) {
+        let revision = organizationRevision
+        let service = try clientService()
+        let machines = try await service.listAllMachines()
+        let userDevices = try await service.listAllUserDevices()
+        guard revision == organizationRevision else { throw CancellationError() }
+        return (machines, userDevices)
+    }
+
+    private func clientService() throws -> PangolinClientService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: pangolinServerUrl, apiKey: pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinClientService(client: PangolinAPIClient(configuration: configuration), organizationId: pangolinOrganizationId)
+    }
+
     private func userService() throws -> PangolinUserService {
         let configuration: PangolinAPIConfiguration
         do {
