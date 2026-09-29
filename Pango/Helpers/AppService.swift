@@ -377,9 +377,36 @@ class AppService: ObservableObject {
     
     public func fetchUsers() {
         let revision = organizationRevision
-        UsersRequest.fetch { success, users in
-            guard revision == self.organizationRevision else { return }
-            self.users = users
+        Task {
+            do {
+                _ = try await fetchUsers()
+            } catch {
+                guard revision == organizationRevision else { return }
+                users = []
+            }
         }
+    }
+
+    public func fetchUsers() async throws -> [User] {
+        let revision = organizationRevision
+        let fetchedUsers = try await userService().listAllUsers()
+        guard revision == organizationRevision else { throw CancellationError() }
+        users = fetchedUsers
+        return fetchedUsers
+    }
+
+    private func userService() throws -> PangolinUserService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: pangolinServerUrl, apiKey: pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinUserService(client: PangolinAPIClient(configuration: configuration), organizationId: pangolinOrganizationId)
     }
 }

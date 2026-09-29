@@ -10,6 +10,7 @@ import SwiftUI
 struct UsersView: View {
     
     @EnvironmentObject var appService: AppService
+    @State private var errorKey: String?
     
     var body: some View {
         NavigationStack {
@@ -41,8 +42,21 @@ struct UsersView: View {
                 }//loop
             }//list
             .navigationTitle("USERS")
-            .onAppear {
-                self.appService.fetchUsers()
+            .task {
+                do {
+                    _ = try await appService.fetchUsers()
+                } catch is CancellationError {
+                    return
+                } catch let error as PangolinAPIError {
+                    errorKey = error.localizationKey
+                } catch {
+                    errorKey = "ERROR_API_RESPONSE"
+                }
+            }
+            .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+                Button("OK", role: .cancel) { errorKey = nil }
+            } message: {
+                if let errorKey { Text(LocalizedStringKey(errorKey)) }
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
