@@ -12,6 +12,7 @@ struct InvitationsView: View {
     @EnvironmentObject var appService: AppService
     
     @State private var invitations: [Invitation] = []
+    @State private var errorKey: String?
     
     var body: some View {
         List {
@@ -31,14 +32,25 @@ struct InvitationsView: View {
             }
         }
         .navigationTitle("INVITATIONS")
-        .onAppear {
-            self.fetch()
+        .task {
+            await fetch()
+        }
+        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
+            Button("OK", role: .cancel) { errorKey = nil }
+        } message: {
+            if let errorKey { Text(LocalizedStringKey(errorKey)) }
         }
     }
     
-    private func fetch() {
-        InvitationsRequest.fetch { success, invitations in
-            self.invitations = invitations
+    private func fetch() async {
+        do {
+            invitations = try await appService.fetchInvitations()
+        } catch is CancellationError {
+            return
+        } catch let error as PangolinAPIError {
+            errorKey = error.localizationKey
+        } catch {
+            errorKey = "ERROR_API_RESPONSE"
         }
     }
 }

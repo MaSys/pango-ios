@@ -375,6 +375,35 @@ class AppService: ObservableObject {
         return PangolinRoleService(client: PangolinAPIClient(configuration: configuration), organizationId: pangolinOrganizationId)
     }
     
+    public func fetchInvitations() async throws -> [Invitation] {
+        let revision = organizationRevision
+        let invitations = try await invitationService().listAllInvitations()
+        guard revision == organizationRevision else { throw CancellationError() }
+        return invitations
+    }
+
+    public func createInvitation(email: String, validHours: Int, roleId: Int) async throws -> CreatedInvitation {
+        let revision = organizationRevision
+        let invitation = try await invitationService().create(email: email, validHours: validHours, roleId: roleId)
+        guard revision == organizationRevision else { throw CancellationError() }
+        return invitation
+    }
+
+    private func invitationService() throws -> PangolinInvitationService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: pangolinServerUrl, apiKey: pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinInvitationService(client: PangolinAPIClient(configuration: configuration), organizationId: pangolinOrganizationId)
+    }
+
     public func fetchUsers() {
         let revision = organizationRevision
         Task {

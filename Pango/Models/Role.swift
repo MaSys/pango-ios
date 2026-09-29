@@ -16,5 +16,5 @@ struct Role: Decodable {
 
 struct AssociationRole: Decodable {
     var roleId: Int
-    var roleName: String
+    var roleName: String?
 }
