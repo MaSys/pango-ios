@@ -112,6 +112,14 @@ class AppService: ObservableObject {
         return site
     }
 
+    public func approveSite(siteId: Int) async throws {
+        try await siteService().approveSite(siteId: siteId)
+    }
+
+    public func rejectSite(siteId: Int) async throws {
+        try await siteService().rejectSite(siteId: siteId)
+    }
+
     public func deleteSite(siteId: Int) async throws {
         try await siteService().deleteSite(siteId: siteId)
         sites.removeAll { $0.siteId == siteId }

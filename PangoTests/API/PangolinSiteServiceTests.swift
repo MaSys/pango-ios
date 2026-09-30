@@ -17,6 +17,89 @@ struct PangolinSiteServiceTests {
         return PangolinSiteService(client: client, organizationId: "synthetic-org")
     }
 
+    @Test("approves a site without a body or query", arguments: ["null", "{}"])
+    func approvesSite(data: String) async throws {
+        URLProtocolStub.handler = { request in
+            #expect(request.url?.absoluteString == "https://api.example.com/v1/org/synthetic-org/site/7/approve")
+            #expect(request.httpMethod == "POST")
+            #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer synthetic-key")
+            #expect(request.bodyData == nil)
+            return .init(statusCode: 200, data: Data("{\"data\":\(data),\"success\":true,\"error\":false,\"message\":\"\",\"status\":200}".utf8))
+        }
+
+        try await makeService().approveSite(siteId: 7)
+    }
+
+    @Test("rejects a site without a body or query", arguments: ["null", "{}"])
+    func rejectsSite(data: String) async throws {
+        URLProtocolStub.handler = { request in
+            #expect(request.url?.absoluteString == "https://api.example.com/v1/org/synthetic-org/site/7/reject")
+            #expect(request.httpMethod == "DELETE")
+            #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer synthetic-key")
+            #expect(request.bodyData == nil)
+            return .init(statusCode: 200, data: Data("{\"data\":\(data),\"success\":true,\"error\":false,\"message\":\"\",\"status\":200}".utf8))
+        }
+
+        try await makeService().rejectSite(siteId: 7)
+    }
+
+    @Test("site actions reject failed envelopes", arguments: [true, false], [
+        #"{"data":null,"success":false,"error":false,"message":"rejected","status":400}"#,
+        #"{"data":null,"success":true,"error":true,"message":"rejected","status":400}"#
+    ])
+    func rejectsFailedActionEnvelope(approval: Bool, envelope: String) async throws {
+        URLProtocolStub.handler = { _ in
+            .init(statusCode: 200, data: Data(envelope.utf8))
+        }
+
+        await #expect(throws: PangolinAPIError.serverRejected(status: 400, message: "rejected")) {
+            if approval {
+                try await makeService().approveSite(siteId: 7)
+            } else {
+                try await makeService().rejectSite(siteId: 7)
+            }
+        }
+    }
+
+    @Test("site actions preserve HTTP authentication failures", arguments: [true, false], [401, 403])
+    func preservesActionAuthenticationFailure(approval: Bool, status: Int) async throws {
+        URLProtocolStub.handler = { _ in .init(statusCode: status, data: Data()) }
+
+        await #expect(throws: status == 401 ? PangolinAPIError.unauthenticated : .forbidden) {
+            if approval {
+                try await makeService().approveSite(siteId: 7)
+            } else {
+                try await makeService().rejectSite(siteId: 7)
+            }
+        }
+    }
+
+    @Test("site actions reject malformed responses", arguments: [true, false])
+    func rejectsMalformedActionResponse(approval: Bool) async throws {
+        URLProtocolStub.handler = { _ in .init(statusCode: 200, data: Data("invalid".utf8)) }
+
+        await #expect(throws: PangolinAPIError.decoding) {
+            if approval {
+                try await makeService().approveSite(siteId: 7)
+            } else {
+                try await makeService().rejectSite(siteId: 7)
+            }
+        }
+    }
+
+    @Test("site actions preserve transport failures", arguments: [true, false])
+    func preservesActionTransportFailure(approval: Bool) async throws {
+        URLProtocolStub.handler = { _ in throw URLError(.notConnectedToInternet) }
+
+        await #expect(throws: PangolinAPIError.transport) {
+            if approval {
+                try await makeService().approveSite(siteId: 7)
+            } else {
+                try await makeService().rejectSite(siteId: 7)
+            }
+        }
+    }
+
     @Test("lists sites using the current paginated response")
     func listsSites() async throws {
         URLProtocolStub.handler = { request in
