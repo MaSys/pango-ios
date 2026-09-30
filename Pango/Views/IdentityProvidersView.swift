@@ -54,7 +54,22 @@ struct IdentityProvidersView: View {
 
     private func fetch() {
         Task {
-            idps = (try? await appService.fetchIdentityProviders()) ?? []
+            do {
+                guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                    throw PangolinAPIError.organizationRequired
+                }
+                let configuration = try PangolinAPIConfiguration(
+                    baseURLString: appService.pangolinServerUrl,
+                    apiKey: appService.pangolinApiKey
+                )
+                let service = PangolinIdentityProviderService(
+                    client: PangolinAPIClient(configuration: configuration),
+                    organizationId: appService.pangolinOrganizationId
+                )
+                idps = try await service.listIdentityProviders()
+            } catch {
+                idps = []
+            }
         }
     }
 

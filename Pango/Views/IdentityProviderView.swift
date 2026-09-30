@@ -124,7 +124,16 @@ struct IdentityProviderView: View {
 
     private func load(id: Int) {
         Task {
-            guard let detail = try? await appService.fetchIdentityProvider(idpId: id) else { return }
+            guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                  let configuration = try? PangolinAPIConfiguration(
+                    baseURLString: appService.pangolinServerUrl,
+                    apiKey: appService.pangolinApiKey
+                  ) else { return }
+            let service = PangolinIdentityProviderService(
+                client: PangolinAPIClient(configuration: configuration),
+                organizationId: appService.pangolinOrganizationId
+            )
+            guard let detail = try? await service.getIdentityProvider(idpId: id) else { return }
             self.name = detail.idp.name
             self.autoProvision = detail.idp.autoProvision ?? false
             self.redirectUrl = detail.redirectUrl

@@ -469,29 +469,6 @@ class AppService: ObservableObject {
         return detail
     }
 
-    public func fetchIdentityProviders() async throws -> [IdentityProvider] {
-        try await identityProviderService().listIdentityProviders()
-    }
-
-    public func fetchIdentityProvider(idpId: Int) async throws -> IdentityProviderDetail? {
-        try await identityProviderService().getIdentityProvider(idpId: idpId)
-    }
-
-    private func identityProviderService() throws -> PangolinIdentityProviderService {
-        let configuration: PangolinAPIConfiguration
-        do {
-            configuration = try PangolinAPIConfiguration(baseURLString: pangolinServerUrl, apiKey: pangolinApiKey)
-        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
-            throw PangolinAPIError.invalidBaseURL
-        } catch PangolinAPIConfiguration.Error.missingAPIKey {
-            throw PangolinAPIError.missingAPIKey
-        }
-        guard !pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            throw PangolinAPIError.organizationRequired
-        }
-        return PangolinIdentityProviderService(client: PangolinAPIClient(configuration: configuration), organizationId: pangolinOrganizationId)
-    }
-
     private func clientService() throws -> PangolinClientService {
         let configuration: PangolinAPIConfiguration
         do {
