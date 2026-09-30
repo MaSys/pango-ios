@@ -6,10 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		4346E5DE2E4150C700CD1A93 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4346E5DD2E4150C700CD1A93 /* Alamofire */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		A10000022E50000000C0D001 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -56,7 +52,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4346E5DE2E4150C700CD1A93 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,7 +103,6 @@
 			);
 			name = Pango;
 			packageProductDependencies = (
-				4346E5DD2E4150C700CD1A93 /* Alamofire */,
 			);
 			productName = Pangolinios;
 			productReference = 4346E59E2E40713F00CD1A93 /* Pango.app */;
@@ -167,7 +161,6 @@
 			mainGroup = 4346E5952E40713F00CD1A93;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				4346E5DC2E4150C700CD1A93 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4346E59F2E40713F00CD1A93 /* Products */;
@@ -478,24 +471,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		4346E5DC2E4150C700CD1A93 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.10.2;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		4346E5DD2E4150C700CD1A93 /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4346E5DC2E4150C700CD1A93 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4346E5962E40713F00CD1A93 /* Project object */;
 }
