@@ -103,6 +103,23 @@
         }
       }
     },
+    "ADMIN_ROLE_ACCESS_READ_ONLY" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Administrator access is managed automatically."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El acceso de administrador se gestiona automáticamente."
+          }
+        }
+      }
+    },
     "ALERT_RULES" : {
       "localizations" : {
         "en" : {
@@ -1581,6 +1598,23 @@
         }
       }
     },
+    "NO_ACCESS_OPTIONS" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No assignments available"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay asignaciones disponibles"
+          }
+        }
+      }
+    },
     "NO_DNS_RECORDS" : {
       "localizations" : {
         "en" : {
@@ -2163,6 +2197,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recursos"
+          }
+        }
+      }
+    },
+    "RETRY" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reintentar"
           }
         }
       }
