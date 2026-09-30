@@ -38,14 +38,14 @@ struct PangolinPrivateResourceServiceTests {
         #expect(resources.map(\.name) == ["First", "Second", "Third"])
     }
 
-    @Test("creates through the current route with explicit empty access assignments")
-    func createsResource() async throws {
+    @Test("creates through the current route with explicit empty access assignments", arguments: [[7], [7, 3]])
+    func createsResource(siteIds: [Int]) async throws {
         URLProtocolStub.handler = { request in
             #expect(request.url?.path == "/v1/org/synthetic-org/private-resource")
             #expect(request.httpMethod == "PUT")
             let json = try Self.jsonBody(request)
             #expect(json["name"] as? String == "Database")
-            #expect(json["siteIds"] as? [Int] == [7])
+            #expect(json["siteIds"] as? [Int] == siteIds)
             #expect(json["mode"] as? String == "host")
             #expect(json["userIds"] as? [String] == [])
             #expect(json["roleIds"] as? [Int] == [])
@@ -53,17 +53,17 @@ struct PangolinPrivateResourceServiceTests {
             return .init(statusCode: 201, data: Self.mutationResponse(name: "Database"))
         }
 
-        try await makeService().create(configuration: Self.configuration(name: "Database"))
+        try await makeService().create(configuration: Self.configuration(name: "Database", siteIds: siteIds))
     }
 
-    @Test("updates without changing access assignments")
-    func updatesWithoutAccessAssignments() async throws {
+    @Test("updates without changing access assignments", arguments: [[7], [7, 3]])
+    func updatesWithoutAccessAssignments(siteIds: [Int]) async throws {
         URLProtocolStub.handler = { request in
             #expect(request.url?.path == "/v1/private-resource/9")
             #expect(request.httpMethod == "POST")
             let json = try Self.jsonBody(request)
             #expect(json["name"] as? String == "Renamed Database")
-            #expect(json["siteIds"] as? [Int] == [7])
+            #expect(json["siteIds"] as? [Int] == siteIds)
             #expect(!json.keys.contains("userIds"))
             #expect(!json.keys.contains("roleIds"))
             #expect(!json.keys.contains("clientIds"))
@@ -72,7 +72,7 @@ struct PangolinPrivateResourceServiceTests {
 
         try await makeService().update(
             resourceId: 9,
-            configuration: Self.configuration(name: "Renamed Database")
+            configuration: Self.configuration(name: "Renamed Database", siteIds: siteIds)
         )
     }
 
@@ -90,10 +90,10 @@ struct PangolinPrivateResourceServiceTests {
         try await makeService().delete(resourceId: 9)
     }
 
-    private static func configuration(name: String) -> PrivateResourceConfiguration {
+    private static func configuration(name: String, siteIds: [Int]) -> PrivateResourceConfiguration {
         PrivateResourceConfiguration(
             name: name,
-            siteIds: [7],
+            siteIds: siteIds,
             mode: "host",
             ssl: false,
             scheme: nil,

@@ -15,6 +15,7 @@ struct PrivateResourceView: View {
     var resource: PrivateResource
 
     @State private var hasInitializedForm = false
+    @State private var siteSelection = PrivateResourceSiteSelection()
     @State private var name: String = ""
     @State private var mode: String = "host"
     @State private var scheme: String = "http"
@@ -32,6 +33,7 @@ struct PrivateResourceView: View {
     @State private var showDeleteConfirmation: Bool = false
 
     var validForm: Bool {
+        if resource.orgId != appService.pangolinOrganizationId || siteSelection.siteIds.isEmpty { return false }
         if name.isEmpty { return false }
         if destination.isEmpty { return false }
         if mode == "cidr" && alias.isEmpty { return false }
@@ -56,6 +58,12 @@ struct PrivateResourceView: View {
                     Text("HTTP").tag("http")
                 }.pickerStyle(.segmented)
             }
+
+            PrivateResourceSitesSection(
+                selection: $siteSelection,
+                existingNames: Dictionary(zip(resource.siteIds, resource.siteNames), uniquingKeysWith: { first, _ in first })
+            )
+            .disabled(isSaving || resource.orgId != appService.pangolinOrganizationId)
 
             if mode == "http" {
                 httpFields
@@ -100,6 +108,7 @@ struct PrivateResourceView: View {
         .onAppear {
             guard !hasInitializedForm else { return }
             hasInitializedForm = true
+            siteSelection = PrivateResourceSiteSelection(siteIds: resource.siteIds)
             self.name = resource.name
             self.mode = resource.mode
             self.scheme = resource.scheme ?? "http"
@@ -205,17 +214,22 @@ struct PrivateResourceView: View {
     }
 
     private func save() {
-        guard validForm else { return }
+        guard validForm, !isSaving else { return }
+        let revision = appService.organizationRevision
+        let configuration = configuration
+        isSaving = true
         Task {
-            isSaving = true
             defer { isSaving = false }
             do {
+                guard revision == appService.organizationRevision else { return }
                 try await privateResourceService().update(
                     resourceId: resource.siteResourceId,
                     configuration: configuration
                 )
+                guard revision == appService.organizationRevision else { return }
                 dismiss()
             } catch {
+                guard revision == appService.organizationRevision else { return }
                 errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
             }
         }
@@ -237,7 +251,7 @@ struct PrivateResourceView: View {
     private var configuration: PrivateResourceConfiguration {
         PrivateResourceConfiguration(
             name: name,
-            siteIds: resource.siteIds,
+            siteIds: siteSelection.siteIds,
             mode: mode,
             ssl: mode == "http" && ssl,
             scheme: mode == "http" ? scheme : nil,
