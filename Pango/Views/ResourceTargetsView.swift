@@ -15,7 +15,7 @@ struct ResourceTargetsView: View {
     
     @State private var targets: [Target] = []
     @State private var targetToDelete: Target?
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
     
     var body: some View {
         List {
@@ -77,12 +77,12 @@ struct ResourceTargetsView: View {
             Button("CANCEL", role: .cancel) { targetToDelete = nil }
         }
         .alert("ERROR", isPresented: Binding(
-            get: { errorKey != nil },
-            set: { if !$0 { errorKey = nil } }
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
         )) {
-            Button("OK", role: .cancel) { errorKey = nil }
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
     
@@ -90,9 +90,9 @@ struct ResourceTargetsView: View {
         do {
             targets = try await publicTargetService().listAllTargets(resourceId: resource.resourceId)
         } catch let error as PangolinAPIError {
-            errorKey = error.localizationKey
+            errorMessage = error.localizedMessage()
         } catch {
-            errorKey = "ERROR_CONNECTING_TO_SERVER"
+            errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
         }
     }
     
@@ -102,9 +102,9 @@ struct ResourceTargetsView: View {
             targetToDelete = nil
             await fetch()
         } catch let error as PangolinAPIError {
-            errorKey = error.localizationKey
+            errorMessage = error.localizedMessage()
         } catch {
-            errorKey = "ERROR_CONNECTING_TO_SERVER"
+            errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
         }
     }
 }

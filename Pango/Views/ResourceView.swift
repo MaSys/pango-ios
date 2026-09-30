@@ -16,7 +16,7 @@ struct ResourceView: View {
     
     @State private var ssl: Bool = false
     @State private var showDeleteConfirmation: Bool = false
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
     
     var body: some View {
         List {
@@ -78,10 +78,10 @@ struct ResourceView: View {
                 }
             }
         }
-        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
-            Button("OK", role: .cancel) { errorKey = nil }
+        .alert("ERROR", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
     
@@ -96,7 +96,9 @@ struct ResourceView: View {
                     appService.resources[index] = updated
                 }
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
+            } catch {
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
             }
         }
     }
@@ -112,7 +114,10 @@ struct ResourceView: View {
                     appService.resources[index] = updated
                 }
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
+                ssl = resource.ssl
+            } catch {
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
                 ssl = resource.ssl
             }
         }
@@ -127,7 +132,9 @@ struct ResourceView: View {
                 appService.resources.removeAll { $0.resourceId == resource.resourceId }
                 self.dismiss()
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
+            } catch {
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
             }
         }
     }

@@ -34,7 +34,7 @@ struct ResourcesView: View {
     @State private var filteredBy: ResourceFilter = .none
     @State private var privateResources: [PrivateResource] = []
     @State private var privateResourcesLoading = false
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
 
     var sortedResources: [Resource] {
         switch sort {
@@ -102,22 +102,26 @@ struct ResourcesView: View {
                     }
                 }
             }
-            .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
-                Button("OK", role: .cancel) { errorKey = nil }
+            .alert("ERROR", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+                Button("OK", role: .cancel) { errorMessage = nil }
             } message: {
-                if let errorKey { Text(LocalizedStringKey(errorKey)) }
+                if let errorMessage { Text(errorMessage) }
             }
         }
     }
 
     private func fetchAll() async {
         _ = try? await appService.fetchResources()
+        guard !Task.isCancelled else { return }
         privateResourcesLoading = true
         defer { privateResourcesLoading = false }
         do {
             privateResources = try await privateResourceService().listAllResources()
+        } catch is CancellationError {
+            return
         } catch {
-            errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+            guard !Task.isCancelled else { return }
+            errorMessage = (error as? PangolinAPIError)?.localizedMessage() ?? PangolinAPIError.transport.localizedMessage()
         }
     }
 }

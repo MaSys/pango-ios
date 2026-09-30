@@ -16,7 +16,7 @@ struct InvitationCreateView: View {
     @State private var validHours: Int = 24
     @State private var roleId: Int = 0
     @State private var isSaving = false
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
     @State private var createdInvitation: CreatedInvitation?
     
     var validForm: Bool {
@@ -69,9 +69,9 @@ struct InvitationCreateView: View {
             } catch is CancellationError {
                 return
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
             } catch {
-                errorKey = "ERROR_API_RESPONSE"
+                errorMessage = String(localized: "ERROR_API_RESPONSE")
             }
         }
         .toolbar {
@@ -84,10 +84,10 @@ struct InvitationCreateView: View {
                 }
             }
         }
-        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
-            Button("OK", role: .cancel) { errorKey = nil }
+        .alert("ERROR", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
     
@@ -104,9 +104,9 @@ struct InvitationCreateView: View {
             } catch is CancellationError {
                 return
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
             } catch {
-                errorKey = "ERROR_API_RESPONSE"
+                errorMessage = String(localized: "ERROR_API_RESPONSE")
             }
         }
     }

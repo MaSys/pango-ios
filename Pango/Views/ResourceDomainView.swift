@@ -16,6 +16,7 @@ struct ResourceDomainView: View {
     
     @State private var subdomain: String = ""
     @State private var selectedDomain: String = ""
+    @State private var errorMessage: String?
     
     var body: some View {
         VStack {
@@ -59,10 +60,16 @@ struct ResourceDomainView: View {
                 }
             }
         }
+        .alert("ERROR", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) { errorMessage = nil }
+        } message: {
+            if let errorMessage { Text(errorMessage) }
+        }
     }
     
     private func save() {
         if self.subdomain.isEmpty || self.selectedDomain.isEmpty {
+            errorMessage = String(localized: "ERROR_RESOURCE_DOMAIN_REQUIRED")
             return
         }
         
@@ -74,8 +81,10 @@ struct ResourceDomainView: View {
                     subdomain: subdomain
                 )
                 refreshAndDismiss()
+            } catch is CancellationError {
+                return
             } catch {
-                // Keep the editor open when the update fails.
+                errorMessage = (error as? PangolinAPIError)?.localizedMessage() ?? PangolinAPIError.transport.localizedMessage()
             }
         }
     }

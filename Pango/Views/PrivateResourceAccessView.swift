@@ -12,7 +12,7 @@ struct PrivateResourceAccessView: View {
     @State private var loadedRevision: UUID?
     @State private var isLoading = false
     @State private var isSaving = false
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
 
     var body: some View {
         List {
@@ -59,17 +59,17 @@ struct PrivateResourceAccessView: View {
             }
         }
         .task(id: appService.organizationRevision) { await load() }
-        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
-            Button("OK", role: .cancel) { errorKey = nil }
+        .alert("ERROR", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
 
     private func load() async {
         selection = nil
         loadedRevision = nil
-        errorKey = nil
+        errorMessage = nil
         guard organizationId == appService.pangolinOrganizationId else { return }
         let revision = appService.organizationRevision
         isLoading = true
@@ -95,7 +95,7 @@ struct PrivateResourceAccessView: View {
             loadedRevision = revision
         } catch {
             guard !Task.isCancelled, revision == appService.organizationRevision else { return }
-            errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+            errorMessage = (error as? PangolinAPIError)?.localizedMessage() ?? PangolinAPIError.transport.localizedMessage()
         }
     }
 
@@ -113,7 +113,7 @@ struct PrivateResourceAccessView: View {
                 dismiss()
             } catch {
                 guard loadedRevision == appService.organizationRevision else { return }
-                errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+                errorMessage = (error as? PangolinAPIError)?.localizedMessage() ?? PangolinAPIError.transport.localizedMessage()
             }
         }
     }

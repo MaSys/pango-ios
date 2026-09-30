@@ -19,7 +19,7 @@ struct InstanceView: View {
     @State private var serverUrl = ""
     @State private var apiKey = ""
     @State private var organizationId = ""
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
     @State private var isLoading: Bool = false
         
     var body: some View {
@@ -44,8 +44,8 @@ struct InstanceView: View {
                         .multilineTextAlignment(.trailing)
                 }
                 
-                if let errorKey {
-                    Text(LocalizedStringKey(errorKey))
+                if let errorMessage {
+                    Text(errorMessage)
                         .foregroundStyle(.red)
                         .font(.system(size: 14))
                 }
@@ -80,7 +80,7 @@ struct InstanceView: View {
     }
     
     private func save() {
-        errorKey = nil
+        errorMessage = nil
         do {
             let configuration = try PangolinAPIConfiguration(
                 baseURLString: serverUrl,
@@ -109,21 +109,21 @@ struct InstanceView: View {
                     dismiss()
                 } catch let error as PangolinAPIError {
                     isLoading = false
-                    errorKey = error.localizationKey
+                    errorMessage = error.localizedMessage()
                 } catch {
                     isLoading = false
-                    errorKey = PangolinAPIError.transport.localizationKey
+                    errorMessage = PangolinAPIError.transport.localizedMessage()
                 }
             }
         } catch let error as PangolinAPIConfiguration.Error {
             switch error {
             case .invalidBaseURL:
-                errorKey = PangolinAPIError.invalidBaseURL.localizationKey
+                errorMessage = PangolinAPIError.invalidBaseURL.localizedMessage()
             case .missingAPIKey:
-                errorKey = PangolinAPIError.missingAPIKey.localizationKey
+                errorMessage = PangolinAPIError.missingAPIKey.localizedMessage()
             }
         } catch {
-            errorKey = PangolinAPIError.invalidBaseURL.localizationKey
+            errorMessage = PangolinAPIError.invalidBaseURL.localizedMessage()
         }
     }
 

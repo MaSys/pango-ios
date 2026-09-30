@@ -28,7 +28,7 @@ struct ResourceTargetView: View {
     @State private var rewritePath = ""
     @State private var rewritePathType: TargetRewritePathType = .prefix
     @State private var isSaving = false
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
     
     var validForm: Bool {
         if self.siteId == 0 { return false }
@@ -137,12 +137,12 @@ struct ResourceTargetView: View {
             }
         }
         .alert("ERROR", isPresented: Binding(
-            get: { errorKey != nil },
-            set: { if !$0 { errorKey = nil } }
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
         )) {
-            Button("OK", role: .cancel) { errorKey = nil }
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
     
@@ -175,9 +175,9 @@ struct ResourceTargetView: View {
                 }
                 dismiss()
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
             } catch {
-                errorKey = "ERROR_CONNECTING_TO_SERVER"
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
             }
         }
     }

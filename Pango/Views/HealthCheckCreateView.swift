@@ -18,7 +18,7 @@ struct HealthCheckCreateView: View {
     @State private var type: String = "http"
     @State private var targetUrl: String = ""
     @State private var intervalMinutes: Int = 1
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
 
     var validForm: Bool {
         !name.isEmpty && !targetUrl.isEmpty
@@ -55,8 +55,8 @@ struct HealthCheckCreateView: View {
                 }
             }
 
-            if let errorKey {
-                Text(LocalizedStringKey(errorKey))
+            if let errorMessage {
+                Text(errorMessage)
                     .foregroundStyle(.red)
                     .font(.system(size: 14))
             }
@@ -71,7 +71,7 @@ struct HealthCheckCreateView: View {
     }
 
     private func save() {
-        errorKey = nil
+        errorMessage = nil
         Task {
             do {
                 try await healthCheckService().createHealthCheck(
@@ -83,9 +83,9 @@ struct HealthCheckCreateView: View {
                 onSaved()
                 dismiss()
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
             } catch {
-                errorKey = "ERROR_CONNECTING_TO_SERVER"
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
             }
         }
     }

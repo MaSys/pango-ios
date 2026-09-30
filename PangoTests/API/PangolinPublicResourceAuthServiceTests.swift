@@ -40,18 +40,39 @@ struct PangolinPublicResourceAuthServiceTests {
         #expect(policy.idpId == 2)
     }
 
-    @Test("sets a password on the default policy")
-    func setsPassword() async throws {
+    @Test("sets a password on the default policy", arguments: ["four words", "abcd", String(repeating: "a", count: 100), "🔒🔒", String(repeating: "🔒", count: 50)])
+    func setsPassword(password: String) async throws {
         URLProtocolStub.handler = { request in
             #expect(request.url?.path == "/v1/public-resource-policy/8/password")
             #expect(request.httpMethod == "POST")
             let body = try #require(request.bodyData)
             let json = try #require(JSONSerialization.jsonObject(with: body) as? [String: Any])
-            #expect(json["password"] as? String == "four words")
+            #expect(json["password"] as? String == password)
             return .init(statusCode: 200, data: Self.emptyResponse)
         }
 
-        try await makeService().setPassword(policyId: 8, password: "four words")
+        try await makeService().setPassword(policyId: 8, password: password)
+    }
+
+    @Test("rejects invalid password lengths with an actionable error before sending", arguments: [
+        ("", "ERROR_RESOURCE_PASSWORD_TOO_SHORT"),
+        ("ab", "ERROR_RESOURCE_PASSWORD_TOO_SHORT"),
+        ("abc", "ERROR_RESOURCE_PASSWORD_TOO_SHORT"),
+        (String(repeating: "a", count: 101), "ERROR_RESOURCE_PASSWORD_TOO_LONG"),
+        (String(repeating: "🔒", count: 51), "ERROR_RESOURCE_PASSWORD_TOO_LONG")
+    ])
+    func rejectsInvalidPassword(password: String, expectedKey: String) async throws {
+        URLProtocolStub.handler = { _ in
+            Issue.record("Invalid passwords must not be sent to the server")
+            return .init(statusCode: 200, data: Self.emptyResponse)
+        }
+
+        do {
+            try await makeService().setPassword(policyId: 8, password: password)
+            Issue.record("Expected password validation to fail")
+        } catch let error as PangolinAPIError {
+            #expect(error.localizationKey == expectedKey)
+        }
     }
 
     @Test("removes a password by sending null")
@@ -67,18 +88,33 @@ struct PangolinPublicResourceAuthServiceTests {
         try await makeService().setPassword(policyId: 8, password: nil)
     }
 
-    @Test("sets a six-digit PIN on the default policy")
-    func setsPinCode() async throws {
+    @Test("sets a six-digit PIN on the default policy", arguments: ["123456", "000001"])
+    func setsPinCode(pinCode: String) async throws {
         URLProtocolStub.handler = { request in
             #expect(request.url?.path == "/v1/public-resource-policy/8/pincode")
             #expect(request.httpMethod == "POST")
             let body = try #require(request.bodyData)
             let json = try #require(JSONSerialization.jsonObject(with: body) as? [String: Any])
-            #expect(json["pincode"] as? String == "123456")
+            #expect(json["pincode"] as? String == pinCode)
             return .init(statusCode: 200, data: Self.emptyResponse)
         }
 
-        try await makeService().setPinCode(policyId: 8, pinCode: "123456")
+        try await makeService().setPinCode(policyId: 8, pinCode: pinCode)
+    }
+
+    @Test("rejects invalid PINs before sending with an actionable error", arguments: ["", "12", "12345", "1234567", "12345a", "123 45", "１２３４５６", "١٢٣٤٥٦", "123456\n"])
+    func rejectsInvalidPinCode(pinCode: String) async throws {
+        URLProtocolStub.handler = { _ in
+            Issue.record("Invalid PINs must not be sent to the server")
+            return .init(statusCode: 200, data: Self.emptyResponse)
+        }
+
+        do {
+            try await makeService().setPinCode(policyId: 8, pinCode: pinCode)
+            Issue.record("Expected PIN validation to fail")
+        } catch let error as PangolinAPIError {
+            #expect(error.localizationKey == "ERROR_RESOURCE_PIN_CODE_INVALID")
+        }
     }
 
     @Test("removes a PIN by sending null")

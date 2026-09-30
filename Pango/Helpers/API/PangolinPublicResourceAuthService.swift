@@ -76,6 +76,7 @@ struct PangolinPublicResourceAuthService: Sendable {
     }
 
     func setPassword(policyId: Int, password: String?) async throws {
+        try Self.validatePassword(password)
         let response: PangolinResponse<PangolinEmptyResponse> = try await client.send(
             .post,
             path: "/public-resource-policy/\(policyId)/password",
@@ -86,7 +87,16 @@ struct PangolinPublicResourceAuthService: Sendable {
         }
     }
 
+    static func validatePassword(_ password: String?) throws {
+        guard let password else { return }
+        // Match the UTF-16 string length used by Pangolin's JavaScript validator.
+        let length = password.utf16.count
+        guard length >= 4 else { throw PangolinAPIError.resourcePasswordTooShort }
+        guard length <= 100 else { throw PangolinAPIError.resourcePasswordTooLong }
+    }
+
     func setPinCode(policyId: Int, pinCode: String?) async throws {
+        try Self.validatePinCode(pinCode)
         let response: PangolinResponse<PangolinEmptyResponse> = try await client.send(
             .post,
             path: "/public-resource-policy/\(policyId)/pincode",
@@ -94,6 +104,13 @@ struct PangolinPublicResourceAuthService: Sendable {
         )
         guard response.success, !response.error else {
             throw PangolinAPIError.serverRejected(status: response.status, message: response.message)
+        }
+    }
+
+    static func validatePinCode(_ pinCode: String?) throws {
+        guard let pinCode else { return }
+        guard pinCode.utf8.count == 6, pinCode.utf8.allSatisfy({ (48...57).contains($0) }) else {
+            throw PangolinAPIError.resourcePinCodeInvalid
         }
     }
 

@@ -6,7 +6,7 @@ struct ClientDetailView: View {
 
     @State private var client: PangolinClient?
     @State private var isLoading = false
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
 
     var body: some View {
         List {
@@ -58,10 +58,10 @@ struct ClientDetailView: View {
         .navigationTitle("CLIENT_DETAILS")
         .task(id: appService.pangolinOrganizationId) { await fetch() }
         .refreshable { await fetch() }
-        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
-            Button("OK", role: .cancel) { errorKey = nil }
+        .alert("ERROR", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
 
@@ -78,10 +78,10 @@ struct ClientDetailView: View {
             return
         } catch let error as PangolinAPIError {
             guard !Task.isCancelled else { return }
-            errorKey = error.localizationKey
+            errorMessage = error.localizedMessage()
         } catch {
             guard !Task.isCancelled else { return }
-            errorKey = "ERROR_API_RESPONSE"
+            errorMessage = String(localized: "ERROR_API_RESPONSE")
         }
     }
 }
