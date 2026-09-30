@@ -14,6 +14,7 @@ struct PrivateResourceView: View {
 
     var resource: PrivateResource
 
+    @State private var hasInitializedForm = false
     @State private var name: String = ""
     @State private var mode: String = "host"
     @State private var scheme: String = "http"
@@ -62,6 +63,21 @@ struct PrivateResourceView: View {
                 networkFields
             }
 
+            Section("ACCESS_CONTROL") {
+                ForEach(PrivateResourceAccessKind.allCases, id: \.self) { kind in
+                    NavigationLink {
+                        PrivateResourceAccessView(
+                            resourceId: resource.siteResourceId,
+                            organizationId: resource.orgId,
+                            kind: kind
+                        )
+                    } label: {
+                        Text(LocalizedStringKey(kind.titleKey))
+                    }
+                    .disabled(isSaving)
+                }
+            }
+
             Section {
                 HStack {
                     Spacer()
@@ -82,6 +98,8 @@ struct PrivateResourceView: View {
         }
         .navigationTitle(resource.name)
         .onAppear {
+            guard !hasInitializedForm else { return }
+            hasInitializedForm = true
             self.name = resource.name
             self.mode = resource.mode
             self.scheme = resource.scheme ?? "http"
