@@ -66,15 +66,23 @@ struct ResourceDomainView: View {
             return
         }
         
-        ResourcesRequest.updateSubdomain(
-            id: self.resource.resourceId,
-            domainId: self.selectedDomain,
-            subdomain: self.subdomain) { success, response in
-                if let res = response, res.success {
-                    self.appService.fetchResources()
-                    self.dismiss()
-                }
+        Task {
+            do {
+                try await appService.updateResourceDomain(
+                    resourceId: resource.resourceId,
+                    domainId: selectedDomain,
+                    subdomain: subdomain
+                )
+                refreshAndDismiss()
+            } catch {
+                // Keep the editor open when the update fails.
             }
+        }
+    }
+
+    private func refreshAndDismiss() {
+        appService.fetchResources()
+        dismiss()
     }
 }
 
