@@ -192,7 +192,7 @@ struct PrivateResourceView: View {
             isSaving = true
             defer { isSaving = false }
             do {
-                try await appService.updatePrivateResource(
+                try await privateResourceService().update(
                     resourceId: resource.siteResourceId,
                     configuration: configuration
                 )
@@ -208,7 +208,7 @@ struct PrivateResourceView: View {
             isSaving = true
             defer { isSaving = false }
             do {
-                try await appService.deletePrivateResource(resourceId: resource.siteResourceId)
+                try await privateResourceService().delete(resourceId: resource.siteResourceId)
                 dismiss()
             } catch {
                 errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
@@ -231,6 +231,29 @@ struct PrivateResourceView: View {
             disableIcmp: mode == "http" ? nil : !icmpEnabled,
             domainId: mode == "http" ? domainId : nil,
             subdomain: mode == "http" ? subdomain : nil
+        )
+    }
+}
+
+private extension PrivateResourceView {
+    func privateResourceService() throws -> PangolinPrivateResourceService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinPrivateResourceService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
         )
     }
 }

@@ -169,9 +169,9 @@ struct ResourceTargetView: View {
                     healthCheckConfiguration: target?.healthCheckConfiguration ?? .init()
                 )
                 if let target {
-                    _ = try await appService.updateTarget(targetId: target.targetId, configuration: configuration)
+                    _ = try await publicTargetService().updateTarget(targetId: target.targetId, configuration: configuration)
                 } else {
-                    _ = try await appService.createTarget(resourceId: resource.resourceId, configuration: configuration)
+                    _ = try await publicTargetService().createTarget(resourceId: resource.resourceId, configuration: configuration)
                 }
                 dismiss()
             } catch let error as PangolinAPIError {
@@ -185,4 +185,18 @@ struct ResourceTargetView: View {
 
 #Preview {
     ResourceTargetView(resource: Resource.fake())
+}
+
+private extension ResourceTargetView {
+    func publicTargetService() throws -> PangolinPublicTargetService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinPublicTargetService(client: PangolinAPIClient(configuration: configuration))
+    }
 }

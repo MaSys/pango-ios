@@ -88,8 +88,13 @@ struct ResourceView: View {
     private func toggleStatus() {
         Task {
             do {
-                let updated = try await appService.updateResource(resourceId: resource.resourceId, enabled: !resource.enabled)
+                let revision = appService.organizationRevision
+                let updated = try await publicResourceService().update(resourceId: resource.resourceId, enabled: !resource.enabled)
+                guard revision == appService.organizationRevision else { return }
                 resource = updated
+                if let index = appService.resources.firstIndex(where: { $0.resourceId == updated.resourceId }) {
+                    appService.resources[index] = updated
+                }
             } catch let error as PangolinAPIError {
                 errorKey = error.localizationKey
             }
@@ -99,7 +104,13 @@ struct ResourceView: View {
     private func toggleSSL() {
         Task {
             do {
-                resource = try await appService.updateResource(resourceId: resource.resourceId, ssl: ssl)
+                let revision = appService.organizationRevision
+                let updated = try await publicResourceService().update(resourceId: resource.resourceId, ssl: ssl)
+                guard revision == appService.organizationRevision else { return }
+                resource = updated
+                if let index = appService.resources.firstIndex(where: { $0.resourceId == updated.resourceId }) {
+                    appService.resources[index] = updated
+                }
             } catch let error as PangolinAPIError {
                 errorKey = error.localizationKey
                 ssl = resource.ssl
@@ -110,7 +121,10 @@ struct ResourceView: View {
     private func delete() {
         Task {
             do {
-                try await appService.deleteResource(resourceId: resource.resourceId)
+                let revision = appService.organizationRevision
+                try await publicResourceService().delete(resourceId: resource.resourceId)
+                guard revision == appService.organizationRevision else { return }
+                appService.resources.removeAll { $0.resourceId == resource.resourceId }
                 self.dismiss()
             } catch let error as PangolinAPIError {
                 errorKey = error.localizationKey
@@ -254,4 +268,21 @@ extension ResourceView {
 
 #Preview {
     ResourceView(resource: Resource.fake())
+}
+
+private extension ResourceView {
+    func publicResourceService() throws -> PangolinPublicResourceService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinPublicResourceService(client: PangolinAPIClient(configuration: configuration), organizationId: appService.pangolinOrganizationId)
+    }
 }

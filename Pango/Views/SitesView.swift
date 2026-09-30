@@ -158,7 +158,7 @@ extension SitesView {
     private func approve(_ site: Site) {
         Task {
             do {
-                try await appService.approveSite(siteId: site.siteId)
+                try await siteService().approveSite(siteId: site.siteId)
                 await fetch()
             } catch {
                 // Preserve the existing behavior: only refresh after a successful action.
@@ -169,7 +169,7 @@ extension SitesView {
     private func reject(_ site: Site) {
         Task {
             do {
-                try await appService.rejectSite(siteId: site.siteId)
+                try await siteService().rejectSite(siteId: site.siteId)
                 await fetch()
             } catch {
                 // Preserve the existing behavior: only refresh after a successful action.
@@ -187,5 +187,28 @@ extension Double {
     func rounded(toPlaces places:Int) -> Double {
         let divisor = pow(10.0, Double(places))
         return (self * divisor).rounded() / divisor
+    }
+}
+
+private extension SitesView {
+    func siteService() throws -> PangolinSiteService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinSiteService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
+        )
     }
 }

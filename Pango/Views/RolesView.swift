@@ -144,7 +144,10 @@ struct DeleteRoleView: View {
         Task {
             defer { isSaving = false }
             do {
-                try await appService.deleteRole(roleId: roleToDelete.roleId, transferRoleId: selectedRoleForTransfer.roleId)
+                let revision = appService.organizationRevision
+                try await roleService().delete(roleId: roleToDelete.roleId, transferRoleId: selectedRoleForTransfer.roleId)
+                guard revision == appService.organizationRevision else { return }
+                appService.roles.removeAll { $0.roleId == roleToDelete.roleId }
                 dismiss()
             } catch is CancellationError {
                 return
@@ -154,5 +157,22 @@ struct DeleteRoleView: View {
                 errorKey = "ERROR_API_RESPONSE"
             }
         }
+    }
+}
+
+private extension DeleteRoleView {
+    func roleService() throws -> PangolinRoleService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinRoleService(client: PangolinAPIClient(configuration: configuration), organizationId: appService.pangolinOrganizationId)
     }
 }

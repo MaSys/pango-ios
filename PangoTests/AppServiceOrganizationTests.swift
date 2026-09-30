@@ -108,6 +108,23 @@ struct AppServiceOrganizationTests {
         #expect(UserDefaults.standard.string(forKey: "pangolin_organization_id") == "org-b")
     }
 
+    @Test("organization revision rejects stale results after switching away and back")
+    func changesRevisionOnRoundTrip() {
+        let previous = UserDefaults.standard.object(forKey: "pangolin_organization_id")
+        defer { UserDefaults.standard.set(previous, forKey: "pangolin_organization_id") }
+        let service = RefreshRecordingService()
+        service.pangolinOrganizationId = "org-a"
+        let initialRevision = service.organizationRevision
+
+        service.pangolinOrganizationId = "org-b"
+        service.pangolinOrganizationId = "org-a"
+
+        #expect(service.organizationRevision != initialRevision)
+        let currentRevision = service.organizationRevision
+        service.pangolinOrganizationId = "org-a"
+        #expect(service.organizationRevision == currentRevision)
+    }
+
     @Test("selecting the same organization preserves loaded data")
     func keepsCurrentOrganization() {
         let previous = UserDefaults.standard.object(forKey: "pangolin_organization_id")

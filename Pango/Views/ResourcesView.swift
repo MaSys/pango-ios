@@ -115,7 +115,7 @@ struct ResourcesView: View {
         privateResourcesLoading = true
         defer { privateResourcesLoading = false }
         do {
-            privateResources = try await appService.fetchPrivateResources()
+            privateResources = try await privateResourceService().listAllResources()
         } catch {
             errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
         }
@@ -313,4 +313,27 @@ extension ResourcesView {
     AppService.shared.resources.append(Resource.fake())
     return ResourcesView()
         .environmentObject(AppService.shared)
+}
+
+private extension ResourcesView {
+    func privateResourceService() throws -> PangolinPrivateResourceService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinPrivateResourceService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
+        )
+    }
 }

@@ -75,7 +75,12 @@ struct SiteCreateView: View {
         Task {
             defer { isSaving = false }
             do {
-                let created = try await appService.createSite(name: trimmedName, type: siteType)
+                let revision = appService.organizationRevision
+                let created = try await siteService().createSite(name: trimmedName, type: siteType)
+                guard revision == appService.organizationRevision else { return }
+                var cachedSite = created.site
+                cachedSite.secret = nil
+                appService.sites.append(cachedSite)
                 if let siteCredentials = created.credentials {
                     credentials = siteCredentials
                 } else {
@@ -87,5 +92,28 @@ struct SiteCreateView: View {
                 errorKey = "ERROR_CONNECTING_TO_SERVER"
             }
         }
+    }
+}
+
+private extension SiteCreateView {
+    func siteService() throws -> PangolinSiteService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinSiteService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
+        )
     }
 }

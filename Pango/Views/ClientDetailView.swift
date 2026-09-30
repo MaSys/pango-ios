@@ -70,7 +70,10 @@ struct ClientDetailView: View {
         isLoading = true
         defer { isLoading = false }
         do {
-            client = try await appService.fetchClient(clientId: clientId)
+            let revision = appService.organizationRevision
+            let result = try await clientService().getClient(clientId: clientId)
+            guard revision == appService.organizationRevision else { return }
+            client = result
         } catch is CancellationError {
             return
         } catch let error as PangolinAPIError {
@@ -80,5 +83,22 @@ struct ClientDetailView: View {
             guard !Task.isCancelled else { return }
             errorKey = "ERROR_API_RESPONSE"
         }
+    }
+}
+
+private extension ClientDetailView {
+    func clientService() throws -> PangolinClientService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinClientService(client: PangolinAPIClient(configuration: configuration), organizationId: appService.pangolinOrganizationId)
     }
 }
