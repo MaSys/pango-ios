@@ -68,7 +68,7 @@ struct ResourceDomainView: View {
         
         Task {
             do {
-                try await appService.updateResourceDomain(
+                try await publicResourceService().updateDomain(
                     resourceId: resource.resourceId,
                     domainId: selectedDomain,
                     subdomain: subdomain
@@ -88,4 +88,21 @@ struct ResourceDomainView: View {
 
 #Preview {
     ResourceDomainView(resource: Resource.fake())
+}
+
+private extension ResourceDomainView {
+    func publicResourceService() throws -> PangolinPublicResourceService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinPublicResourceService(client: PangolinAPIClient(configuration: configuration), organizationId: appService.pangolinOrganizationId)
+    }
 }

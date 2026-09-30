@@ -61,9 +61,13 @@ struct ClientsView: View {
         isLoading = true
         defer { isLoading = false }
         do {
-            let result = try await appService.fetchClients()
-            machines = result.machines
-            userDevices = result.userDevices
+            let revision = appService.organizationRevision
+            let service = try clientService()
+            let machines = try await service.listAllMachines()
+            let userDevices = try await service.listAllUserDevices()
+            guard revision == appService.organizationRevision else { return }
+            self.machines = machines
+            self.userDevices = userDevices
         } catch is CancellationError {
             return
         } catch let error as PangolinAPIError {
@@ -73,5 +77,22 @@ struct ClientsView: View {
             guard !Task.isCancelled else { return }
             errorKey = "ERROR_API_RESPONSE"
         }
+    }
+}
+
+private extension ClientsView {
+    func clientService() throws -> PangolinClientService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinClientService(client: PangolinAPIClient(configuration: configuration), organizationId: appService.pangolinOrganizationId)
     }
 }

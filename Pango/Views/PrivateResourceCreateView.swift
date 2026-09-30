@@ -170,7 +170,7 @@ struct PrivateResourceCreateView: View {
             isSaving = true
             defer { isSaving = false }
             do {
-                try await appService.createPrivateResource(configuration: configuration)
+                try await privateResourceService().create(configuration: configuration)
                 dismiss()
             } catch {
                 errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
@@ -193,6 +193,29 @@ struct PrivateResourceCreateView: View {
             disableIcmp: mode == "http" ? nil : !icmpEnabled,
             domainId: mode == "http" ? domainId : nil,
             subdomain: mode == "http" ? subdomain : nil
+        )
+    }
+}
+
+private extension PrivateResourceCreateView {
+    func privateResourceService() throws -> PangolinPrivateResourceService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinPrivateResourceService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
         )
     }
 }

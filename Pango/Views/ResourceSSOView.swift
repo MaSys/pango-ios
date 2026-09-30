@@ -67,7 +67,8 @@ struct ResourceSSOView: View {
             isUpdating = true
             defer { isUpdating = false }
             do {
-                try await appService.setResourceSSO(resourceId: resource.resourceId, enabled: enabled)
+                try await publicResourceAuthService().setSSO(resourceId: resource.resourceId, enabled: enabled)
+                Task { try? await appService.fetchResources() }
             } catch let error as PangolinAPIError {
                 ssoEnabled = rollbackValue
                 errorKey = error.localizationKey
@@ -145,7 +146,7 @@ struct ResourceUsersView: View {
         isLoading = true
         defer { isLoading = false }
         do {
-            selectedUsers = try await appService.getResourcePolicy(resourceId: resource.resourceId).userIds
+            selectedUsers = try await publicResourceAuthService().getDefaultPolicy(resourceId: resource.resourceId).userIds
             hasLoadedAssignments = true
         } catch {
             errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
@@ -158,7 +159,7 @@ struct ResourceUsersView: View {
             isLoading = true
             defer { isLoading = false }
             do {
-                try await appService.setResourceUsers(resourceId: resource.resourceId, userIds: selectedUsers)
+                try await publicResourceAuthService().setUsers(resourceId: resource.resourceId, userIds: selectedUsers)
                 dismiss()
             } catch {
                 errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
@@ -228,7 +229,7 @@ struct ResourceRolesView: View {
         isLoading = true
         defer { isLoading = false }
         do {
-            selectedRoles = try await appService.getResourcePolicy(resourceId: resource.resourceId).roleIds
+            selectedRoles = try await publicResourceAuthService().getDefaultPolicy(resourceId: resource.resourceId).roleIds
             hasLoadedAssignments = true
         } catch {
             errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
@@ -241,11 +242,53 @@ struct ResourceRolesView: View {
             isLoading = true
             defer { isLoading = false }
             do {
-                try await appService.setResourceRoles(resourceId: resource.resourceId, roleIds: selectedRoles)
+                try await publicResourceAuthService().setRoles(resourceId: resource.resourceId, roleIds: selectedRoles)
                 dismiss()
             } catch {
                 errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
             }
         }
+    }
+}
+
+private extension ResourceSSOView {
+    func publicResourceAuthService() throws -> PangolinPublicResourceAuthService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinPublicResourceAuthService(client: PangolinAPIClient(configuration: configuration))
+    }
+}
+
+private extension ResourceUsersView {
+    func publicResourceAuthService() throws -> PangolinPublicResourceAuthService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinPublicResourceAuthService(client: PangolinAPIClient(configuration: configuration))
+    }
+}
+
+private extension ResourceRolesView {
+    func publicResourceAuthService() throws -> PangolinPublicResourceAuthService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinPublicResourceAuthService(client: PangolinAPIClient(configuration: configuration))
     }
 }

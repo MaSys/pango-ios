@@ -97,7 +97,10 @@ struct InvitationCreateView: View {
         Task {
             defer { isSaving = false }
             do {
-                createdInvitation = try await appService.createInvitation(email: email, validHours: validHours, roleId: roleId)
+                let revision = appService.organizationRevision
+                let result = try await invitationService().create(email: email, validHours: validHours, roleId: roleId)
+                guard revision == appService.organizationRevision else { return }
+                createdInvitation = result
             } catch is CancellationError {
                 return
             } catch let error as PangolinAPIError {
@@ -111,4 +114,21 @@ struct InvitationCreateView: View {
 
 #Preview {
     InvitationCreateView()
+}
+
+private extension InvitationCreateView {
+    func invitationService() throws -> PangolinInvitationService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinInvitationService(client: PangolinAPIClient(configuration: configuration), organizationId: appService.pangolinOrganizationId)
+    }
 }

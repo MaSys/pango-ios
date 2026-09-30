@@ -56,7 +56,7 @@ struct SiteDetailView: View {
 
     private func refresh() async {
         do {
-            site = try await appService.getSite(siteId: site.siteId)
+            site = try await siteService().getSite(siteId: site.siteId)
             name = site.name
         } catch let error as PangolinAPIError {
             errorKey = error.localizationKey
@@ -71,7 +71,13 @@ struct SiteDetailView: View {
         Task {
             defer { isSaving = false }
             do {
-                site = try await appService.renameSite(siteId: site.siteId, name: trimmedName)
+                let revision = appService.organizationRevision
+                let updated = try await siteService().renameSite(siteId: site.siteId, name: trimmedName)
+                guard revision == appService.organizationRevision else { return }
+                site = updated
+                if let index = appService.sites.firstIndex(where: { $0.siteId == site.siteId }) {
+                    appService.sites[index] = updated
+                }
                 name = site.name
             } catch let error as PangolinAPIError {
                 errorKey = error.localizationKey
@@ -86,7 +92,10 @@ struct SiteDetailView: View {
         Task {
             defer { isSaving = false }
             do {
-                try await appService.deleteSite(siteId: site.siteId)
+                let revision = appService.organizationRevision
+                try await siteService().deleteSite(siteId: site.siteId)
+                guard revision == appService.organizationRevision else { return }
+                appService.sites.removeAll { $0.siteId == site.siteId }
                 dismiss()
             } catch let error as PangolinAPIError {
                 errorKey = error.localizationKey
@@ -94,5 +103,28 @@ struct SiteDetailView: View {
                 errorKey = "ERROR_CONNECTING_TO_SERVER"
             }
         }
+    }
+}
+
+private extension SiteDetailView {
+    func siteService() throws -> PangolinSiteService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinSiteService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
+        )
     }
 }

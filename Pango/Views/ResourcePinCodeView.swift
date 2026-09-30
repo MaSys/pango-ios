@@ -48,10 +48,13 @@ struct ResourcePinCodeView: View {
             isSaving = true
             defer { isSaving = false }
             do {
-                try await appService.setResourcePinCode(
-                    resourceId: resource.resourceId,
+                let service = try publicResourceAuthService()
+                let policy = try await service.getDefaultPolicy(resourceId: resource.resourceId)
+                try await service.setPinCode(
+                    policyId: policy.resourcePolicyId,
                     pinCode: pinCode.isEmpty ? nil : pinCode
                 )
+                Task { try? await appService.fetchResources() }
                 dismiss()
             } catch let error as PangolinAPIError {
                 errorKey = error.localizationKey
@@ -62,4 +65,18 @@ struct ResourcePinCodeView: View {
 
 #Preview {
     ResourcePinCodeView(resource: Resource.fake())
+}
+
+private extension ResourcePinCodeView {
+    func publicResourceAuthService() throws -> PangolinPublicResourceAuthService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinPublicResourceAuthService(client: PangolinAPIClient(configuration: configuration))
+    }
 }

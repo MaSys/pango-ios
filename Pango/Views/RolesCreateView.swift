@@ -58,7 +58,10 @@ struct RolesCreateView: View {
         Task {
             defer { isSaving = false }
             do {
-                try await appService.createRole(name: name, description: description)
+                let revision = appService.organizationRevision
+                let role = try await roleService().create(name: name, description: description)
+                guard revision == appService.organizationRevision else { return }
+                appService.roles.append(role)
                 dismiss()
             } catch is CancellationError {
                 return
@@ -73,4 +76,21 @@ struct RolesCreateView: View {
 
 #Preview {
     RolesCreateView()
+}
+
+private extension RolesCreateView {
+    func roleService() throws -> PangolinRoleService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinRoleService(client: PangolinAPIClient(configuration: configuration), organizationId: appService.pangolinOrganizationId)
+    }
 }

@@ -88,7 +88,7 @@ struct ResourceTargetsView: View {
     
     private func fetch() async {
         do {
-            targets = try await appService.fetchTargets(resourceId: resource.resourceId)
+            targets = try await publicTargetService().listAllTargets(resourceId: resource.resourceId)
         } catch let error as PangolinAPIError {
             errorKey = error.localizationKey
         } catch {
@@ -98,7 +98,7 @@ struct ResourceTargetsView: View {
     
     private func delete(_ target: Target) async {
         do {
-            try await appService.deleteTarget(targetId: target.targetId)
+            try await publicTargetService().deleteTarget(targetId: target.targetId)
             targetToDelete = nil
             await fetch()
         } catch let error as PangolinAPIError {
@@ -111,4 +111,18 @@ struct ResourceTargetsView: View {
 
 #Preview {
     ResourceTargetsView(resource: Resource.fake())
+}
+
+private extension ResourceTargetsView {
+    func publicTargetService() throws -> PangolinPublicTargetService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinPublicTargetService(client: PangolinAPIClient(configuration: configuration))
+    }
 }

@@ -72,13 +72,18 @@ struct ResourcesCreateView: View {
     private func save() {
         Task {
             do {
+                let revision = appService.organizationRevision
+                let service = try publicResourceService()
+                let created: Resource
                 if resourceHttp {
-                    try await appService.createHTTPResource(name: name, subdomain: subdomain, domainId: selectedDomain)
+                    created = try await service.createHTTP(name: name, subdomain: subdomain, domainId: selectedDomain)
                 } else if let port = Int(proxyPort), let rawProtocol = PublicResourceRawProtocol(rawValue: protocolString) {
-                    try await appService.createRawResource(name: name, protocol: rawProtocol, proxyPort: port)
+                    created = try await service.createRaw(name: name, protocol: rawProtocol, proxyPort: port)
                 } else {
                     throw PangolinAPIError.serverRejected(status: 400, message: "INVALID_PORT")
                 }
+                guard revision == appService.organizationRevision else { return }
+                appService.resources.append(created)
                 dismiss()
             } catch let error as PangolinAPIError {
                 errorMessage = String(localized: String.LocalizationValue(error.localizationKey))
@@ -138,4 +143,21 @@ extension ResourcesCreateView {
 
 #Preview {
     ResourcesCreateView()
+}
+
+private extension ResourcesCreateView {
+    func publicResourceService() throws -> PangolinPublicResourceService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinPublicResourceService(client: PangolinAPIClient(configuration: configuration), organizationId: appService.pangolinOrganizationId)
+    }
 }

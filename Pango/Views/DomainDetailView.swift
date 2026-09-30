@@ -90,7 +90,7 @@ struct DomainDetailView: View {
         loading = true
         defer { loading = false }
         do {
-            records = try await appService.fetchDNSRecords(domainId: domain.domainId)
+            records = try await domainService().listDNSRecords(domainId: domain.domainId)
         } catch is CancellationError {
             return
         } catch let error as PangolinAPIError {
@@ -98,5 +98,28 @@ struct DomainDetailView: View {
         } catch {
             errorKey = "ERROR_API_RESPONSE"
         }
+    }
+}
+
+private extension DomainDetailView {
+    func domainService() throws -> PangolinDomainService {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        return PangolinDomainService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
+        )
     }
 }
