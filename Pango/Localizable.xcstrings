@@ -1,380 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "TIMEOUT" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Timeout"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tiempo de espera"
-          }
-        }
-      }
-    },
-    "NOTIFICATION_TARGET" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notification destination"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Destino de la notificación"
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_URL" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ must be a valid URL."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ debe ser una URL válida."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_SUBDOMAIN" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter a valid subdomain using letters, digits, and hyphens."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ingresa un subdominio válido con letras, dígitos y guiones."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_REQUIRED" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter a value for %@."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ingresa un valor para %@."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_PORT" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Port must be between 1 and 65535."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "El puerto debe estar entre 1 y 65535."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_PATH_REQUIRED" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter a matching path before setting a rewrite path."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ingresa una ruta de coincidencia antes de configurar una ruta de reescritura."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_MIN_NUMBER" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ must be at least %d."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ debe ser al menos %d."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_MIN_LENGTH" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ must contain at least %d characters."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ debe tener al menos %d caracteres."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_MIN_ITEMS" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select %2$d or more items for %1$@."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selecciona al menos %2$d elementos para %1$@."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_MAX_NUMBER" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ must be at most %d."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ debe ser como máximo %d."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_MAX_LENGTH" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ must contain at most %d characters."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ debe tener como máximo %d caracteres."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_MAX_ITEMS" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select %2$d or fewer items for %1$@."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selecciona como máximo %2$d elementos para %1$@."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_LESS_NUMBER" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ must be less than %d."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ debe ser menor que %d."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_INTEGER" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ must be a whole number."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ debe ser un número entero."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_GREATER_NUMBER" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ must be greater than %d."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ debe ser mayor que %d."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_FIELD" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check the value entered for %@."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revisa el valor ingresado para %@."
-          }
-        }
-      }
-    },
-    "ERROR_VALIDATION_EMAIL" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter a valid email address."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ingresa una dirección de correo electrónico válida."
-          }
-        }
-      }
-    },
-    "ERROR_RESOURCE_PIN_CODE_INVALID" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PIN must contain exactly 6 digits (0–9)."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "El PIN debe tener exactamente 6 dígitos (0–9)."
-          }
-        }
-      }
-    },
-    "ERROR_RESOURCE_PASSWORD_TOO_SHORT" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Password must contain at least 4 characters."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La contraseña debe tener al menos 4 caracteres."
-          }
-        }
-      }
-    },
-    "ERROR_RESOURCE_PASSWORD_TOO_LONG" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Password must contain at most 100 characters."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La contraseña debe tener como máximo 100 caracteres."
-          }
-        }
-      }
-    },
-    "ERROR_RESOURCE_DOMAIN_REQUIRED" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter a subdomain and select a base domain."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ingresa un subdominio y selecciona un dominio base."
-          }
-        }
-      }
-    },
     "" : {
 
     },
@@ -767,56 +393,18 @@
     },
     "CLIENT_DETAILS" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Client Details" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Detalles del Cliente" } }
-      }
-    },
-    "CONNECTION" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Connection" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Conexión" } }
-      }
-    },
-    "DEVICE_DETAILS" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Device Details" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Detalles del Dispositivo" } }
-      }
-    },
-    "DEVICE_MODEL" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Device Model" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Modelo del Dispositivo" } }
-      }
-    },
-    "NICE_ID" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Readable ID" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "ID Legible" } }
-      }
-    },
-    "OFFLINE" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Offline" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Desconectado" } }
-      }
-    },
-    "ONLINE" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Online" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Conectado" } }
-      }
-    },
-    "OS_VERSION" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "OS Version" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Versión del SO" } }
-      }
-    },
-    "PLATFORM" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Platform" } },
-        "es-419" : { "stringUnit" : { "state" : "translated", "value" : "Plataforma" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client Details"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detalles del Cliente"
+          }
+        }
       }
     },
     "CLIENT_ID" : {
@@ -863,6 +451,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clientes"
+          }
+        }
+      }
+    },
+    "CONNECTION" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conexión"
           }
         }
       }
@@ -1105,6 +709,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Destino"
+          }
+        }
+      }
+    },
+    "DEVICE_DETAILS" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Device Details"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detalles del Dispositivo"
+          }
+        }
+      }
+    },
+    "DEVICE_MODEL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Device Model"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modelo del Dispositivo"
           }
         }
       }
@@ -1404,7 +1040,6 @@
       }
     },
     "ERROR_CONNECTING_TO_SERVER" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1450,6 +1085,346 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ingresa el ID de la organización para esta clave API de organización."
+          }
+        }
+      }
+    },
+    "ERROR_RESOURCE_DOMAIN_REQUIRED" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a subdomain and select a base domain."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa un subdominio y selecciona un dominio base."
+          }
+        }
+      }
+    },
+    "ERROR_RESOURCE_PASSWORD_TOO_LONG" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password must contain at most 100 characters."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La contraseña debe tener como máximo 100 caracteres."
+          }
+        }
+      }
+    },
+    "ERROR_RESOURCE_PASSWORD_TOO_SHORT" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password must contain at least 4 characters."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La contraseña debe tener al menos 4 caracteres."
+          }
+        }
+      }
+    },
+    "ERROR_RESOURCE_PIN_CODE_INVALID" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PIN must contain exactly 6 digits (0–9)."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El PIN debe tener exactamente 6 dígitos (0–9)."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_EMAIL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a valid email address."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa una dirección de correo electrónico válida."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_FIELD" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check the value entered for %@."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisa el valor ingresado para %@."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_GREATER_NUMBER" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ must be greater than %d."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ debe ser mayor que %d."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_INTEGER" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ must be a whole number."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ debe ser un número entero."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_LESS_NUMBER" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ must be less than %d."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ debe ser menor que %d."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_MAX_ITEMS" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select %2$d or fewer items for %1$@."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona como máximo %2$d elementos para %1$@."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_MAX_LENGTH" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ must contain at most %d characters."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ debe tener como máximo %d caracteres."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_MAX_NUMBER" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ must be at most %d."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ debe ser como máximo %d."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_MIN_ITEMS" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select %2$d or more items for %1$@."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona al menos %2$d elementos para %1$@."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_MIN_LENGTH" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ must contain at least %d characters."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ debe tener al menos %d caracteres."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_MIN_NUMBER" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ must be at least %d."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ debe ser al menos %d."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_PATH_REQUIRED" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a matching path before setting a rewrite path."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa una ruta de coincidencia antes de configurar una ruta de reescritura."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_PORT" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Port must be between 1 and 65535."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El puerto debe estar entre 1 y 65535."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_REQUIRED" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a value for %@."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa un valor para %@."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_SUBDOMAIN" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a valid subdomain using letters, digits, and hyphens."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa un subdominio válido con letras, dígitos y guiones."
+          }
+        }
+      }
+    },
+    "ERROR_VALIDATION_URL" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ must be a valid URL."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ debe ser una URL válida."
           }
         }
       }
@@ -1971,6 +1946,22 @@
         }
       }
     },
+    "NICE_ID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Readable ID"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID Legible"
+          }
+        }
+      }
+    },
     "NO_ACCESS_OPTIONS" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2052,6 +2043,40 @@
         }
       }
     },
+    "NOTIFICATION_TARGET" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification destination"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destino de la notificación"
+          }
+        }
+      }
+    },
+    "OFFLINE" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desconectado"
+          }
+        }
+      }
+    },
     "OIDC" : {
       "localizations" : {
         "en" : {
@@ -2070,6 +2095,23 @@
     },
     "OK" : {
 
+    },
+    "ONLINE" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Online"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conectado"
+          }
+        }
+      }
     },
     "ORGANIZATION" : {
       "localizations" : {
@@ -2115,6 +2157,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Déjalo vacío si tu Clave API tiene acceso root."
+          }
+        }
+      }
+    },
+    "OS_VERSION" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OS Version"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versión del SO"
           }
         }
       }
@@ -2262,6 +2320,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Protección con Código PIN"
+          }
+        }
+      }
+    },
+    "PLATFORM" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platform"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plataforma"
           }
         }
       }
@@ -2963,7 +3037,6 @@
       }
     },
     "SUBNET" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3029,6 +3102,23 @@
     },
     "TCP" : {
 
+    },
+    "TIMEOUT" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timeout"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo de espera"
+          }
+        }
+      }
     },
     "TOKEN_URL" : {
       "localizations" : {
