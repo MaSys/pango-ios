@@ -9,6 +9,8 @@ import SwiftUI
 
 struct HealthChecksView: View {
 
+    @EnvironmentObject var appService: AppService
+
     @State private var healthChecks: [HealthCheck] = []
 
     var body: some View {
@@ -68,14 +70,44 @@ struct HealthChecksView: View {
     }
 
     private func fetch() {
-        HealthChecksRequest.fetch { success, checks in
-            self.healthChecks = checks
+        Task {
+            do {
+                healthChecks = try await healthCheckService().listHealthChecks()
+            } catch {
+                healthChecks = []
+            }
         }
     }
 
     private func delete(_ check: HealthCheck) {
-        HealthChecksRequest.delete(id: check.healthCheckId) { success in
-            if success { self.fetch() }
+        Task {
+            do {
+                try await healthCheckService().deleteHealthCheck(healthCheckId: check.healthCheckId)
+                fetch()
+            } catch {
+                // Preserve the existing behavior: leave the list unchanged on failure.
+            }
         }
+    }
+
+    private func healthCheckService() throws -> PangolinHealthCheckService {
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinHealthCheckService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
+        )
     }
 }
