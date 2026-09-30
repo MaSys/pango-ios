@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HealthCheckCreateView: View {
 
+    @EnvironmentObject var appService: AppService
     @Environment(\.dismiss) var dismiss
 
     var onSaved: () -> Void
@@ -17,7 +18,7 @@ struct HealthCheckCreateView: View {
     @State private var type: String = "http"
     @State private var targetUrl: String = ""
     @State private var intervalMinutes: Int = 1
-    @State private var errorMessage: String = ""
+    @State private var errorKey: String?
 
     var validForm: Bool {
         !name.isEmpty && !targetUrl.isEmpty
@@ -54,8 +55,8 @@ struct HealthCheckCreateView: View {
                 }
             }
 
-            if !errorMessage.isEmpty {
-                Text(errorMessage)
+            if let errorKey {
+                Text(LocalizedStringKey(errorKey))
                     .foregroundStyle(.red)
                     .font(.system(size: 14))
             }
@@ -70,18 +71,43 @@ struct HealthCheckCreateView: View {
     }
 
     private func save() {
-        HealthChecksRequest.create(
-            name: name,
-            type: type,
-            url: targetUrl,
-            interval: intervalMinutes * 60
-        ) { success, response in
-            if success {
-                self.onSaved()
-                self.dismiss()
-            } else {
-                self.errorMessage = response?.message ?? ""
+        errorKey = nil
+        Task {
+            do {
+                try await healthCheckService().createHealthCheck(
+                    name: name,
+                    type: type,
+                    url: targetUrl,
+                    interval: intervalMinutes * 60
+                )
+                onSaved()
+                dismiss()
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
+            } catch {
+                errorKey = "ERROR_CONNECTING_TO_SERVER"
             }
         }
+    }
+
+    private func healthCheckService() throws -> PangolinHealthCheckService {
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinHealthCheckService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
+        )
     }
 }
