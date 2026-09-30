@@ -18,7 +18,7 @@ struct AlertRuleCreateView: View {
     @State private var triggerType: String = "site_down"
     @State private var notificationMethod: String = "email"
     @State private var notificationTarget: String = ""
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
 
     var validForm: Bool {
         !name.isEmpty && !notificationTarget.isEmpty
@@ -50,8 +50,8 @@ struct AlertRuleCreateView: View {
                     .autocorrectionDisabled(true)
             }
 
-            if let errorKey {
-                Text(LocalizedStringKey(errorKey))
+            if let errorMessage {
+                Text(errorMessage)
                     .foregroundStyle(.red)
                     .font(.system(size: 14))
             }
@@ -66,7 +66,7 @@ struct AlertRuleCreateView: View {
     }
 
     private func save() {
-        errorKey = nil
+        errorMessage = nil
         Task {
             do {
                 try await alertRuleService().createAlertRule(
@@ -78,9 +78,9 @@ struct AlertRuleCreateView: View {
                 onSaved()
                 dismiss()
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
             } catch {
-                errorKey = "ERROR_CONNECTING_TO_SERVER"
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
             }
         }
     }

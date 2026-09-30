@@ -16,7 +16,7 @@ struct ResourceSSOView: View {
     
     @State private var ssoEnabled: Bool = false
     @State private var isUpdating = false
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
     
     var body: some View {
         Form {
@@ -55,10 +55,10 @@ struct ResourceSSOView: View {
             self.appService.fetchUsers()
             self.appService.fetchRoles()
         }
-        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
-            Button("OK", role: .cancel) { errorKey = nil }
+        .alert("ERROR", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
     
@@ -71,10 +71,10 @@ struct ResourceSSOView: View {
                 Task { try? await appService.fetchResources() }
             } catch let error as PangolinAPIError {
                 ssoEnabled = rollbackValue
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
             } catch {
                 ssoEnabled = rollbackValue
-                errorKey = "ERROR_CONNECTING_TO_SERVER"
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
             }
         }
     }
@@ -96,7 +96,7 @@ struct ResourceUsersView: View {
     @State private var isLoading: Bool = false
     @State private var hasLoadedAssignments = false
     @State private var selectedUsers: [String] = []
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
     
     var body: some View {
         List {
@@ -138,10 +138,10 @@ struct ResourceUsersView: View {
                 .disabled(self.isLoading || !self.hasLoadedAssignments)
             }
         }
-        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
-            Button("OK", role: .cancel) { errorKey = nil }
+        .alert("ERROR", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
     
@@ -152,7 +152,7 @@ struct ResourceUsersView: View {
             selectedUsers = try await publicResourceAuthService().getDefaultPolicy(resourceId: resource.resourceId).userIds
             hasLoadedAssignments = true
         } catch {
-            errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+            errorMessage = (error as? PangolinAPIError)?.localizedMessage() ?? PangolinAPIError.transport.localizedMessage()
         }
     }
     
@@ -165,7 +165,7 @@ struct ResourceUsersView: View {
                 try await publicResourceAuthService().setUsers(resourceId: resource.resourceId, userIds: selectedUsers)
                 dismiss()
             } catch {
-                errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+                errorMessage = (error as? PangolinAPIError)?.localizedMessage() ?? PangolinAPIError.transport.localizedMessage()
             }
         }
     }
@@ -181,7 +181,7 @@ struct ResourceRolesView: View {
     @State private var isLoading: Bool = false
     @State private var hasLoadedAssignments = false
     @State private var selectedRoles: [Int] = []
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
     
     var body: some View {
         List {
@@ -221,10 +221,10 @@ struct ResourceRolesView: View {
                 .disabled(self.isLoading || !self.hasLoadedAssignments)
             }
         }
-        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
-            Button("OK", role: .cancel) { errorKey = nil }
+        .alert("ERROR", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
     
@@ -235,7 +235,7 @@ struct ResourceRolesView: View {
             selectedRoles = try await publicResourceAuthService().getDefaultPolicy(resourceId: resource.resourceId).roleIds
             hasLoadedAssignments = true
         } catch {
-            errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+            errorMessage = (error as? PangolinAPIError)?.localizedMessage() ?? PangolinAPIError.transport.localizedMessage()
         }
     }
     
@@ -248,7 +248,7 @@ struct ResourceRolesView: View {
                 try await publicResourceAuthService().setRoles(resourceId: resource.resourceId, roleIds: selectedRoles)
                 dismiss()
             } catch {
-                errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+                errorMessage = (error as? PangolinAPIError)?.localizedMessage() ?? PangolinAPIError.transport.localizedMessage()
             }
         }
     }

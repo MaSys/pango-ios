@@ -16,7 +16,7 @@ struct SitesView: View {
 
     @EnvironmentObject var appService: AppService
     @State private var selectedSegment: SiteSegment = .all
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
 
     var pendingSites: [Site] { appService.sites.filter { $0.status == "pending" || $0.pending == true } }
     var activeSites: [Site] { appService.sites.filter { $0.status != "pending" && $0.pending != true } }
@@ -50,12 +50,12 @@ struct SitesView: View {
                 }
             }
             .alert("ERROR", isPresented: Binding(
-                get: { errorKey != nil },
-                set: { if !$0 { errorKey = nil } }
+                get: { errorMessage != nil },
+                set: { if !$0 { errorMessage = nil } }
             )) {
-                Button("OK", role: .cancel) { errorKey = nil }
+                Button("OK", role: .cancel) { errorMessage = nil }
             } message: {
-                if let errorKey { Text(LocalizedStringKey(errorKey)) }
+                if let errorMessage { Text(errorMessage) }
             }
             .task { await fetch() }
             .refreshable { await fetch() }
@@ -69,7 +69,7 @@ struct SitesView: View {
             return
         } catch {
             guard !Task.isCancelled else { return }
-            errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+            errorMessage = (error as? PangolinAPIError)?.localizedMessage() ?? PangolinAPIError.transport.localizedMessage()
         }
     }
 }

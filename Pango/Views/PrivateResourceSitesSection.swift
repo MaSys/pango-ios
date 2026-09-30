@@ -6,7 +6,7 @@ struct PrivateResourceSitesSection: View {
     var existingNames: [Int: String] = [:]
 
     @State private var isLoading = false
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
 
     var body: some View {
         Section("SITES") {
@@ -30,8 +30,8 @@ struct PrivateResourceSitesSection: View {
             Text("SELECT_AT_LEAST_ONE_SITE")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
-            if let errorKey {
-                Text(LocalizedStringKey(errorKey))
+            if let errorMessage {
+                Text(errorMessage)
                     .foregroundStyle(.red)
                 Button("RETRY") { Task { await fetch() } }
                     .disabled(isLoading)
@@ -43,13 +43,13 @@ struct PrivateResourceSitesSection: View {
     private func fetch() async {
         let revision = appService.organizationRevision
         isLoading = true
-        errorKey = nil
+        errorMessage = nil
         defer { isLoading = false }
         do {
             _ = try await appService.fetchSites()
         } catch {
             guard !Task.isCancelled, revision == appService.organizationRevision else { return }
-            errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+            errorMessage = (error as? PangolinAPIError)?.localizedMessage() ?? PangolinAPIError.transport.localizedMessage()
         }
     }
 }

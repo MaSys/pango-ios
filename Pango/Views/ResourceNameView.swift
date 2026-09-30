@@ -15,7 +15,7 @@ struct ResourceNameView: View {
     var resource: Resource
     
     @State private var name: String = ""
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
     
     var body: some View {
         Form {
@@ -37,10 +37,10 @@ struct ResourceNameView: View {
 
             }
         }
-        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
-            Button("OK", role: .cancel) { errorKey = nil }
+        .alert("ERROR", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
     
@@ -57,9 +57,9 @@ struct ResourceNameView: View {
                 }
                 self.dismiss()
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
             } catch {
-                errorKey = "ERROR_CONNECTING_TO_SERVER"
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
             }
         }
     }

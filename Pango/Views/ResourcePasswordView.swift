@@ -16,7 +16,7 @@ struct ResourcePasswordView: View {
     
     @State private var password: String = ""
     @State private var isSaving = false
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
     
     var body: some View {
         Form {
@@ -35,10 +35,10 @@ struct ResourcePasswordView: View {
 
             }
         }
-        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
-            Button("OK", role: .cancel) { errorKey = nil }
+        .alert("ERROR", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
     
@@ -47,18 +47,20 @@ struct ResourcePasswordView: View {
             isSaving = true
             defer { isSaving = false }
             do {
+                let newPassword = password.isEmpty ? nil : password
+                try PangolinPublicResourceAuthService.validatePassword(newPassword)
                 let service = try publicResourceAuthService()
                 let policy = try await service.getDefaultPolicy(resourceId: resource.resourceId)
                 try await service.setPassword(
                     policyId: policy.resourcePolicyId,
-                    password: password.isEmpty ? nil : password
+                    password: newPassword
                 )
                 Task { try? await appService.fetchResources() }
                 dismiss()
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
             } catch {
-                errorKey = "ERROR_CONNECTING_TO_SERVER"
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
             }
         }
     }

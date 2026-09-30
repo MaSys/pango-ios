@@ -9,7 +9,7 @@ struct SiteCreateView: View {
     @State private var isSaving = false
     @State private var siteType: SiteType = .newt
     @State private var credentials: SiteCredentials?
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
 
     var body: some View {
         Form {
@@ -44,12 +44,12 @@ struct SiteCreateView: View {
             }
         }
         .alert("ERROR", isPresented: Binding(
-            get: { errorKey != nil },
-            set: { if !$0 { errorKey = nil } }
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
         )) {
-            Button("OK", role: .cancel) { errorKey = nil }
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
 
@@ -87,9 +87,9 @@ struct SiteCreateView: View {
                     dismiss()
                 }
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
             } catch {
-                errorKey = "ERROR_CONNECTING_TO_SERVER"
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
             }
         }
     }

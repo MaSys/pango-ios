@@ -7,7 +7,7 @@ struct SiteDetailView: View {
     @State private var name: String
     @State private var isSaving = false
     @State private var confirmsDeletion = false
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
 
     init(site: Site) {
         self._site = State(initialValue: site)
@@ -45,12 +45,12 @@ struct SiteDetailView: View {
             Button("CANCEL", role: .cancel) {}
         }
         .alert("ERROR", isPresented: Binding(
-            get: { errorKey != nil },
-            set: { if !$0 { errorKey = nil } }
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
         )) {
-            Button("OK", role: .cancel) { errorKey = nil }
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
 
@@ -59,9 +59,9 @@ struct SiteDetailView: View {
             site = try await siteService().getSite(siteId: site.siteId)
             name = site.name
         } catch let error as PangolinAPIError {
-            errorKey = error.localizationKey
+            errorMessage = error.localizedMessage()
         } catch {
-            errorKey = "ERROR_CONNECTING_TO_SERVER"
+            errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
         }
     }
 
@@ -80,9 +80,9 @@ struct SiteDetailView: View {
                 }
                 name = site.name
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
             } catch {
-                errorKey = "ERROR_CONNECTING_TO_SERVER"
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
             }
         }
     }
@@ -98,9 +98,9 @@ struct SiteDetailView: View {
                 appService.sites.removeAll { $0.siteId == site.siteId }
                 dismiss()
             } catch let error as PangolinAPIError {
-                errorKey = error.localizationKey
+                errorMessage = error.localizedMessage()
             } catch {
-                errorKey = "ERROR_CONNECTING_TO_SERVER"
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
             }
         }
     }

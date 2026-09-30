@@ -1,3 +1,5 @@
+import Foundation
+
 enum PangolinAPIError: Error, Equatable, Sendable {
     case invalidBaseURL
     case missingAPIKey
@@ -9,6 +11,17 @@ enum PangolinAPIError: Error, Equatable, Sendable {
     case serverRejected(status: Int, message: String)
     case httpFailure(status: Int)
     case decoding
+    case resourcePasswordTooShort
+    case resourcePasswordTooLong
+    case resourcePinCodeInvalid
+
+    func localizedMessage(bundle: Bundle = .main) -> String {
+        if case let .serverRejected(status, message) = self, [400, 409, 422].contains(status),
+           let validationMessage = PangolinValidationMessage.message(for: message, bundle: bundle) {
+            return validationMessage
+        }
+        return bundle.localizedString(forKey: localizationKey, value: nil, table: nil)
+    }
 
     var localizationKey: String {
         switch self {
@@ -30,6 +43,12 @@ enum PangolinAPIError: Error, Equatable, Sendable {
             return "ERROR_API_HTTP"
         case .decoding:
             return "ERROR_API_RESPONSE"
+        case .resourcePasswordTooShort:
+            return "ERROR_RESOURCE_PASSWORD_TOO_SHORT"
+        case .resourcePasswordTooLong:
+            return "ERROR_RESOURCE_PASSWORD_TOO_LONG"
+        case .resourcePinCodeInvalid:
+            return "ERROR_RESOURCE_PIN_CODE_INVALID"
         }
     }
 }

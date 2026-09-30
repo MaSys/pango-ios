@@ -27,7 +27,7 @@ struct PrivateResourceCreateView: View {
     @State private var domainId: String = ""
     @State private var ssl: Bool = false
     @State private var isSaving = false
-    @State private var errorKey: String?
+    @State private var errorMessage: String?
 
     var validForm: Bool {
         if name.isEmpty { return false }
@@ -92,10 +92,10 @@ struct PrivateResourceCreateView: View {
                     .disabled(!validForm || isSaving)
             }
         }
-        .alert("ERROR", isPresented: Binding(get: { errorKey != nil }, set: { if !$0 { errorKey = nil } })) {
-            Button("OK", role: .cancel) { errorKey = nil }
+        .alert("ERROR", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+            Button("OK", role: .cancel) { errorMessage = nil }
         } message: {
-            if let errorKey { Text(LocalizedStringKey(errorKey)) }
+            if let errorMessage { Text(errorMessage) }
         }
     }
 
@@ -180,7 +180,7 @@ struct PrivateResourceCreateView: View {
                 dismiss()
             } catch {
                 guard revision == appService.organizationRevision else { return }
-                errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
+                errorMessage = (error as? PangolinAPIError)?.localizedMessage() ?? PangolinAPIError.transport.localizedMessage()
             }
         }
     }
