@@ -2378,6 +2378,23 @@
         }
       }
     },
+    "SELECT_AT_LEAST_ONE_SITE" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select at least one site."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona al menos un sitio."
+          }
+        }
+      }
+    },
     "SERVER_HINT" : {
       "localizations" : {
         "en" : {

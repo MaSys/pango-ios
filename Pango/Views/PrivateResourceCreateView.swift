@@ -13,7 +13,8 @@ struct PrivateResourceCreateView: View {
     @Environment(\.dismiss) var dismiss
 
     @State private var name: String = ""
-    @State private var selectedSiteId: Int = 0
+    @State private var siteSelection = PrivateResourceSiteSelection()
+    @State private var hasInitializedSites = false
     @State private var mode: String = "host"
     @State private var scheme: String = "http"
     @State private var destination: String = ""
@@ -30,7 +31,7 @@ struct PrivateResourceCreateView: View {
 
     var validForm: Bool {
         if name.isEmpty { return false }
-        if selectedSiteId == 0 { return false }
+        if siteSelection.siteIds.isEmpty { return false }
         if destination.isEmpty { return false }
         if mode == "cidr" && alias.isEmpty { return false }
 
@@ -48,18 +49,15 @@ struct PrivateResourceCreateView: View {
             Section {
                 TextField("NAME", text: $name)
 
-                Picker("SITE", selection: $selectedSiteId) {
-                    ForEach(appService.sites, id: \.siteId) { site in
-                        Text(site.name).tag(site.siteId)
-                    }
-                }.pickerStyle(.menu)
-
                 Picker("MODE", selection: $mode) {
                     Text("HOST").tag("host")
                     Text("CIDR").tag("cidr")
                     Text("HTTP").tag("http")
                 }.pickerStyle(.segmented)
             }
+
+            PrivateResourceSitesSection(selection: $siteSelection)
+                .disabled(isSaving)
 
             if mode == "http" {
                 httpFields
@@ -69,14 +67,18 @@ struct PrivateResourceCreateView: View {
 
         }
         .onAppear {
-            if let site = appService.sites.first {
-                selectedSiteId = site.siteId
+            if !hasInitializedSites {
+                hasInitializedSites = true
+                siteSelection = PrivateResourceSiteSelection(siteIds: appService.sites.first.map { [$0.siteId] } ?? [])
             }
             if appService.domains.isEmpty {
                 appService.fetchDomains()
             } else if domainId.isEmpty, let domain = appService.domains.first {
                 domainId = domain.domainId
             }
+        }
+        .onChange(of: appService.organizationRevision) {
+            siteSelection = PrivateResourceSiteSelection()
         }
         .onChange(of: appService.domains.count) {
             if domainId.isEmpty, let domain = appService.domains.first {
@@ -165,14 +167,19 @@ struct PrivateResourceCreateView: View {
     }
 
     private func save() {
-        guard validForm else { return }
+        guard validForm, !isSaving else { return }
+        let revision = appService.organizationRevision
+        let configuration = configuration
+        isSaving = true
         Task {
-            isSaving = true
             defer { isSaving = false }
             do {
+                guard revision == appService.organizationRevision else { return }
                 try await privateResourceService().create(configuration: configuration)
+                guard revision == appService.organizationRevision else { return }
                 dismiss()
             } catch {
+                guard revision == appService.organizationRevision else { return }
                 errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
             }
         }
@@ -181,7 +188,7 @@ struct PrivateResourceCreateView: View {
     private var configuration: PrivateResourceConfiguration {
         PrivateResourceConfiguration(
             name: name,
-            siteIds: [selectedSiteId],
+            siteIds: siteSelection.siteIds,
             mode: mode,
             ssl: mode == "http" && ssl,
             scheme: mode == "http" ? scheme : nil,
