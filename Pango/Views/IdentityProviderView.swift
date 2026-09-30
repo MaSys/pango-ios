@@ -25,7 +25,7 @@ struct IdentityProviderView: View {
     @State private var namePath: String = ""
     @State private var autoProvision: Bool = false
     @State private var redirectUrl: String = ""
-    @State private var errorMessage: String = ""
+    @State private var errorKey: String?
     @State private var isSaving: Bool = false
 
     var isEditing: Bool { idpId != nil }
@@ -104,8 +104,8 @@ struct IdentityProviderView: View {
                 }
             }
 
-            if !errorMessage.isEmpty {
-                Text(errorMessage)
+            if let errorKey {
+                Text(LocalizedStringKey(errorKey))
                     .foregroundStyle(.red)
                     .font(.system(size: 14))
             }
@@ -124,16 +124,8 @@ struct IdentityProviderView: View {
 
     private func load(id: Int) {
         Task {
-            guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-                  let configuration = try? PangolinAPIConfiguration(
-                    baseURLString: appService.pangolinServerUrl,
-                    apiKey: appService.pangolinApiKey
-                  ) else { return }
-            let service = PangolinIdentityProviderService(
-                client: PangolinAPIClient(configuration: configuration),
-                organizationId: appService.pangolinOrganizationId
-            )
-            guard let detail = try? await service.getIdentityProvider(idpId: id) else { return }
+            guard let service = try? identityProviderService(),
+                  let detail = try? await service.getIdentityProvider(idpId: id) else { return }
             self.name = detail.idp.name
             self.autoProvision = detail.idp.autoProvision ?? false
             self.redirectUrl = detail.redirectUrl
@@ -151,55 +143,61 @@ struct IdentityProviderView: View {
         }
     }
 
+    private func identityProviderService() throws -> PangolinIdentityProviderService {
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinIdentityProviderService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
+        )
+    }
+
     private func save() {
-        errorMessage = ""
+        errorKey = nil
         isSaving = true
-        if let id = idpId {
-            IdentityProvidersRequest.update(
-                id: id,
-                name: name,
-                clientId: clientId,
-                clientSecret: clientSecret,
-                authUrl: authUrl,
-                tokenUrl: tokenUrl,
-                scopes: scopes,
-                identifierPath: identifierPath,
-                emailPath: emailPath,
-                namePath: namePath,
-                autoProvision: autoProvision
-            ) { success, response in
-                isSaving = false
-                if success {
-                    onSaved()
-                    dismiss()
+        Task {
+            defer { isSaving = false }
+            do {
+                let service = try identityProviderService()
+                let input = OIDCIdentityProviderInput(
+                    name: name,
+                    clientId: clientId,
+                    clientSecret: clientSecret,
+                    authUrl: authUrl,
+                    tokenUrl: tokenUrl,
+                    scopes: scopes,
+                    identifierPath: identifierPath,
+                    emailPath: emailPath,
+                    namePath: namePath,
+                    autoProvision: autoProvision
+                )
+                if let id = idpId {
+                    try await service.updateOIDC(idpId: id, input: input)
                 } else {
-                    errorMessage = response?.message ?? ""
+                    try await service.createOIDC(input: input, variant: variant)
                 }
-            }
-        } else {
-            IdentityProvidersRequest.create(
-                name: name,
-                clientId: clientId,
-                clientSecret: clientSecret,
-                authUrl: authUrl,
-                tokenUrl: tokenUrl,
-                scopes: scopes,
-                identifierPath: identifierPath,
-                emailPath: emailPath,
-                namePath: namePath,
-                autoProvision: autoProvision,
-                variant: variant
-            ) { success, response in
-                isSaving = false
-                if success {
-                    onSaved()
-                    dismiss()
-                } else {
-                    errorMessage = response?.message ?? ""
-                }
+                onSaved()
+                dismiss()
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
+            } catch {
+                errorKey = "ERROR_CONNECTING_TO_SERVER"
             }
         }
     }
+
 }
 
 #Preview {

@@ -55,17 +55,7 @@ struct IdentityProvidersView: View {
     private func fetch() {
         Task {
             do {
-                guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                    throw PangolinAPIError.organizationRequired
-                }
-                let configuration = try PangolinAPIConfiguration(
-                    baseURLString: appService.pangolinServerUrl,
-                    apiKey: appService.pangolinApiKey
-                )
-                let service = PangolinIdentityProviderService(
-                    client: PangolinAPIClient(configuration: configuration),
-                    organizationId: appService.pangolinOrganizationId
-                )
+                let service = try identityProviderService()
                 idps = try await service.listIdentityProviders()
             } catch {
                 idps = []
@@ -73,9 +63,35 @@ struct IdentityProvidersView: View {
         }
     }
 
+    private func identityProviderService() throws -> PangolinIdentityProviderService {
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinIdentityProviderService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
+        )
+    }
+
     private func delete(_ idp: IdentityProvider) {
-        IdentityProvidersRequest.delete(id: idp.idpId) { success in
-            if success { self.fetch() }
+        Task {
+            do {
+                try await identityProviderService().deleteIdentityProvider(idpId: idp.idpId)
+                fetch()
+            } catch {
+                // Preserve the existing behavior: only refresh after a successful deletion.
+            }
         }
     }
 }
