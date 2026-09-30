@@ -30,6 +30,11 @@ struct PangolinPublicResourceService: Sendable {
         let ssl: Bool?
     }
 
+    private struct DomainBody: Encodable {
+        let domainId: String
+        let subdomain: String
+    }
+
     private let client: PangolinAPIClient
     private let organizationId: String
 
@@ -98,6 +103,17 @@ struct PangolinPublicResourceService: Sendable {
             body: UpdateBody(name: name, enabled: enabled, ssl: ssl)
         )
         return try response.requiredData()
+    }
+
+    func updateDomain(resourceId: Int, domainId: String, subdomain: String) async throws {
+        let response: PangolinResponse<PangolinEmptyResponse> = try await client.send(
+            .post,
+            path: "/public-resource/\(resourceId)",
+            body: DomainBody(domainId: domainId, subdomain: subdomain)
+        )
+        guard response.success, !response.error else {
+            throw PangolinAPIError.serverRejected(status: response.status, message: response.message)
+        }
     }
 
     func delete(resourceId: Int) async throws {

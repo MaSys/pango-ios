@@ -95,6 +95,61 @@ struct PangolinPublicResourceServiceTests {
         #expect(!resource.enabled)
     }
 
+    @Test("updates only the resource domain fields", arguments: ["null", "{}"])
+    func updatesResourceDomain(data: String) async throws {
+        URLProtocolStub.handler = { request in
+            #expect(request.url?.absoluteString == "https://api.example.com/v1/public-resource/4")
+            #expect(request.httpMethod == "POST")
+            #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer synthetic-key")
+            #expect(request.value(forHTTPHeaderField: "Content-Type") == "application/json")
+            let body = try #require(request.bodyData)
+            let json = try #require(JSONSerialization.jsonObject(with: body) as? [String: String])
+            #expect(json == ["domainId": "domain-id", "subdomain": "new-web"])
+            return .init(statusCode: 200, data: Data("{\"data\":\(data),\"success\":true,\"error\":false,\"message\":\"\",\"status\":200}".utf8))
+        }
+
+        try await makeService().updateDomain(resourceId: 4, domainId: "domain-id", subdomain: "new-web")
+    }
+
+    @Test("domain updates reject failed envelopes", arguments: [
+        #"{"data":null,"success":false,"error":false,"message":"rejected","status":400}"#,
+        #"{"data":null,"success":true,"error":true,"message":"rejected","status":400}"#
+    ])
+    func rejectsFailedDomainUpdate(envelope: String) async throws {
+        URLProtocolStub.handler = { _ in .init(statusCode: 200, data: Data(envelope.utf8)) }
+
+        await #expect(throws: PangolinAPIError.serverRejected(status: 400, message: "rejected")) {
+            try await makeService().updateDomain(resourceId: 4, domainId: "domain-id", subdomain: "new-web")
+        }
+    }
+
+    @Test("domain updates preserve authentication failures", arguments: [401, 403])
+    func preservesDomainUpdateAuthenticationFailure(status: Int) async throws {
+        URLProtocolStub.handler = { _ in .init(statusCode: status, data: Data()) }
+
+        await #expect(throws: status == 401 ? PangolinAPIError.unauthenticated : .forbidden) {
+            try await makeService().updateDomain(resourceId: 4, domainId: "domain-id", subdomain: "new-web")
+        }
+    }
+
+    @Test("domain updates reject malformed responses")
+    func rejectsMalformedDomainUpdateResponse() async throws {
+        URLProtocolStub.handler = { _ in .init(statusCode: 200, data: Data("invalid".utf8)) }
+
+        await #expect(throws: PangolinAPIError.decoding) {
+            try await makeService().updateDomain(resourceId: 4, domainId: "domain-id", subdomain: "new-web")
+        }
+    }
+
+    @Test("domain updates preserve transport failures")
+    func preservesDomainUpdateTransportFailure() async throws {
+        URLProtocolStub.handler = { _ in throw URLError(.notConnectedToInternet) }
+
+        await #expect(throws: PangolinAPIError.transport) {
+            try await makeService().updateDomain(resourceId: 4, domainId: "domain-id", subdomain: "new-web")
+        }
+    }
+
     @Test("deletes through the non-legacy public resource route")
     func deletesResource() async throws {
         URLProtocolStub.handler = { request in

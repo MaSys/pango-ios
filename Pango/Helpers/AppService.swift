@@ -180,6 +180,10 @@ class AppService: ObservableObject {
         return resource
     }
 
+    public func updateResourceDomain(resourceId: Int, domainId: String, subdomain: String) async throws {
+        try await publicResourceService().updateDomain(resourceId: resourceId, domainId: domainId, subdomain: subdomain)
+    }
+
     public func deleteResource(resourceId: Int) async throws {
         try await publicResourceService().delete(resourceId: resourceId)
         resources.removeAll { $0.resourceId == resourceId }
