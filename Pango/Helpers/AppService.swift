@@ -42,16 +42,33 @@ class AppService: ObservableObject {
     @Published var users: [User] = []
     
     public func fetchOrgs(completionHandler: @escaping (_ success: Bool, _ orgs: [Organization]) -> Void) {
-        OrgsRequest.fetch { success, orgs in
-            self.organizations = orgs
-            if success, !orgs.contains(where: { $0.orgId == self.pangolinOrganizationId }),
-               let org = orgs.first {
-                self.pangolinOrganizationId = org.orgId
+        Task {
+            do {
+                let orgs = try await listOrganizations()
+                organizations = orgs
+                if !orgs.contains(where: { $0.orgId == pangolinOrganizationId }), let first = orgs.first {
+                    pangolinOrganizationId = first.orgId
+                }
+                completionHandler(true, orgs)
+            } catch {
+                organizations = []
+                completionHandler(false, [])
             }
-            completionHandler(success, orgs)
         }
     }
-    
+
+    public func listOrganizations() async throws -> [Organization] {
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(baseURLString: pangolinServerUrl, apiKey: pangolinApiKey)
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return try await PangolinConnectionService(client: PangolinAPIClient(configuration: configuration)).listOrganizations()
+    }
+
     public func fetchSites(completionHandler: @escaping (_ success: Bool, _ sites: [Site]) -> Void) {
         Task {
             do {

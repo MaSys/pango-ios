@@ -19,6 +19,59 @@ struct PangolinConnectionServiceTests {
         )
     }
 
+    @Test("loads organizations without a separate health probe")
+    func listsOrganizations() async throws {
+        URLProtocolStub.handler = { request in
+            #expect(request.httpMethod == "GET")
+            #expect(request.url?.path == "/v1/orgs")
+            #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer synthetic-key")
+            return .init(statusCode: 200, data: Data(#"{"data":{"orgs":[{"orgId":"a","name":"A"},{"orgId":"b","name":"B"}]},"success":true,"error":false,"message":"","status":200}"#.utf8))
+        }
+        let organizations = try await makeService().listOrganizations()
+        #expect(organizations.map(\.orgId) == ["a", "b"])
+        #expect(organizations.map(\.name) == ["A", "B"])
+    }
+
+    @Test("accepts an empty organization list")
+    func listsEmptyOrganizations() async throws {
+        URLProtocolStub.handler = { _ in
+            .init(statusCode: 200, data: Data(#"{"data":{"orgs":[]},"success":true,"error":false,"message":"","status":200}"#.utf8))
+        }
+        let organizations = try await makeService().listOrganizations()
+        #expect(organizations.isEmpty)
+    }
+
+    @Test("rejects null organization data")
+    func rejectsNullOrganizations() async throws {
+        URLProtocolStub.handler = { _ in
+            .init(statusCode: 200, data: Data(#"{"data":null,"success":true,"error":false,"message":"","status":200}"#.utf8))
+        }
+        await #expect(throws: PangolinAPIError.decoding) {
+            try await makeService().listOrganizations()
+        }
+    }
+
+    @Test("rejects failed organization envelopes", arguments: [
+        #"{"data":{"orgs":[]},"success":false,"error":false,"message":"rejected","status":400}"#,
+        #"{"data":{"orgs":[]},"success":true,"error":true,"message":"rejected","status":400}"#
+    ])
+    func rejectsOrganizationEnvelope(envelope: String) async throws {
+        URLProtocolStub.handler = { _ in
+            .init(statusCode: 200, data: Data(envelope.utf8))
+        }
+        await #expect(throws: PangolinAPIError.serverRejected(status: 400, message: "rejected")) {
+            try await makeService().listOrganizations()
+        }
+    }
+
+    @Test("preserves organization HTTP authentication errors", arguments: [401, 403])
+    func preservesOrganizationAuthenticationError(status: Int) async throws {
+        URLProtocolStub.handler = { _ in .init(statusCode: status, data: Data()) }
+        await #expect(throws: status == 401 ? PangolinAPIError.unauthenticated : .forbidden) {
+            try await makeService().listOrganizations()
+        }
+    }
+
     @Test("validates health before loading organizations")
     func validatesHealthAndOrganizations() async throws {
         URLProtocolStub.handler = { request in

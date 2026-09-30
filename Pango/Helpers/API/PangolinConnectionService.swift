@@ -5,6 +5,17 @@ struct PangolinConnectionService: Sendable {
         self.client = client
     }
 
+    func listOrganizations() async throws -> [Organization] {
+        let response: PangolinResponse<OrganizationsResponse> = try await client.send(.get, path: "/orgs")
+        guard response.success, !response.error else {
+            throw PangolinAPIError.serverRejected(status: response.status, message: response.message)
+        }
+        guard let organizations = response.data?.orgs else {
+            throw PangolinAPIError.decoding
+        }
+        return organizations
+    }
+
     func validate(organizationId: String?) async throws -> [Organization] {
         let health: HealthCheckResponse = try await client.sendRaw(.get, path: "")
         guard health.message == "Healthy" else {
