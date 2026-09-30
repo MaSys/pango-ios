@@ -7,6 +7,7 @@ import SwiftUI
 
 struct IdentityProvidersView: View {
 
+    @EnvironmentObject var appService: AppService
     @State private var idps: [IdentityProvider] = []
 
     var body: some View {
@@ -52,8 +53,23 @@ struct IdentityProvidersView: View {
     }
 
     private func fetch() {
-        IdentityProvidersRequest.fetch { success, idps in
-            self.idps = idps
+        Task {
+            do {
+                guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                    throw PangolinAPIError.organizationRequired
+                }
+                let configuration = try PangolinAPIConfiguration(
+                    baseURLString: appService.pangolinServerUrl,
+                    apiKey: appService.pangolinApiKey
+                )
+                let service = PangolinIdentityProviderService(
+                    client: PangolinAPIClient(configuration: configuration),
+                    organizationId: appService.pangolinOrganizationId
+                )
+                idps = try await service.listIdentityProviders()
+            } catch {
+                idps = []
+            }
         }
     }
 
