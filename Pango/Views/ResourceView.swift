@@ -97,6 +97,8 @@ struct ResourceView: View {
                 }
             } catch let error as PangolinAPIError {
                 errorKey = error.localizationKey
+            } catch {
+                errorKey = "ERROR_CONNECTING_TO_SERVER"
             }
         }
     }
@@ -114,6 +116,9 @@ struct ResourceView: View {
             } catch let error as PangolinAPIError {
                 errorKey = error.localizationKey
                 ssl = resource.ssl
+            } catch {
+                errorKey = "ERROR_CONNECTING_TO_SERVER"
+                ssl = resource.ssl
             }
         }
     }
@@ -128,6 +133,8 @@ struct ResourceView: View {
                 self.dismiss()
             } catch let error as PangolinAPIError {
                 errorKey = error.localizationKey
+            } catch {
+                errorKey = "ERROR_CONNECTING_TO_SERVER"
             }
         }
     }

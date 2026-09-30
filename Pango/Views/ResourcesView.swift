@@ -112,11 +112,15 @@ struct ResourcesView: View {
 
     private func fetchAll() async {
         _ = try? await appService.fetchResources()
+        guard !Task.isCancelled else { return }
         privateResourcesLoading = true
         defer { privateResourcesLoading = false }
         do {
             privateResources = try await privateResourceService().listAllResources()
+        } catch is CancellationError {
+            return
         } catch {
+            guard !Task.isCancelled else { return }
             errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
         }
     }

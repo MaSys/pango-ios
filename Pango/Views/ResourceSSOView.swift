@@ -72,6 +72,9 @@ struct ResourceSSOView: View {
             } catch let error as PangolinAPIError {
                 ssoEnabled = rollbackValue
                 errorKey = error.localizationKey
+            } catch {
+                ssoEnabled = rollbackValue
+                errorKey = "ERROR_CONNECTING_TO_SERVER"
             }
         }
     }

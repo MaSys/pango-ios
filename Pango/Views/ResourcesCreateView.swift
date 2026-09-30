@@ -87,6 +87,8 @@ struct ResourcesCreateView: View {
                 dismiss()
             } catch let error as PangolinAPIError {
                 errorMessage = String(localized: String.LocalizationValue(error.localizationKey))
+            } catch {
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
             }
         }
     }

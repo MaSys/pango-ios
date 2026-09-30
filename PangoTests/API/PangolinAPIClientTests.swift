@@ -123,6 +123,34 @@ struct PangolinAPIClientTests {
             let _: PangolinResponse<PangolinEmptyResponse> = try await makeClient().send(.get, path: "/orgs")
         }
     }
+
+    @Test("preserves URL session cancellation instead of reporting a connection failure")
+    func preservesRequestCancellation() async throws {
+        URLProtocolStub.handler = { _ in
+            throw URLError(.cancelled)
+        }
+
+        await #expect(throws: CancellationError.self) {
+            let _: PangolinResponse<PangolinEmptyResponse> = try await makeClient().send(.get, path: "/orgs")
+        }
+    }
+
+    @Test("does not start a request from an already cancelled loading task")
+    func rejectsCancelledTask() async throws {
+        URLProtocolStub.handler = { _ in
+            Issue.record("A cancelled loading task must not start another request")
+            return .init(statusCode: 200, data: Data())
+        }
+        let client = try makeClient()
+        let task = Task {
+            withUnsafeCurrentTask { $0?.cancel() }
+            let _: PangolinResponse<PangolinEmptyResponse> = try await client.send(.get, path: "/orgs")
+        }
+
+        await #expect(throws: CancellationError.self) {
+            try await task.value
+        }
+    }
 }
 
 private extension URLRequest {

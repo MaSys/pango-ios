@@ -57,6 +57,8 @@ struct ResourcePasswordView: View {
                 dismiss()
             } catch let error as PangolinAPIError {
                 errorKey = error.localizationKey
+            } catch {
+                errorKey = "ERROR_CONNECTING_TO_SERVER"
             }
         }
     }

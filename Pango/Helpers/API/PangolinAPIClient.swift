@@ -58,6 +58,7 @@ struct PangolinAPIClient: Sendable {
         queryItems: [URLQueryItem],
         body: Data?
     ) async throws -> Data {
+        try Task.checkCancellation()
         let url = try requestURL(path: path, queryItems: queryItems)
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
@@ -72,8 +73,12 @@ struct PangolinAPIClient: Sendable {
         do {
             (data, response) = try await session.data(for: request)
         } catch {
+            if Task.isCancelled || error is CancellationError || (error as? URLError)?.code == .cancelled {
+                throw CancellationError()
+            }
             throw PangolinAPIError.transport
         }
+        try Task.checkCancellation()
 
         guard let httpResponse = response as? HTTPURLResponse else {
             throw PangolinAPIError.transport

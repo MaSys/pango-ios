@@ -65,10 +65,11 @@ struct SitesView: View {
     private func fetch() async {
         do {
             _ = try await appService.fetchSites()
-        } catch let error as PangolinAPIError {
-            errorKey = error.localizationKey
+        } catch is CancellationError {
+            return
         } catch {
-            errorKey = "ERROR_CONNECTING_TO_SERVER"
+            guard !Task.isCancelled else { return }
+            errorKey = (error as? PangolinAPIError)?.localizationKey ?? PangolinAPIError.transport.localizationKey
         }
     }
 }
