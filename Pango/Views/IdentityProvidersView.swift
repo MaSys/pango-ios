@@ -7,6 +7,7 @@ import SwiftUI
 
 struct IdentityProvidersView: View {
 
+    @EnvironmentObject var appService: AppService
     @State private var idps: [IdentityProvider] = []
 
     var body: some View {
@@ -52,8 +53,8 @@ struct IdentityProvidersView: View {
     }
 
     private func fetch() {
-        IdentityProvidersRequest.fetch { success, idps in
-            self.idps = idps
+        Task {
+            idps = (try? await appService.fetchIdentityProviders()) ?? []
         }
     }
 

@@ -7,6 +7,7 @@ import SwiftUI
 
 struct IdentityProviderView: View {
 
+    @EnvironmentObject var appService: AppService
     @Environment(\.dismiss) var dismiss
 
     var idpId: Int?
@@ -122,8 +123,8 @@ struct IdentityProviderView: View {
     }
 
     private func load(id: Int) {
-        IdentityProvidersRequest.get(id: id) { success, detail in
-            guard success, let detail = detail else { return }
+        Task {
+            guard let detail = try? await appService.fetchIdentityProvider(idpId: id) else { return }
             self.name = detail.idp.name
             self.autoProvision = detail.idp.autoProvision ?? false
             self.redirectUrl = detail.redirectUrl
@@ -195,5 +196,6 @@ struct IdentityProviderView: View {
 #Preview {
     NavigationStack {
         IdentityProviderView(idpId: nil) {}
+            .environmentObject(AppService())
     }
 }

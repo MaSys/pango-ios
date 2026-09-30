@@ -8,53 +8,6 @@ import Alamofire
 
 class IdentityProvidersRequest {
 
-    public static func fetch(
-        completionHandler: @escaping (_ success: Bool, _ idps: [IdentityProvider]) -> Void
-    ) {
-        let userDefaults = UserDefaults.standard
-        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
-              let apiKey = userDefaults.string(forKey: "pangolin_api_key"),
-              let org = userDefaults.string(forKey: "pangolin_organization_id") else {
-            completionHandler(false, [])
-            return
-        }
-
-        let url = URL(string: "\(baseUrl)/v1/org/\(org)/idp")!
-        let token = "Bearer \(apiKey)"
-        AF.request(url, headers: ["Authorization": token])
-            .responseDecodable(of: MainResponse<IdentityProvidersResponse>.self) { response in
-                if let val = response.value, val.success {
-                    completionHandler(true, val.data?.idps ?? [])
-                } else {
-                    completionHandler(false, [])
-                }
-            }
-    }
-
-    public static func get(
-        id: Int,
-        completionHandler: @escaping (_ success: Bool, _ detail: IdentityProviderDetail?) -> Void
-    ) {
-        let userDefaults = UserDefaults.standard
-        guard let baseUrl = userDefaults.string(forKey: "pangolin_server_url"),
-              let apiKey = userDefaults.string(forKey: "pangolin_api_key"),
-              let org = userDefaults.string(forKey: "pangolin_organization_id") else {
-            completionHandler(false, nil)
-            return
-        }
-
-        let url = URL(string: "\(baseUrl)/v1/org/\(org)/idp/\(id)")!
-        let token = "Bearer \(apiKey)"
-        AF.request(url, headers: ["Authorization": token])
-            .responseDecodable(of: MainResponse<IdentityProviderDetail>.self) { response in
-                if let val = response.value, val.success {
-                    completionHandler(true, val.data)
-                } else {
-                    completionHandler(false, nil)
-                }
-            }
-    }
-
     public static func create(
         name: String,
         clientId: String,
