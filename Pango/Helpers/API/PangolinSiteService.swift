@@ -92,6 +92,26 @@ struct PangolinSiteService: Sendable {
         return try response.requireData()
     }
 
+    func approveSite(siteId: Int) async throws {
+        let response: PangolinResponse<PangolinEmptyResponse> = try await client.send(
+            .post,
+            path: "/org/\(organizationId)/site/\(siteId)/approve"
+        )
+        guard response.success, !response.error else {
+            throw PangolinAPIError.serverRejected(status: response.status, message: response.message)
+        }
+    }
+
+    func rejectSite(siteId: Int) async throws {
+        let response: PangolinResponse<PangolinEmptyResponse> = try await client.send(
+            .delete,
+            path: "/org/\(organizationId)/site/\(siteId)/reject"
+        )
+        guard response.success, !response.error else {
+            throw PangolinAPIError.serverRejected(status: response.status, message: response.message)
+        }
+    }
+
     func deleteSite(siteId: Int) async throws {
         let response: PangolinResponse<PangolinEmptyResponse> = try await client.send(
             .delete,

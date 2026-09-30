@@ -156,14 +156,24 @@ extension SitesView {
     }
 
     private func approve(_ site: Site) {
-        SitesRequest.approve(siteId: site.siteId) { success in
-            if success { Task { await self.fetch() } }
+        Task {
+            do {
+                try await appService.approveSite(siteId: site.siteId)
+                await fetch()
+            } catch {
+                // Preserve the existing behavior: only refresh after a successful action.
+            }
         }
     }
 
     private func reject(_ site: Site) {
-        SitesRequest.reject(siteId: site.siteId) { success in
-            if success { Task { await self.fetch() } }
+        Task {
+            do {
+                try await appService.rejectSite(siteId: site.siteId)
+                await fetch()
+            } catch {
+                // Preserve the existing behavior: only refresh after a successful action.
+            }
         }
     }
 }
