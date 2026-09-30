@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AlertRuleCreateView: View {
 
+    @EnvironmentObject var appService: AppService
     @Environment(\.dismiss) var dismiss
 
     var onSaved: () -> Void
@@ -17,7 +18,7 @@ struct AlertRuleCreateView: View {
     @State private var triggerType: String = "site_down"
     @State private var notificationMethod: String = "email"
     @State private var notificationTarget: String = ""
-    @State private var errorMessage: String = ""
+    @State private var errorKey: String?
 
     var validForm: Bool {
         !name.isEmpty && !notificationTarget.isEmpty
@@ -49,8 +50,8 @@ struct AlertRuleCreateView: View {
                     .autocorrectionDisabled(true)
             }
 
-            if !errorMessage.isEmpty {
-                Text(errorMessage)
+            if let errorKey {
+                Text(LocalizedStringKey(errorKey))
                     .foregroundStyle(.red)
                     .font(.system(size: 14))
             }
@@ -65,18 +66,43 @@ struct AlertRuleCreateView: View {
     }
 
     private func save() {
-        AlertRulesRequest.create(
-            name: name,
-            triggerType: triggerType,
-            notificationMethod: notificationMethod,
-            notificationTarget: notificationTarget
-        ) { success, response in
-            if success {
-                self.onSaved()
-                self.dismiss()
-            } else {
-                self.errorMessage = response?.message ?? ""
+        errorKey = nil
+        Task {
+            do {
+                try await alertRuleService().createAlertRule(
+                    name: name,
+                    triggerType: triggerType,
+                    notificationMethod: notificationMethod,
+                    notificationTarget: notificationTarget
+                )
+                onSaved()
+                dismiss()
+            } catch let error as PangolinAPIError {
+                errorKey = error.localizationKey
+            } catch {
+                errorKey = "ERROR_CONNECTING_TO_SERVER"
             }
         }
+    }
+
+    private func alertRuleService() throws -> PangolinAlertRuleService {
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinAlertRuleService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
+        )
     }
 }

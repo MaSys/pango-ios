@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AlertRulesView: View {
 
+    @EnvironmentObject var appService: AppService
     @State private var alerts: [AlertRule] = []
 
     var body: some View {
@@ -59,14 +60,44 @@ struct AlertRulesView: View {
     }
 
     private func fetch() {
-        AlertRulesRequest.fetch { success, alerts in
-            self.alerts = alerts
+        Task {
+            do {
+                alerts = try await alertRuleService().listAlertRules()
+            } catch {
+                alerts = []
+            }
         }
     }
 
+    private func alertRuleService() throws -> PangolinAlertRuleService {
+        guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw PangolinAPIError.organizationRequired
+        }
+        let configuration: PangolinAPIConfiguration
+        do {
+            configuration = try PangolinAPIConfiguration(
+                baseURLString: appService.pangolinServerUrl,
+                apiKey: appService.pangolinApiKey
+            )
+        } catch PangolinAPIConfiguration.Error.invalidBaseURL {
+            throw PangolinAPIError.invalidBaseURL
+        } catch PangolinAPIConfiguration.Error.missingAPIKey {
+            throw PangolinAPIError.missingAPIKey
+        }
+        return PangolinAlertRuleService(
+            client: PangolinAPIClient(configuration: configuration),
+            organizationId: appService.pangolinOrganizationId
+        )
+    }
+
     private func delete(_ alert: AlertRule) {
-        AlertRulesRequest.delete(id: alert.alertId) { success in
-            if success { self.fetch() }
+        Task {
+            do {
+                try await alertRuleService().deleteAlertRule(alertId: alert.alertId)
+                fetch()
+            } catch {
+                // Preserve the existing behavior: only refresh after a successful deletion.
+            }
         }
     }
 }
