@@ -13,6 +13,16 @@ struct ResourceView: View {
     @Environment(\.dismiss) var dismiss
     
     @State var resource: Resource
+    @State var authenticationPolicy: PublicResourcePolicy?
+
+    var authenticationResource: Resource {
+        guard let authenticationPolicy else { return resource }
+        var updated = resource
+        updated.pincodeId = authenticationPolicy.pincodeId
+        updated.passwordId = authenticationPolicy.passwordId
+        updated.sso = authenticationPolicy.sso ? 1 : 0
+        return updated
+    }
     
     @State private var ssl: Bool = false
     @State private var showDeleteConfirmation: Bool = false
@@ -49,6 +59,9 @@ struct ResourceView: View {
         .navigationTitle(self.resource.name)
         .onAppear {
             self.ssl = self.resource.ssl
+        }
+        .task(id: appService.organizationRevision) {
+            await loadAuthenticationPolicy()
         }
         .onReceive(appService.$resources) { resources in
             if let updated = resources.first(where: { $0.resourceId == resource.resourceId }) {
@@ -151,7 +164,7 @@ extension ResourceView {
                                 .font(.system(size: 14))
                                 .fontWeight(.semibold)
                             HStack {
-                                ShieldView(resource: resource, showText: true)
+                                ShieldView(resource: authenticationResource, showText: true)
                             }
                         }
                     } else {
@@ -227,13 +240,13 @@ extension ResourceView {
     var authenticationSection: some View {
         Section {
             NavigationLink {
-                ResourceSSOView(resource: self.resource)
+                ResourceSSOView(resource: authenticationResource)
                     .environmentObject(self.appService)
             } label: {
                 HStack {
                     Text("USERS_AND_ROLES")
                     Spacer()
-                    if self.resource.sso == 0 {
+                    if authenticationResource.sso == 0 {
                         Text("DISABLED").foregroundStyle(.gray)
                     } else {
                         Text("ENABLED").foregroundStyle(.green)
@@ -248,7 +261,7 @@ extension ResourceView {
                 HStack {
                     Text("PASSWORD_PROTECTION")
                     Spacer()
-                    if self.resource.passwordId == nil {
+                    if authenticationResource.passwordId == nil {
                         Text("DISABLED").foregroundStyle(.gray)
                     } else {
                         Text("ENABLED").foregroundStyle(.green)
@@ -262,7 +275,7 @@ extension ResourceView {
                 HStack {
                     Text("PIN_CODE_PROTECTION")
                     Spacer()
-                    if self.resource.pincodeId == nil {
+                    if authenticationResource.pincodeId == nil {
                         Text("DISABLED").foregroundStyle(.gray)
                     } else {
                         Text("ENABLED").foregroundStyle(.green)
@@ -278,15 +291,37 @@ extension ResourceView {
 }
 
 private extension ResourceView {
-    func publicResourceService() throws -> PangolinPublicResourceService {
-        let configuration: PangolinAPIConfiguration
+    func loadAuthenticationPolicy() async {
+        guard resource.http else { return }
+        let revision = appService.organizationRevision
         do {
-            configuration = try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
+            let configuration = try apiConfiguration()
+            let service = PangolinPublicResourceAuthService(client: PangolinAPIClient(configuration: configuration))
+            let policy = try await service.getDefaultPolicy(resourceId: resource.resourceId)
+            guard !Task.isCancelled, revision == appService.organizationRevision else { return }
+            authenticationPolicy = policy
+        } catch {
+            guard !Task.isCancelled, revision == appService.organizationRevision else { return }
+            if let error = error as? PangolinAPIError {
+                errorMessage = error.localizedMessage()
+            } else {
+                errorMessage = String(localized: "ERROR_CONNECTING_TO_SERVER")
+            }
+        }
+    }
+
+    func apiConfiguration() throws -> PangolinAPIConfiguration {
+        do {
+            return try PangolinAPIConfiguration(baseURLString: appService.pangolinServerUrl, apiKey: appService.pangolinApiKey)
         } catch PangolinAPIConfiguration.Error.invalidBaseURL {
             throw PangolinAPIError.invalidBaseURL
         } catch PangolinAPIConfiguration.Error.missingAPIKey {
             throw PangolinAPIError.missingAPIKey
         }
+    }
+
+    func publicResourceService() throws -> PangolinPublicResourceService {
+        let configuration = try apiConfiguration()
         guard !appService.pangolinOrganizationId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw PangolinAPIError.organizationRequired
         }
